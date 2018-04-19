@@ -39,7 +39,7 @@ namespace ASTERIX
         object locker = new object();
 
         int UPDATEGRIDMILLISECONDS = 5000;
-        int UPDATESTATUSMINUTE = 1;
+        int UPDATESTATUSMINUTE = 20;
 
         DataTable query(string query)
         {
@@ -86,39 +86,49 @@ namespace ASTERIX
             doc.DocumentElement.AppendChild(trk);
             doc.DocumentElement.InnerXml = doc.DocumentElement.InnerXml.Replace("xmlns=\"\"", "");
 
-            string insert = "INSERT INTO dbo.[Load] (TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, BeginTime, EndTime, Interval, Status, Gpx) VALUES('" + TargetAddress + "','" + AircraftIdentification + "','" + EmitterCategory + "','" + AirportDepature + "','" + AirportArrival + "','" + BeginTime + "','" + EndTime + "','" + Interval + "','" + Status + "','" + doc.InnerXml + "')";
+            string insert = "INSERT INTO dbo.[Load] (TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, BeginTime, EndTime, Interval, Status, Gpx, AddTime) VALUES('" + TargetAddress + "','" + AircraftIdentification + "','" + EmitterCategory + "','" + AirportDepature + "','" + AirportArrival + "','" + BeginTime + "','" + EndTime + "','" + Interval + "','" + Status + "','" + doc.InnerXml + "', GETDATE())";
             query(insert);
         }
         void UPDATE(object[] Trek, DataRow oldRow)
         {
-            string BeginTime = Convert.ToString(oldRow[6]);
-            string EndTime = (string)Trek[6];
-            string Interval = (DateTime.Parse(EndTime) - DateTime.Parse(BeginTime)).ToString();
+            string OldEndTime = Convert.ToString(oldRow[7]);
+            string BeginTime = (string)Trek[5];
 
-            Interval = Interval.Replace("1.", "");
-            Interval = Interval.Replace("-", "");
-
-
-            DataTable Aircraftmessage = (DataTable)Trek[8];
-
-            XmlDocument doc = new XmlDocument();
-            doc.InnerXml = Convert.ToString(oldRow[10]);
-            XmlNodeList node = doc.DocumentElement.ChildNodes;
-
-            XmlNode newNode = node[0];
-            for (int point = 0; point < Aircraftmessage.Rows.Count; point++)
+            if ((DateTime.Parse(BeginTime) - DateTime.Parse(OldEndTime)) > TimeSpan.Parse("00:" + Convert.ToString(UPDATESTATUSMINUTE) + ":00"))
             {
-                XmlElement trkpt = doc.CreateElement("trkpt");
-                trkpt.IsEmpty = true;
-                trkpt.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
-                trkpt.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
-                newNode.ChildNodes[1].AppendChild(trkpt);
+                query("UPDATE Load SET Status = 'Завершен' WHERE Id =" + Convert.ToString(oldRow[0]));
+                INSERT(Trek);
+                return;
             }
-            doc.DocumentElement.ReplaceChild(node[0], newNode);
-            doc.DocumentElement.InnerXml = doc.DocumentElement.InnerXml.Replace("xmlns=\"\"", "");
+            string OldBeginTime = Convert.ToString(oldRow[6]);
+            string EndTime = (string)Trek[6];
+            string Interval = (DateTime.Parse(EndTime) - DateTime.Parse(OldBeginTime)).ToString();
 
-            string update = "UPDATE Load SET EndTime = '" + EndTime + "', Interval = '" + Interval + "', Gpx = '" + doc.InnerXml + "' WHERE Id =" + Convert.ToString(oldRow[0]);
-            query(update);
+            Interval = Interval.Replace("-","");
+
+            if (BeginTime != OldBeginTime)
+            {
+                DataTable Aircraftmessage = (DataTable)Trek[8];
+
+                XmlDocument doc = new XmlDocument();
+                doc.InnerXml = Convert.ToString(oldRow[10]);
+                XmlNodeList node = doc.DocumentElement.ChildNodes;
+
+                XmlNode newNode = node[0];
+                for (int point = 0; point < Aircraftmessage.Rows.Count; point++)
+                {
+                    XmlElement trkpt = doc.CreateElement("trkpt");
+                    trkpt.IsEmpty = true;
+                    trkpt.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
+                    trkpt.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
+                    newNode.ChildNodes[1].AppendChild(trkpt);
+                }
+                doc.DocumentElement.ReplaceChild(node[0], newNode);
+                doc.DocumentElement.InnerXml = doc.DocumentElement.InnerXml.Replace("xmlns=\"\"", "");
+
+                string update = "UPDATE Load SET EndTime = '" + EndTime + "', Interval = '" + Interval + "', Gpx = '" + doc.InnerXml + "', AddTime = GETDATE() WHERE Id = " + Convert.ToString(oldRow[0]);
+                query(update);
+            }
         }
         private void LoadGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
@@ -956,34 +966,75 @@ namespace ASTERIX
             }
             return message;
         }
-        object[] ReadTrek(DataTable CoordinateTable, string TargetAddress)
+        object[,] ReadTrek(DataTable CoordinateTable, string TargetAddress)
         {
-            object[] TrekInfo = new object[9];
             DataTable TrekCoordinate = CoordinateTable.Select("TargetAddress = '" + TargetAddress + "'").CopyToDataTable().Select().OrderBy(ms => ms["DTime"]).CopyToDataTable();
+            DataTable NewTrek = new DataTable();
+            NewTrek.Columns.Add("TargetAddress", System.Type.GetType("System.String"));
+            NewTrek.Columns.Add("AircraftIdentification", System.Type.GetType("System.String"));
+            NewTrek.Columns.Add("EmitterCategory", System.Type.GetType("System.String"));
+            NewTrek.Columns.Add("AirportDepature", System.Type.GetType("System.String"));
+            NewTrek.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
+            NewTrek.Columns.Add("Latitude", System.Type.GetType("System.Double"));
+            NewTrek.Columns.Add("Longitude", System.Type.GetType("System.Double"));
+            NewTrek.Columns.Add("DTime", System.Type.GetType("System.DateTime"));
 
-            List<DateTime> DTime = new List<DateTime>();
+            int i = 0;
+
+            for (int time = 0; time < TrekCoordinate.Rows.Count - 1; time++)
+            {
+                if (Convert.ToDateTime(TrekCoordinate.Rows[time + 1]["DTime"]) - Convert.ToDateTime(TrekCoordinate.Rows[time]["DTime"]) > TimeSpan.FromMinutes(20))
+                {
+                    i++;
+                }
+            }
+
+            object[,] TrekInfo = new object[i + 1, 9];
+
+            i = 0;
 
             for (int time = 0; time < TrekCoordinate.Rows.Count; time++)
             {
-                DTime.Add(Convert.ToDateTime(TrekCoordinate.Rows[time]["DTime"]));
+                if (time > 0)
+                {
+                    if (((Convert.ToDateTime(TrekCoordinate.Rows[time]["DTime"]) - Convert.ToDateTime(TrekCoordinate.Rows[time - 1]["DTime"]) > TimeSpan.FromMinutes(UPDATESTATUSMINUTE)) || (time == TrekCoordinate.Rows.Count - 1)) && (NewTrek.Rows.Count > 0))
+                    {
+                        string BeginTime = Convert.ToString(NewTrek.Rows[0]["DTime"]);
+                        string EndTime = Convert.ToString(NewTrek.Rows[NewTrek.Rows.Count - 1]["DTime"]);
+                        string Interval = (DateTime.Parse(EndTime) - DateTime.Parse(BeginTime)).ToString();
+
+                        TrekInfo[i, 0] = NewTrek.Rows[0]["TargetAddress"];
+                        TrekInfo[i, 1] = NewTrek.Rows[0]["AircraftIdentification"];
+                        TrekInfo[i, 2] = NewTrek.Rows[0]["EmitterCategory"];
+                        TrekInfo[i, 3] = NewTrek.Rows[0]["AirportDepature"];
+                        TrekInfo[i, 4] = NewTrek.Rows[0]["AirportArrival"];
+                        TrekInfo[i, 5] = BeginTime;
+                        TrekInfo[i, 6] = EndTime;
+                        TrekInfo[i, 7] = Interval;
+                        TrekInfo[i, 8] = NewTrek;
+
+                        NewTrek = new DataTable();
+                        NewTrek.Columns.Add("TargetAddress", System.Type.GetType("System.String"));
+                        NewTrek.Columns.Add("AircraftIdentification", System.Type.GetType("System.String"));
+                        NewTrek.Columns.Add("EmitterCategory", System.Type.GetType("System.String"));
+                        NewTrek.Columns.Add("AirportDepature", System.Type.GetType("System.String"));
+                        NewTrek.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
+                        NewTrek.Columns.Add("Latitude", System.Type.GetType("System.Double"));
+                        NewTrek.Columns.Add("Longitude", System.Type.GetType("System.Double"));
+                        NewTrek.Columns.Add("DTime", System.Type.GetType("System.DateTime"));
+
+                        i++;
+                    }
+                    else
+                    {
+                        NewTrek.LoadDataRow(TrekCoordinate.Rows[time].ItemArray, true);
+                    }
+                }
+                else
+                {
+                    NewTrek.LoadDataRow(TrekCoordinate.Rows[time].ItemArray, true);
+                }
             }
-
-            string BeginTime = Convert.ToString(DTime.Min());
-            string EndTime = Convert.ToString(DTime.Max());
-            string Interval = (DateTime.Parse(EndTime) - DateTime.Parse(BeginTime)).ToString();
-
-            Interval = Interval.Replace("1.", "");
-            Interval = Interval.Replace("-", "");
-
-            TrekInfo[0] = TrekCoordinate.Rows[0]["TargetAddress"];
-            TrekInfo[1] = TrekCoordinate.Rows[0]["AircraftIdentification"];
-            TrekInfo[2] = TrekCoordinate.Rows[0]["EmitterCategory"];
-            TrekInfo[3] = TrekCoordinate.Rows[0]["AirportDepature"];
-            TrekInfo[4] = TrekCoordinate.Rows[0]["AirportArrival"];
-            TrekInfo[5] = BeginTime;
-            TrekInfo[6] = EndTime;
-            TrekInfo[7] = Interval;
-            TrekInfo[8] = TrekCoordinate;
 
             return TrekInfo;
         }
@@ -1008,31 +1059,30 @@ namespace ASTERIX
                         ProgressBarMax(TargetAddress.Count);
                         for (int Address = 0; Address < TargetAddress.Count; Address++)
                         {
-                            object[] Trek = ReadTrek(CoordinateTable, TargetAddress[Address]);
-                            int countTargetAddress = Convert.ToInt32(query("SELECT COUNT(*) FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "'").Rows[0][0]);
-
-                            query("UPDATE Load SET Status = 'Завершен' WHERE EndTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
-
-                            if (countTargetAddress > 0)
+                            object[,] Treks = ReadTrek(CoordinateTable, TargetAddress[Address]);
+                            for (int i = 0; i <= Treks.GetUpperBound(0); i++)
                             {
-                                if (countTargetAddress == Convert.ToInt32(query("SELECT COUNT(*) FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "' AND Status = 'Завершен'").Rows[0][0]))
+                                if (Treks[i, 0] != null)
                                 {
-                                    //  трек завершен -> переход на создание нового
-                                    INSERT(Trek);
-                                  //  ShowDataGridView();
+                                    object[] Trek = new object[9];
+                                    for (int n = 0; n < 9; n++)
+                                    {
+                                        Trek[n] = Treks[i, n];
+                                    }
+
+                                    query("UPDATE Load SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
+
+                                    int countTargetAddress = Convert.ToInt32(query("SELECT COUNT(*) FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0][0]);
+
+                                    if (countTargetAddress > 0)
+                                    {
+                                        UPDATE(Trek, query("SELECT * FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0]);
+                                    }
+                                    else
+                                    {
+                                        INSERT(Trek);
+                                    }
                                 }
-                                else
-                                {
-                                    // дописываем координаты
-                                    UPDATE(Trek, query("SELECT * FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "' AND Status = 'Активен'").Rows[0]);
-                                  //  ShowDataGridView();
-                                }
-                            }
-                            else
-                            {
-                                // создаем трек
-                                INSERT(Trek);
-                               // ShowDataGridView();
                             }
                             
                             ProgressBarValue(Address + 1);
@@ -1372,7 +1422,7 @@ namespace ASTERIX
 
         void timerThread()
         {
-            query("UPDATE Load SET Status = 'Завершен' WHERE EndTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
+              query("UPDATE Load SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
             int newchcksum = checksum();
             if (chcksum != newchcksum)
             {
@@ -1393,7 +1443,7 @@ namespace ASTERIX
             InitializeComponent();
             sqlConnection1 =
           new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS1;Initial Catalog=ADS-B;Persist Security Info=True;User ID=Adm;Password=Analiz2");
-            sqlConnection1.Open();
+            sqlConnection1.Open(); 
 
             FSPECtable21 = GetFSPECtable(21);
             FSPECtable62 = GetFSPECtable(62);
