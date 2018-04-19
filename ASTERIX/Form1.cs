@@ -23,7 +23,7 @@ namespace ASTERIX
         List<string> ASCIIlist, EmitterCategorylist;
         SqlDataAdapter adapt;
         SqlConnection sqlConnection1;
-        Thread mythread, updateThread;
+        Thread mythread, updateThread, DeleteThread;
 
         List<string> pathList;
         FileSystemWatcher watcher;
@@ -1046,18 +1046,23 @@ namespace ASTERIX
             }
             mythread.Abort();
         }
-
+        void openGPXThread(object RowIndex)
+        {
+            string TargetAddress = Convert.ToString(LoadGridView1[1, Convert.ToInt32(RowIndex)].Value);
+            XmlDocument doc = new XmlDocument();
+            doc.InnerXml = Convert.ToString(LoadGridView1[10, Convert.ToInt32(RowIndex)].Value);
+            doc.Save(TargetAddress + ".gpx");
+            Process.Start(TargetAddress + ".gpx");
+            Thread.Sleep(10000);
+            File.Delete(TargetAddress + ".gpx");
+            DeleteThread.Abort();
+        }
         private void LoadGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if ((e.Button == MouseButtons.Left) && (e.RowIndex >= 0))
             {
-                string TargetAddress = Convert.ToString(LoadGridView1[1, e.RowIndex].Value);
-                XmlDocument doc = new XmlDocument();
-                doc.InnerXml = Convert.ToString(LoadGridView1[10, e.RowIndex].Value);
-                doc.Save(TargetAddress + ".gpx");
-                Process.Start(TargetAddress + ".gpx");
-                Thread.Sleep(2000);
-                File.Delete(TargetAddress + ".gpx");
+                DeleteThread = new Thread(openGPXThread);
+                DeleteThread.Start(e.RowIndex);
             }
         }
 
@@ -1335,6 +1340,18 @@ namespace ASTERIX
             {
                 EnableEndTimePicker = !EnableEndTimePicker;
                 ShowDataGridView();
+            }
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (mythread != null)
+            {
+                mythread.Abort();
+            }
+            if (updateThread != null)
+            {
+                updateThread.Abort();
             }
         }
 
