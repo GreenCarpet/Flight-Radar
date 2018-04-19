@@ -38,6 +38,9 @@ namespace ASTERIX
 
         object locker = new object();
 
+        int UPDATEGRIDMILLISECONDS = 5000;
+        int UPDATESTATUSMINUTE = 1;
+
         DataTable query(string query)
         {
             lock (locker) {
@@ -1008,6 +1011,8 @@ namespace ASTERIX
                             object[] Trek = ReadTrek(CoordinateTable, TargetAddress[Address]);
                             int countTargetAddress = Convert.ToInt32(query("SELECT COUNT(*) FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "'").Rows[0][0]);
 
+                            query("UPDATE Load SET Status = 'Завершен' WHERE EndTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
+
                             if (countTargetAddress > 0)
                             {
                                 if (countTargetAddress == Convert.ToInt32(query("SELECT COUNT(*) FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "' AND Status = 'Завершен'").Rows[0][0]))
@@ -1022,7 +1027,6 @@ namespace ASTERIX
                                     UPDATE(Trek, query("SELECT * FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "' AND Status = 'Активен'").Rows[0]);
                                   //  ShowDataGridView();
                                 }
-
                             }
                             else
                             {
@@ -1030,6 +1034,7 @@ namespace ASTERIX
                                 INSERT(Trek);
                                // ShowDataGridView();
                             }
+                            
                             ProgressBarValue(Address + 1);
                         }
                         File.Delete(pathList[0]);
@@ -1367,6 +1372,7 @@ namespace ASTERIX
 
         void timerThread()
         {
+            query("UPDATE Load SET Status = 'Завершен' WHERE EndTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
             int newchcksum = checksum();
             if (chcksum != newchcksum)
             {
@@ -1395,7 +1401,7 @@ namespace ASTERIX
             EmitterCategorylist = GetList(Properties.Resources.Emitter_Category);
             chcksum = checksum();
             ShowDataGridView();
-            UpdateTimer.Interval = 5000;
+            UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
         }
     }
