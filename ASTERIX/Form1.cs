@@ -36,6 +36,8 @@ namespace ASTERIX
 
         bool start = false;
 
+        bool userDeleting = true;
+
         object locker = new object();
 
         int UPDATEGRIDMILLISECONDS = 5000;
@@ -132,21 +134,33 @@ namespace ASTERIX
         }
         private void LoadGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
-            DataGridViewSelectedRowCollection deleteCollection = LoadGridView1.SelectedRows;
-
-            string delete = "DELETE FROM dbo.[Load] WHERE ";
-            for (int i = 0; i < deleteCollection.Count; i++)
+            if (userDeleting)
             {
-                if (i == 0)
+                DataGridViewSelectedRowCollection deleteCollection = LoadGridView1.SelectedRows;
+                string delete = "DELETE FROM dbo.[Load] WHERE ";
+                for (int i = 0; i < deleteCollection.Count; i++)
                 {
-                    delete += "Id = '" + Convert.ToString(LoadGridView1[0, deleteCollection[i].Index].Value) + "'";
+                    if (i == 0)
+                    {
+                        delete += "Id = '" + Convert.ToString(LoadGridView1[0, deleteCollection[i].Index].Value) + "'";
+                    }
+                    else
+                    {
+                        delete += " OR Id = '" + Convert.ToString(LoadGridView1[0, deleteCollection[i].Index].Value) + "'";
+                    }
                 }
-                else
+                query(delete);
+
+                if (LoadGridView1.SelectedRows.Count > 1)
                 {
-                    delete += " OR Id = '" + Convert.ToString(LoadGridView1[0, deleteCollection[i].Index].Value) + "'";
+                    userDeleting = false;
                 }
             }
-            query(delete);
+
+            if (LoadGridView1.SelectedRows.Count == 1)
+            {
+                userDeleting = true;
+            }
         }
         void ShowDataGridView()
         {
@@ -1351,6 +1365,8 @@ namespace ASTERIX
             {
                 StartStopBTN.BackgroundImage = Properties.Resources.mouseenterStop;
 
+                mythread.Abort();
+
                 progressBar1.Value = 0;
                 if (binStream != null)
                 {
@@ -1360,8 +1376,6 @@ namespace ASTERIX
                 start = false;
 
                 watcher.EnableRaisingEvents = false;
-
-                mythread.Abort();
             }
         }
 
