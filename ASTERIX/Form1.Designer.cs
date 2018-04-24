@@ -33,6 +33,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.LoadGridView1 = new System.Windows.Forms.DataGridView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.StartStopBTN = new System.Windows.Forms.PictureBox();
@@ -121,7 +122,6 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
-            this.splitContainer1.Panel1.Controls.Add(this.StartStopBTN);
             this.splitContainer1.Panel1.Controls.Add(this.progressBar1);
             this.splitContainer1.Panel1.Controls.Add(this.TargetAddressLabel);
             this.splitContainer1.Panel1.Controls.Add(this.EndTimePicker);
@@ -131,6 +131,7 @@
             this.splitContainer1.Panel1.Controls.Add(this.EmitterCategoryComboBox);
             this.splitContainer1.Panel1.Controls.Add(this.TargetAddressTextBox);
             this.splitContainer1.Panel1.Controls.Add(this.AircraftIdetificationTextBox);
+            this.splitContainer1.Panel1.Controls.Add(this.StartStopBTN);
             // 
             // splitContainer1.Panel2
             // 
@@ -143,11 +144,11 @@
             // 
             // StartStopBTN
             // 
-            this.StartStopBTN.BackgroundImage = global::ASTERIX.Properties.Resources.start;
+            this.StartStopBTN.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("StartStopBTN.BackgroundImage")));
             this.StartStopBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.StartStopBTN.Location = new System.Drawing.Point(12, 12);
+            this.StartStopBTN.Location = new System.Drawing.Point(-2, -4);
             this.StartStopBTN.Name = "StartStopBTN";
-            this.StartStopBTN.Size = new System.Drawing.Size(26, 22);
+            this.StartStopBTN.Size = new System.Drawing.Size(53, 53);
             this.StartStopBTN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.StartStopBTN.TabIndex = 8;
             this.StartStopBTN.TabStop = false;

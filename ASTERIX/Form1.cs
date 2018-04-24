@@ -1349,7 +1349,7 @@ namespace ASTERIX
 
             else
             {
-                StartStopBTN.BackgroundImage = Properties.Resources.start;
+                StartStopBTN.BackgroundImage = Properties.Resources.mouseenterStop;
 
                 progressBar1.Value = 0;
                 if (binStream != null)

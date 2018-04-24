@@ -98,12 +98,6 @@
     <None Include="Resources\Length_62.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\start.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\stop.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\mouseenter.png" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +108,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\mouseenterStop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\stop.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
