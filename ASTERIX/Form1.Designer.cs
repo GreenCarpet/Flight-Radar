@@ -36,7 +36,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.LoadGridView1 = new System.Windows.Forms.DataGridView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.StartStopBTN = new System.Windows.Forms.PictureBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.TargetAddressLabel = new System.Windows.Forms.Label();
             this.EndTimePicker = new System.Windows.Forms.DateTimePicker();
@@ -46,6 +45,7 @@
             this.EmitterCategoryComboBox = new System.Windows.Forms.ComboBox();
             this.TargetAddressTextBox = new System.Windows.Forms.TextBox();
             this.AircraftIdetificationTextBox = new System.Windows.Forms.TextBox();
+            this.StartStopBTN = new System.Windows.Forms.PictureBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
@@ -108,7 +108,7 @@
             this.LoadGridView1.TabStop = false;
             this.LoadGridView1.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.LoadGridView1_CellMouseDoubleClick);
             this.LoadGridView1.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.LoadGridView1_UserDeletingRow);
-            this.LoadGridView1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.LoadGridView1_KeyPress);
+            this.LoadGridView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.LoadGridView1_KeyDown);
             // 
             // splitContainer1
             // 
@@ -141,20 +141,6 @@
             this.splitContainer1.SplitterDistance = 37;
             this.splitContainer1.TabIndex = 1;
             this.splitContainer1.TabStop = false;
-            // 
-            // StartStopBTN
-            // 
-            this.StartStopBTN.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("StartStopBTN.BackgroundImage")));
-            this.StartStopBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.StartStopBTN.Location = new System.Drawing.Point(-2, -4);
-            this.StartStopBTN.Name = "StartStopBTN";
-            this.StartStopBTN.Size = new System.Drawing.Size(53, 53);
-            this.StartStopBTN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.StartStopBTN.TabIndex = 8;
-            this.StartStopBTN.TabStop = false;
-            this.StartStopBTN.Click += new System.EventHandler(this.StartStopBTN_Click);
-            this.StartStopBTN.MouseEnter += new System.EventHandler(this.StartStopBTN_MouseEnter);
-            this.StartStopBTN.MouseLeave += new System.EventHandler(this.StartStopBTN_MouseLeave);
             // 
             // progressBar1
             // 
@@ -245,6 +231,20 @@
             this.AircraftIdetificationTextBox.TabIndex = 0;
             this.AircraftIdetificationTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.AircraftIdetificationTextBox.TextChanged += new System.EventHandler(this.AircraftIdetificationTextBox_TextChanged);
+            // 
+            // StartStopBTN
+            // 
+            this.StartStopBTN.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("StartStopBTN.BackgroundImage")));
+            this.StartStopBTN.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.StartStopBTN.Location = new System.Drawing.Point(-2, -4);
+            this.StartStopBTN.Name = "StartStopBTN";
+            this.StartStopBTN.Size = new System.Drawing.Size(53, 53);
+            this.StartStopBTN.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.StartStopBTN.TabIndex = 8;
+            this.StartStopBTN.TabStop = false;
+            this.StartStopBTN.Click += new System.EventHandler(this.StartStopBTN_Click);
+            this.StartStopBTN.MouseEnter += new System.EventHandler(this.StartStopBTN_MouseEnter);
+            this.StartStopBTN.MouseLeave += new System.EventHandler(this.StartStopBTN_MouseLeave);
             // 
             // openFileDialog1
             // 

@@ -595,7 +595,10 @@ namespace ASTERIX
                                                         }
                                                     }
                                                 }
-                                                message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, "", "", Latitude, Longitude, TimeDecoder(TimePosition) });
+                                                if (TargetAddress != "")
+                                                {
+                                                    message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, "", "", Latitude, Longitude, TimeDecoder(TimePosition) });
+                                                }
                                             }
                                         }
                                     }
@@ -997,7 +1000,7 @@ namespace ASTERIX
 
             for (int time = 0; time < TrekCoordinate.Rows.Count - 1; time++)
             {
-                if (Convert.ToDateTime(TrekCoordinate.Rows[time + 1]["DTime"]) - Convert.ToDateTime(TrekCoordinate.Rows[time]["DTime"]) > TimeSpan.FromMinutes(20))
+                if (Convert.ToDateTime(TrekCoordinate.Rows[time + 1]["DTime"]) - Convert.ToDateTime(TrekCoordinate.Rows[time]["DTime"]) > TimeSpan.FromMinutes(UPDATESTATUSMINUTE))
                 {
                     i++;
                 }
@@ -1132,6 +1135,18 @@ namespace ASTERIX
             {
                 DeleteThread = new Thread(openGPXThread);
                 DeleteThread.Start(e.RowIndex);
+            }
+        }
+        private void LoadGridView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                e.Handled = true;
+                if (LoadGridView1.CurrentRow != null)
+                {
+                    DeleteThread = new Thread(openGPXThread);
+                    DeleteThread.Start(LoadGridView1.CurrentRow.Index);
+                }
             }
         }
 
@@ -1297,20 +1312,6 @@ namespace ASTERIX
         private void EndTimePicker_ValueChanged(object sender, EventArgs e)
         {
             ShowDataGridView();
-        }
-
-        private void LoadGridView1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == '\r')
-            {
-                string TargetAddress = Convert.ToString(LoadGridView1[1, LoadGridView1.CurrentRow.Index].Value);
-                XmlDocument doc = new XmlDocument();
-                doc.InnerXml = Convert.ToString(LoadGridView1[10, LoadGridView1.CurrentRow.Index].Value);
-                doc.Save(TargetAddress + ".gpx");
-                Process.Start(TargetAddress + ".gpx");
-                Thread.Sleep(2000);
-                File.Delete(TargetAddress + ".gpx");
-            }
         }
 
         private void BeginTimePicker_MouseDown(object sender, MouseEventArgs e)
