@@ -98,12 +98,6 @@
     <None Include="Resources\Length_62.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\mouseenter.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\mouseleave.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\mouseenterStart.png" />
   </ItemGroup>
   <ItemGroup>
