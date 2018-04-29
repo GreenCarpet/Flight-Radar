@@ -162,16 +162,16 @@ namespace ASTERIX
                 userDeleting = true;
             }
         }
-        void ShowDataGridView()
+        void ShowDataGridView(bool autoPosition)
         {
             string f = filter();
-            UpdateDataGridView(query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус', Gpx FROM Load " + f));
+            UpdateDataGridView(query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус', Gpx FROM Load " + f), autoPosition);
         }
-        public void UpdateDataGridView(DataTable table)
+        public void UpdateDataGridView(DataTable table, bool autoPosition)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<DataTable>(UpdateDataGridView), new object[] { table });
+                Invoke(new Action<DataTable, bool>(UpdateDataGridView), new object[] { table, autoPosition });
                 return;
             }
 
@@ -187,19 +187,21 @@ namespace ASTERIX
                     selectedId = Convert.ToInt32(LoadGridView1[0, LoadGridView1.CurrentCell.RowIndex].Value);
                 }
                 firstRow = LoadGridView1.FirstDisplayedScrollingRowIndex;
-
-                sortedColumn = LoadGridView1.SortedColumn.Index;
-                if (LoadGridView1.SortOrder == System.Windows.Forms.SortOrder.Ascending)
+                if (LoadGridView1.SortedColumn != null)
                 {
-                    sortDirection = ListSortDirection.Ascending;
-                }
-                else
-                {
-                    sortDirection = ListSortDirection.Descending;
+                    sortedColumn = LoadGridView1.SortedColumn.Index;
+                    if (LoadGridView1.SortOrder == System.Windows.Forms.SortOrder.Ascending)
+                    {
+                        sortDirection = ListSortDirection.Ascending;
+                    }
+                    else
+                    {
+                        sortDirection = ListSortDirection.Descending;
+                    }
                 }
             }
 
-            LoadGridView1.DataSource = table;
+            LoadGridView1.DataSource = table;  
 
             if (FirstSetting == false)
             {
@@ -212,7 +214,7 @@ namespace ASTERIX
                 FirstSetting = true;
             }
 
-            if (LoadGridView1.Rows.Count > 0)
+            if ((LoadGridView1.Rows.Count > 0) && (autoPosition))
             {
                 LoadGridView1.Sort(LoadGridView1.Columns[sortedColumn], sortDirection);
                 for (int row = 0; row < LoadGridView1.Rows.Count; row++)
@@ -1123,7 +1125,12 @@ namespace ASTERIX
             string TargetAddress = Convert.ToString(LoadGridView1[1, Convert.ToInt32(RowIndex)].Value);
             XmlDocument doc = new XmlDocument();
             doc.InnerXml = Convert.ToString(LoadGridView1[10, Convert.ToInt32(RowIndex)].Value);
+            if (File.Exists(TargetAddress + ".gpx"))
+            {
+                File.Delete(TargetAddress + ".gpx");
+            }
             doc.Save(TargetAddress + ".gpx");
+            File.SetAttributes(TargetAddress + ".gpx", FileAttributes.Hidden);
             Process.Start(TargetAddress + ".gpx");
             Thread.Sleep(10000);
             File.Delete(TargetAddress + ".gpx");
@@ -1285,33 +1292,33 @@ namespace ASTERIX
 
         private void TargetAddressTextBox_TextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView();
+            ShowDataGridView(false);
         }
         private void AircraftIdetificationTextBox_TextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView();
+            ShowDataGridView(false);
         }
         private void EmitterCategoryComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ShowDataGridView();
+            ShowDataGridView(false);
         }
         private void AirportDepatureTextBox_TextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView();
+            ShowDataGridView(false);
         }
         private void AirportArrivalTextBox_TextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView();
+            ShowDataGridView(false);
         }
 
         private void BeginTimePicker_ValueChanged(object sender, EventArgs e)
         {
-            ShowDataGridView();
+            ShowDataGridView(false);
         }
 
         private void EndTimePicker_ValueChanged(object sender, EventArgs e)
         {
-            ShowDataGridView();
+            ShowDataGridView(false);
         }
 
         private void BeginTimePicker_MouseDown(object sender, MouseEventArgs e)
@@ -1319,7 +1326,7 @@ namespace ASTERIX
             if (EnableBeginTimePicker != BeginTimePicker.Checked)
             {
                 EnableBeginTimePicker = !EnableBeginTimePicker;
-                ShowDataGridView();
+                ShowDataGridView(false);
             }
         }
 
@@ -1409,7 +1416,7 @@ namespace ASTERIX
             if (EnableEndTimePicker != EndTimePicker.Checked)
             {
                 EnableEndTimePicker = !EnableEndTimePicker;
-                ShowDataGridView();
+                ShowDataGridView(false);
             }
         }
 
@@ -1442,7 +1449,7 @@ namespace ASTERIX
             if (chcksum != newchcksum)
             {
                 chcksum = newchcksum;
-                ShowDataGridView();
+                ShowDataGridView(true);
             }
             updateThread.Abort();
         }
@@ -1465,7 +1472,7 @@ namespace ASTERIX
             ASCIIlist = GetList(Properties.Resources.Symbol);
             EmitterCategorylist = GetList(Properties.Resources.Emitter_Category);
             chcksum = checksum();
-            ShowDataGridView();
+            ShowDataGridView(false);
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
         }
