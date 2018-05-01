@@ -23,7 +23,7 @@ namespace ASTERIX
         List<string> ASCIIlist, EmitterCategorylist;
         SqlDataAdapter adapt;
         SqlConnection sqlConnection1;
-        Thread mythread, updateThread, DeleteThread;
+        Thread mythread, updateThread;
 
         List<string> pathList;
         FileSystemWatcher watcher;
@@ -1134,14 +1134,14 @@ namespace ASTERIX
             Process.Start(TargetAddress + ".gpx");
             Thread.Sleep(10000);
             File.Delete(TargetAddress + ".gpx");
-            DeleteThread.Abort();
+            Thread.CurrentThread.Abort();
         }
         private void LoadGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if ((e.Button == MouseButtons.Left) && (e.RowIndex >= 0))
             {
-                DeleteThread = new Thread(openGPXThread);
-                DeleteThread.Start(e.RowIndex);
+                Thread DeleteThread = new Thread(() => openGPXThread(e.RowIndex));
+                DeleteThread.Start();
             }
         }
         private void LoadGridView1_KeyDown(object sender, KeyEventArgs e)
@@ -1151,8 +1151,8 @@ namespace ASTERIX
                 e.Handled = true;
                 if (LoadGridView1.CurrentRow != null)
                 {
-                    DeleteThread = new Thread(openGPXThread);
-                    DeleteThread.Start(LoadGridView1.CurrentRow.Index);
+                    Thread DeleteThread = new Thread(() => openGPXThread(LoadGridView1.CurrentRow.Index));
+                    DeleteThread.Start();
                 }
             }
         }
