@@ -187,17 +187,18 @@ namespace ASTERIX
                     selectedId = Convert.ToInt32(LoadGridView1[0, LoadGridView1.CurrentCell.RowIndex].Value);
                 }
                 firstRow = LoadGridView1.FirstDisplayedScrollingRowIndex;
-                if (LoadGridView1.SortedColumn != null)
+            }
+
+            if (LoadGridView1.SortedColumn != null)
+            {
+                sortedColumn = LoadGridView1.SortedColumn.Index;
+                if (LoadGridView1.SortOrder == System.Windows.Forms.SortOrder.Ascending)
                 {
-                    sortedColumn = LoadGridView1.SortedColumn.Index;
-                    if (LoadGridView1.SortOrder == System.Windows.Forms.SortOrder.Ascending)
-                    {
-                        sortDirection = ListSortDirection.Ascending;
-                    }
-                    else
-                    {
-                        sortDirection = ListSortDirection.Descending;
-                    }
+                    sortDirection = ListSortDirection.Ascending;
+                }
+                else
+                {
+                    sortDirection = ListSortDirection.Descending;
                 }
             }
 
@@ -214,18 +215,22 @@ namespace ASTERIX
                 FirstSetting = true;
             }
 
-            if ((LoadGridView1.Rows.Count > 0) && (autoPosition))
+            LoadGridView1.Sort(LoadGridView1.Columns[sortedColumn], sortDirection);
+
+            if (LoadGridView1.Rows.Count > 0)
             {
-                LoadGridView1.Sort(LoadGridView1.Columns[sortedColumn], sortDirection);
-                for (int row = 0; row < LoadGridView1.Rows.Count; row++)
+                if (autoPosition)
                 {
-                    if (Convert.ToInt32(LoadGridView1[0, row].Value) == selectedId)
+                    for (int row = 0; row < LoadGridView1.Rows.Count; row++)
                     {
-                        LoadGridView1.CurrentCell = LoadGridView1[1, row];
-                        break;
+                        if (Convert.ToInt32(LoadGridView1[0, row].Value) == selectedId)
+                        {
+                            LoadGridView1.CurrentCell = LoadGridView1[1, row];
+                            break;
+                        }
                     }
+                    LoadGridView1.FirstDisplayedScrollingRowIndex = firstRow;
                 }
-                LoadGridView1.FirstDisplayedScrollingRowIndex = firstRow;
             }
         }
         public void ComboBoxFill()
