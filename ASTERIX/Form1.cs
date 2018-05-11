@@ -54,7 +54,7 @@ namespace ASTERIX
                     adapt.Fill(table);
                     return table;
                 }
-                catch (SqlException ex)
+                catch (InvalidOperationException ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
@@ -1508,6 +1508,7 @@ namespace ASTERIX
             catch(SqlException ex)
             {
                 MessageBox.Show(ex.Message);
+                Environment.Exit(0);
             }
             if (sqlConnection1.State == ConnectionState.Open)
             {
