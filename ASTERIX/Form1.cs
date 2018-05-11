@@ -45,12 +45,21 @@ namespace ASTERIX
 
         DataTable query(string query)
         {
-            lock (locker) {
-                adapt = new SqlDataAdapter(query, sqlConnection1);
-                DataTable table = new DataTable();
-                adapt.Fill(table);
-                return table;
+            lock (locker)
+            {
+                try
+                {
+                    adapt = new SqlDataAdapter(query, sqlConnection1);
+                    DataTable table = new DataTable();
+                    adapt.Fill(table);
+                    return table;
+                }
+                catch (SqlException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
+            return null;
         }
         void INSERT(object[] Trek)
         {
@@ -1128,17 +1137,28 @@ namespace ASTERIX
         void openGPXThread(object RowIndex)
         {
             string TargetAddress = Convert.ToString(LoadGridView1[1, Convert.ToInt32(RowIndex)].Value);
-            XmlDocument doc = new XmlDocument();
-            doc.InnerXml = Convert.ToString(LoadGridView1[10, Convert.ToInt32(RowIndex)].Value);
-            if (File.Exists(TargetAddress + ".gpx"))
+            try
             {
+                XmlDocument doc = new XmlDocument();
+                doc.InnerXml = Convert.ToString(LoadGridView1[10, Convert.ToInt32(RowIndex)].Value);
+                if (File.Exists(TargetAddress + ".gpx"))
+                {
+                    File.Delete(TargetAddress + ".gpx");
+                }
+                doc.Save(TargetAddress + ".gpx");
+                File.SetAttributes(TargetAddress + ".gpx", FileAttributes.Hidden);
+                Process.Start(TargetAddress + ".gpx");
+                Thread.Sleep(10000);
                 File.Delete(TargetAddress + ".gpx");
             }
-            doc.Save(TargetAddress + ".gpx");
-            File.SetAttributes(TargetAddress + ".gpx", FileAttributes.Hidden);
-            Process.Start(TargetAddress + ".gpx");
-            Thread.Sleep(10000);
-            File.Delete(TargetAddress + ".gpx");
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                if (File.Exists(TargetAddress + ".gpx"))
+                {
+                    File.Delete(TargetAddress + ".gpx");
+                }
+            }
             Thread.CurrentThread.Abort();
         }
         private void LoadGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -1425,6 +1445,18 @@ namespace ASTERIX
             }
         }
 
+        private void EndTimePicker_DropDown(object sender, EventArgs e)
+        {
+            EnableEndTimePicker = true;
+            ShowDataGridView(false);
+        }
+
+        private void BeginTimePicker_DropDown(object sender, EventArgs e)
+        {
+            EnableBeginTimePicker = true;
+            ShowDataGridView(false);
+        }
+
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             if (mythread != null)
@@ -1467,19 +1499,28 @@ namespace ASTERIX
 
         public Form1()
         {
-            InitializeComponent();
-            sqlConnection1 =
-          new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS;Initial Catalog=ADS-B;Persist Security Info=True;User ID=Adm;Password=Analiz2");
-            sqlConnection1.Open(); 
-
-            FSPECtable21 = GetFSPECtable(21);
-            FSPECtable62 = GetFSPECtable(62);
-            ASCIIlist = GetList(Properties.Resources.Symbol);
-            EmitterCategorylist = GetList(Properties.Resources.Emitter_Category);
-            chcksum = checksum();
-            ShowDataGridView(false);
-            UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
-            UpdateTimer.Enabled = true;
+            try
+            {
+                sqlConnection1 =
+              new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS;Initial Catalog=ADS-B;Persist Security Info=True;User ID=Adm;Password=Analiz2");
+                sqlConnection1.Open();
+            }
+            catch(SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            if (sqlConnection1.State == ConnectionState.Open)
+            {
+                InitializeComponent();
+                FSPECtable21 = GetFSPECtable(21);
+                FSPECtable62 = GetFSPECtable(62);
+                ASCIIlist = GetList(Properties.Resources.Symbol);
+                EmitterCategorylist = GetList(Properties.Resources.Emitter_Category);
+                chcksum = checksum();
+                ShowDataGridView(false);
+                UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
+                UpdateTimer.Enabled = true;
+            }
         }
     }
 }
