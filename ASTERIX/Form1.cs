@@ -1439,7 +1439,7 @@ namespace ASTERIX
 
         int checksum()
         {
-            DataTable Category = query("SELECT CHECKSUM_AGG(BINARY_CHECKSUM(*)) FROM Load");
+            DataTable Category = query("SELECT CHECKSUM_AGG(GETCHECKSUM()) FROM Load");
             if (Convert.ToString(Category.Rows[0][0]) != "")
             {
                 return Convert.ToInt32(Category.Rows[0][0]);
@@ -1449,7 +1449,7 @@ namespace ASTERIX
 
         void timerThread()
         {
-              query("UPDATE Load SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
+            query("UPDATE Load SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
             int newchcksum = checksum();
             if (chcksum != newchcksum)
             {
