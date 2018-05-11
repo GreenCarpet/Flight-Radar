@@ -98,7 +98,7 @@ namespace ASTERIX
 
             if ((DateTime.Parse(BeginTime) - DateTime.Parse(OldEndTime)) > TimeSpan.Parse("00:" + Convert.ToString(UPDATESTATUSMINUTE) + ":00"))
             {
-                query("UPDATE Load SET Status = 'Завершен' WHERE Id =" + Convert.ToString(oldRow[0]));
+                query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE Id =" + Convert.ToString(oldRow[0]));
                 INSERT(Trek);
                 return;
             }
@@ -128,7 +128,7 @@ namespace ASTERIX
                 doc.DocumentElement.ReplaceChild(node[0], newNode);
                 doc.DocumentElement.InnerXml = doc.DocumentElement.InnerXml.Replace("xmlns=\"\"", "");
 
-                string update = "UPDATE Load SET EndTime = '" + EndTime + "', Interval = '" + Interval + "', Gpx = '" + doc.InnerXml + "', AddTime = GETDATE() WHERE Id = " + Convert.ToString(oldRow[0]);
+                string update = "UPDATE dbo.[Load] SET EndTime = '" + EndTime + "', Interval = '" + Interval + "', Gpx = '" + doc.InnerXml + "', AddTime = GETDATE() WHERE Id = " + Convert.ToString(oldRow[0]);
                 query(update);
             }
         }
@@ -165,7 +165,7 @@ namespace ASTERIX
         void ShowDataGridView(bool autoPosition)
         {
             string f = filter();
-            UpdateDataGridView(query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус', Gpx FROM Load " + f), autoPosition);
+            UpdateDataGridView(query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус', Gpx FROM dbo.[Load] " + f), autoPosition);
         }
         public void UpdateDataGridView(DataTable table, bool autoPosition)
         {
@@ -241,7 +241,7 @@ namespace ASTERIX
                 return;
             }
             EmitterCategoryComboBox.Items.Clear();
-            DataTable Category = query("SELECT DISTINCT(EmitterCategory) FROM Load");
+            DataTable Category = query("SELECT DISTINCT(EmitterCategory) FROM dbo.[Load]");
             for (int row = 0; row < Category.Rows.Count; row++)
             {
                 EmitterCategoryComboBox.Items.Add(Convert.ToString(Category.Rows[row][0]));
@@ -1094,13 +1094,13 @@ namespace ASTERIX
                                         Trek[n] = Treks[i, n];
                                     }
 
-                                    query("UPDATE Load SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
+                                    query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
 
-                                    int countTargetAddress = Convert.ToInt32(query("SELECT COUNT(*) FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0][0]);
+                                    int countTargetAddress = Convert.ToInt32(query("SELECT COUNT(*) FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0][0]);
 
                                     if (countTargetAddress > 0)
                                     {
-                                        UPDATE(Trek, query("SELECT * FROM Load WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0]);
+                                        UPDATE(Trek, query("SELECT * FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0]);
                                     }
                                     else
                                     {
@@ -1439,7 +1439,7 @@ namespace ASTERIX
 
         int checksum()
         {
-            DataTable Category = query("SELECT CHECKSUM_AGG(GETCHECKSUM()) FROM Load");
+            DataTable Category = query("SELECT CHECKSUM_AGG(GETCHECKSUM()) FROM dbo.[Load]");
             if (Convert.ToString(Category.Rows[0][0]) != "")
             {
                 return Convert.ToInt32(Category.Rows[0][0]);
@@ -1449,7 +1449,7 @@ namespace ASTERIX
 
         void timerThread()
         {
-            query("UPDATE Load SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
+            query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
             int newchcksum = checksum();
             if (chcksum != newchcksum)
             {
@@ -1469,7 +1469,7 @@ namespace ASTERIX
         {
             InitializeComponent();
             sqlConnection1 =
-          new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS1;Initial Catalog=ADS-B;Persist Security Info=True;User ID=Adm;Password=Analiz2");
+          new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS;Initial Catalog=ADS-B;Persist Security Info=True;User ID=Adm;Password=Analiz2");
             sqlConnection1.Open(); 
 
             FSPECtable21 = GetFSPECtable(21);
