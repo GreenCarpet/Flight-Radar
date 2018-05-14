@@ -396,6 +396,7 @@ namespace ASTERIX
         string TimeDecoder(byte[] timebytes)
         {
             return Convert.ToString(DateTime.Now.Date.AddSeconds(Convert.ToDouble(BitConverter.ToInt32(timebytes.Reverse().ToArray(), 0)) / 128));
+            //return Convert.ToString(DateTime.Parse(query("SELECT GETUTCDATE()").Rows[0][0].ToString()).Date.AddSeconds(Convert.ToDouble(BitConverter.ToInt32(timebytes.Reverse().ToArray(), 0)) / 128).ToLocalTime());
         }
 
         bool chekcrash(byte header)
@@ -470,7 +471,7 @@ namespace ASTERIX
 
             openFileDialog1.FileName = filename;
 
-            if ((binStream = openFileDialog1.OpenFile()) != null)
+            if ((binStream = File.Open(filename,FileMode.Open)) != null)
             {
                 byte[] lengthPacket = new byte[4];
                 int length;
@@ -1120,7 +1121,7 @@ namespace ASTERIX
                             
                             ProgressBarValue(Address + 1);
                         }
-                        File.Delete(pathList[0]);
+                        File.Delete(pathList[file]);
                         ProgressBarValue(0);
                     }
                     catch (Exception)
@@ -1130,7 +1131,7 @@ namespace ASTERIX
                             file = 0;
                         continue;
                     }
-                }
+                } 
             }
             mythread.Abort();
         }
