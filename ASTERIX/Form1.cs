@@ -393,10 +393,10 @@ namespace ASTERIX
         {
             return Convert.ToDouble(BitConverter.ToInt32(coordinatebytes.Reverse().ToArray(), 0) * 0.00000536441802978515625);
         }
-        string TimeDecoder(byte[] timebytes)
+        string TimeDecoder(double second)
         {
-            return Convert.ToString(DateTime.Now.Date.AddSeconds(Convert.ToDouble(BitConverter.ToInt32(timebytes.Reverse().ToArray(), 0)) / 128));
-            //return Convert.ToString(DateTime.Parse(query("SELECT GETUTCDATE()").Rows[0][0].ToString()).Date.AddSeconds(Convert.ToDouble(BitConverter.ToInt32(timebytes.Reverse().ToArray(), 0)) / 128).ToLocalTime());
+            return Convert.ToString(DateTime.UtcNow.Date.AddSeconds(second));
+            // return Convert.ToString(query("SELECT CONVERT(DATETIME, SWITCHOFFSET(TODATETIMEOFFSET(DATEADD(SECOND, 10, CONVERT(DATETIME, CONVERT(DATE, GETUTCDATE()))), '+00:00'), DATENAME(TZ, SYSDATETIMEOFFSET())))").Rows[0][0]);    
         }
 
         bool chekcrash(byte header)
@@ -456,7 +456,7 @@ namespace ASTERIX
             message.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
             message.Columns.Add("Latitude", System.Type.GetType("System.Double"));
             message.Columns.Add("Longitude", System.Type.GetType("System.Double"));
-            message.Columns.Add("DTime", System.Type.GetType("System.DateTime"));
+            message.Columns.Add("DTime", System.Type.GetType("System.Double"));
 
             BitArray FSPEC;
 
@@ -614,7 +614,7 @@ namespace ASTERIX
                                                 }
                                                 if (TargetAddress != "")
                                                 {
-                                                    message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, "", "", Latitude, Longitude, TimeDecoder(TimePosition) });
+                                                    message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, "", "", Latitude, Longitude, Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
                                                 }
                                             }
                                         }
@@ -972,7 +972,7 @@ namespace ASTERIX
                                                 AircraftIdentification = AircraftIdentification.Replace("'", "");
                                                 if (TargetAddress != "")
                                                 {
-                                                    message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, Latitude, Longitude, TimeDecoder(TimePosition) });
+                                                    message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, Latitude, Longitude, Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
                                                 }
                                             }
 
@@ -1011,13 +1011,13 @@ namespace ASTERIX
             NewTrek.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
             NewTrek.Columns.Add("Latitude", System.Type.GetType("System.Double"));
             NewTrek.Columns.Add("Longitude", System.Type.GetType("System.Double"));
-            NewTrek.Columns.Add("DTime", System.Type.GetType("System.DateTime"));
+            NewTrek.Columns.Add("DTime", System.Type.GetType("System.Double"));
 
             int i = 0;
 
             for (int time = 0; time < TrekCoordinate.Rows.Count - 1; time++)
             {
-                if (Convert.ToDateTime(TrekCoordinate.Rows[time + 1]["DTime"]) - Convert.ToDateTime(TrekCoordinate.Rows[time]["DTime"]) > TimeSpan.FromMinutes(UPDATESTATUSMINUTE))
+                if (Convert.ToDouble(TrekCoordinate.Rows[time + 1]["DTime"]) - Convert.ToDouble(TrekCoordinate.Rows[time]["DTime"]) > UPDATESTATUSMINUTE * 60)
                 {
                     i++;
                 }
@@ -1031,10 +1031,10 @@ namespace ASTERIX
             {
                 if (time > 0)
                 {
-                    if (((Convert.ToDateTime(TrekCoordinate.Rows[time]["DTime"]) - Convert.ToDateTime(TrekCoordinate.Rows[time - 1]["DTime"]) > TimeSpan.FromMinutes(UPDATESTATUSMINUTE)) || (time == TrekCoordinate.Rows.Count - 1)) && (NewTrek.Rows.Count > 0))
+                    if (((Convert.ToDouble(TrekCoordinate.Rows[time]["DTime"]) - Convert.ToDouble(TrekCoordinate.Rows[time - 1]["DTime"]) > UPDATESTATUSMINUTE * 60) || (time == TrekCoordinate.Rows.Count - 1)) && (NewTrek.Rows.Count > 0))
                     {
-                        string BeginTime = Convert.ToString(NewTrek.Rows[0]["DTime"]);
-                        string EndTime = Convert.ToString(NewTrek.Rows[NewTrek.Rows.Count - 1]["DTime"]);
+                        string BeginTime = TimeDecoder(Convert.ToDouble(NewTrek.Rows[0]["DTime"]));
+                        string EndTime = TimeDecoder(Convert.ToDouble(NewTrek.Rows[NewTrek.Rows.Count - 1]["DTime"]));
                         string Interval = (DateTime.Parse(EndTime) - DateTime.Parse(BeginTime)).ToString();
 
                         TrekInfo[i, 0] = NewTrek.Rows[0]["TargetAddress"];
@@ -1055,7 +1055,7 @@ namespace ASTERIX
                         NewTrek.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
                         NewTrek.Columns.Add("Latitude", System.Type.GetType("System.Double"));
                         NewTrek.Columns.Add("Longitude", System.Type.GetType("System.Double"));
-                        NewTrek.Columns.Add("DTime", System.Type.GetType("System.DateTime"));
+                        NewTrek.Columns.Add("DTime", System.Type.GetType("System.Double"));
 
                         i++;
                     }
@@ -1503,7 +1503,7 @@ namespace ASTERIX
             try
             {
                 sqlConnection1 =
-              new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS;Initial Catalog=ADS-B;Persist Security Info=True;User ID=Adm;Password=Analiz2");
+              new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS;Initial Catalog=ADS-B(TEST);Persist Security Info=True;User ID=Adm;Password=Analiz2");
                 sqlConnection1.Open();
             }
             catch(SqlException ex)
