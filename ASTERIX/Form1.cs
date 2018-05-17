@@ -494,50 +494,48 @@ namespace ASTERIX
                                             if (FSPEC.Get((FSPEC.Length - 1) - FSPECbit) == true)
                                             {
                                                 string di = Convert.ToString(FSPECtable21.Rows[FSPECbit]["Data Item"]);
-                                                if ((di == "040") || (di == "090") || (di == "220") || (di == "110") || (di == "271") || (di == "295"))
+                                                if ((di == "040") || (di == "090") || (di == "220") || (di == "110") || (di == "271"))
                                                 {
-                                                    if (di == "295")
-                                                    {
-                                                        BitArray DataAgesFSPEC = GetVariableField();
-                                                        int countoctet = 0;
-                                                        for (int bit = 0; bit < DataAgesFSPEC.Length; bit++)
-                                                        {
-                                                            if (DataAgesFSPEC.Get(bit) == true)
-                                                            {
-                                                                countoctet++;
-                                                            }
-                                                        }
-                                                        countoctet -= (DataAgesFSPEC.Length / 8 - 1);
-                                                        if (chekEndPacket(endPacket, countoctet))
-                                                        {
-                                                            binStream.Seek(countoctet, SeekOrigin.Current);
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        GetVariableField();
-                                                    }
+                                                    GetVariableField();
                                                 }
                                                 else
                                                 {
-                                                    if ((di == "130") || (di == "131") || (di == "170") || (di == "SP") || (di == "073") || (di == "080") || (di == "020") || (di == "RE"))
+                                                    switch (di)
                                                     {
-                                                        if (di == "131")
-                                                        {
-                                                            if (chekEndPacket(endPacket, 4))
+                                                        case "020":
                                                             {
-                                                                binStream.Read(Latitudebytes, 0, 4);
+                                                                if (chekEndPacket(endPacket, 1))
+                                                                {
+                                                                    EmitterCategory = EmitterCategorylist[binStream.ReadByte()];
+                                                                }
+                                                                break;
                                                             }
-                                                            Latitude = CoordinateDecoder131(Latitudebytes);
-                                                            if (chekEndPacket(endPacket, 4))
+                                                        case "073":
                                                             {
-                                                                binStream.Read(Longitudebytes, 0, 4);
+                                                                if (chekEndPacket(endPacket, 3))
+                                                                {
+                                                                    binStream.Read(TimePosition, 1, 3);
+                                                                }
+                                                                break;
                                                             }
-                                                            Longitude = CoordinateDecoder131(Longitudebytes);
-                                                        }
-                                                        else
-                                                        {
-                                                            if (di == "130")
+                                                        case "080":
+                                                            {
+                                                                if (chekEndPacket(endPacket, 3))
+                                                                {
+                                                                    binStream.Read(TargetAddressbytes, 0, 3);
+                                                                }
+                                                                TargetAddress = "0x";
+                                                                for (int i = 0; i < 3; i++)
+                                                                {
+                                                                    if (Convert.ToString(TargetAddressbytes[i], 16).Length < 2)
+                                                                    {
+                                                                        TargetAddress += "0";
+                                                                    }
+                                                                    TargetAddress += Convert.ToString(TargetAddressbytes[i], 16);
+                                                                }
+                                                                break;
+                                                            }
+                                                        case "130":
                                                             {
                                                                 if (chekEndPacket(endPacket, 3))
                                                                 {
@@ -549,69 +547,75 @@ namespace ASTERIX
                                                                     binStream.Read(Longitudebytes, 1, 3);
                                                                 }
                                                                 Longitude = CoordinateDecoder130(Longitudebytes);
+                                                                break;
                                                             }
-                                                        }
-                                                        if (di == "170")
-                                                        {
-                                                            if (chekEndPacket(endPacket, 6))
+                                                        case "131":
                                                             {
-                                                                binStream.Read(AircraftIdentificationbytes, 0, 6);
-                                                            }
-                                                            AircraftIdentification = ASCIIDecoder(AircraftIdentificationbytes, ASCIIlist);
-                                                        }
-                                                        if (di == "073")
-                                                        {
-                                                            if (chekEndPacket(endPacket, 3))
-                                                            {
-                                                                binStream.Read(TimePosition, 1, 3);
-                                                            }
-                                                        }
-                                                        if (di == "SP")
-                                                        {
-                                                            if (chekEndPacket(endPacket, binStream.ReadByte() - 1))
-                                                            {
-                                                                binStream.Position -= 1;
-                                                                binStream.Seek(binStream.ReadByte() - 1, SeekOrigin.Current);
-                                                            }
-                                                        }
-                                                        if (di == "RE")
-                                                        {
-                                                            if (chekEndPacket(endPacket, binStream.ReadByte() - 1))
-                                                            {
-                                                                binStream.Position -= 1;
-                                                                binStream.Seek(binStream.ReadByte() - 1, SeekOrigin.Current);
-                                                            }
-                                                        }
-                                                        if (di == "080")
-                                                        {
-                                                            if (chekEndPacket(endPacket, 3))
-                                                            {
-                                                                binStream.Read(TargetAddressbytes, 0, 3);
-                                                            }
-                                                            TargetAddress = "0x";
-                                                            for (int i = 0; i < 3; i++)
-                                                            {
-                                                                if (Convert.ToString(TargetAddressbytes[i], 16).Length < 2)
+                                                                if (chekEndPacket(endPacket, 4))
                                                                 {
-                                                                    TargetAddress += "0";
+                                                                    binStream.Read(Latitudebytes, 0, 4);
                                                                 }
-                                                                TargetAddress += Convert.ToString(TargetAddressbytes[i], 16);
+                                                                Latitude = CoordinateDecoder131(Latitudebytes);
+                                                                if (chekEndPacket(endPacket, 4))
+                                                                {
+                                                                    binStream.Read(Longitudebytes, 0, 4);
+                                                                }
+                                                                Longitude = CoordinateDecoder131(Longitudebytes);
+                                                                break;
                                                             }
-                                                        }
-                                                        if (di == "020")
-                                                        {
-                                                            if (chekEndPacket(endPacket, 1))
+                                                        case "170":
                                                             {
-                                                                EmitterCategory = EmitterCategorylist[binStream.ReadByte()];
+                                                                if (chekEndPacket(endPacket, 6))
+                                                                {
+                                                                    binStream.Read(AircraftIdentificationbytes, 0, 6);
+                                                                }
+                                                                AircraftIdentification = ASCIIDecoder(AircraftIdentificationbytes, ASCIIlist);
+                                                                break;
                                                             }
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (chekEndPacket(endPacket, Convert.ToInt32(FSPECtable21.Rows[FSPECbit]["length"])))
-                                                        {
-                                                            binStream.Seek(Convert.ToInt32(FSPECtable21.Rows[FSPECbit]["length"]), SeekOrigin.Current);
-                                                        }
+                                                        case "295":
+                                                            {
+                                                                BitArray DataAgesFSPEC = GetVariableField();
+                                                                int countoctet = 0;
+                                                                for (int bit = 0; bit < DataAgesFSPEC.Length; bit++)
+                                                                {
+                                                                    if (DataAgesFSPEC.Get(bit) == true)
+                                                                    {
+                                                                        countoctet++;
+                                                                    }
+                                                                }
+                                                                countoctet -= (DataAgesFSPEC.Length / 8 - 1);
+                                                                if (chekEndPacket(endPacket, countoctet))
+                                                                {
+                                                                    binStream.Seek(countoctet, SeekOrigin.Current);
+                                                                }
+                                                                break;
+                                                            }
+                                                        case "RE":
+                                                            {
+                                                                if (chekEndPacket(endPacket, binStream.ReadByte() - 1))
+                                                                {
+                                                                    binStream.Position -= 1;
+                                                                    binStream.Seek(binStream.ReadByte() - 1, SeekOrigin.Current);
+                                                                }
+                                                                break;
+                                                            }
+                                                        case "SP":
+                                                            {
+                                                                if (chekEndPacket(endPacket, binStream.ReadByte() - 1))
+                                                                {
+                                                                    binStream.Position -= 1;
+                                                                    binStream.Seek(binStream.ReadByte() - 1, SeekOrigin.Current);
+                                                                }
+                                                                break;
+                                                            }
+                                                        default:
+                                                            {
+                                                                if (chekEndPacket(endPacket, Convert.ToInt32(FSPECtable21.Rows[FSPECbit]["length"])))
+                                                                {
+                                                                    binStream.Seek(Convert.ToInt32(FSPECtable21.Rows[FSPECbit]["length"]), SeekOrigin.Current);
+                                                                }
+                                                                break;
+                                                            }
                                                     }
                                                 }
                                             }
@@ -664,7 +668,7 @@ namespace ASTERIX
                                             if ((FSPEC.Get((FSPEC.Length - 1) - FSPECbit) == true) && (FSPECbit < 39))
                                             {
                                                 string di = Convert.ToString(FSPECtable62.Rows[FSPECbit]["Data Item"]);
-                                                if ((di == "380") || (di == "080") || (di == "290") || (di == "295") || (di == "390") || (di == "270") || (di == "110") || (di == "500") || (di == "340") || (di == "RE"))
+                                             /*   if ((di == "380") || (di == "080") || (di == "290") || (di == "295") || (di == "390") || (di == "270") || (di == "110") || (di == "500") || (di == "340") || (di == "RE"))
                                                 {
                                                     if ((di == "110") || (di == "290") || (di == "295") || (di == "340") || (di == "380") || (di == "390") || (di == "500"))
                                                     {
@@ -968,7 +972,7 @@ namespace ASTERIX
                                                             break;
                                                         }
                                                     }
-                                                }
+                                                }*/
                                             }
                                         }
                                         AircraftIdentification = AircraftIdentification.Replace("'", "");
