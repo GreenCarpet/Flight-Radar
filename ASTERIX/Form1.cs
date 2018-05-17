@@ -174,7 +174,7 @@ namespace ASTERIX
         void ShowDataGridView(bool autoPosition)
         {
             string f = filter();
-            UpdateDataGridView(query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус', Gpx FROM dbo.[Load] " + f), autoPosition);
+            UpdateDataGridView(query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
         }
         public void UpdateDataGridView(DataTable table, bool autoPosition)
         {
@@ -399,7 +399,7 @@ namespace ASTERIX
         }
         string TimeDecoder(double second)
         {
-            return Convert.ToString(DateTime.UtcNow.Date.AddSeconds(second));
+            return Convert.ToString(DateTime.UtcNow.Date.AddSeconds(second).ToLocalTime());
             // return Convert.ToString(query("SELECT CONVERT(DATETIME, SWITCHOFFSET(TODATETIMEOFFSET(DATEADD(SECOND, 10, CONVERT(DATETIME, CONVERT(DATE, GETUTCDATE()))), '+00:00'), DATENAME(TZ, SYSDATETIMEOFFSET())))").Rows[0][0]);    
         }
 
@@ -454,7 +454,6 @@ namespace ASTERIX
             byte[] Callsing = new byte[7];
 
             openFileDialog1.FileName = filename;
-            List<int> lenlist = new List<int>();
 
             if ((binStream = File.Open(filename,FileMode.Open)) != null)
             {
@@ -1117,7 +1116,7 @@ namespace ASTERIX
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message);
+                       // MessageBox.Show(ex.Message);
                         if (binStream != null)
                         {
                             binStream.Close();
@@ -1137,7 +1136,7 @@ namespace ASTERIX
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.InnerXml = Convert.ToString(LoadGridView1[10, Convert.ToInt32(RowIndex)].Value);
+                doc.InnerXml = Convert.ToString(query("SELECT GPX FROM [LOAD] WHERE ID = '" + Convert.ToString(LoadGridView1[0, Convert.ToInt32(RowIndex)].Value) + "'").Rows[0][0]);
                 if (File.Exists(TargetAddress + ".gpx"))
                 {
                     File.Delete(TargetAddress + ".gpx");
@@ -1474,6 +1473,11 @@ namespace ASTERIX
                 return Convert.ToInt32(Category.Rows[0][0]);
             }
             return 0;
+        }
+
+        private void AircraftIdetificationTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            AircraftIdetificationTextBox.BackColor =Color.FromKnownColor (KnownColor.ScrollBar);
         }
 
         void timerThread()
