@@ -6,23 +6,19 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Collections;
 using System.Xml;
-using System.Data.SqlClient;
 using System.Threading;
 
 namespace ASTERIX
 {
-    public partial class Form1 : Form
+    public partial class GUI : Form
     {
         Stream binStream;
         DataTable FSPECtable21, FSPECtable62;
         List<string> ASCIIlist, EmitterCategorylist;
-        SqlDataAdapter adapt;
-        SqlConnection sqlConnection1;
         Thread mythread, updateThread;
 
         List<string> pathList;
@@ -41,142 +37,8 @@ namespace ASTERIX
         object locker = new object();
 
         int UPDATEGRIDMILLISECONDS = 5000;
-        int UPDATESTATUSMINUTE = 20;
+        public static int UPDATESTATUSMINUTE = 20;
 
-        DataTable query(string query)
-        {
-            lock (locker)
-            {
-                try
-                {
-                    adapt = new SqlDataAdapter(query, sqlConnection1);
-                    DataTable table = new DataTable();
-                    adapt.Fill(table);
-                    return table;
-                }
-                catch (InvalidOperationException ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            return null;
-        }
-        void INSERT(object[] Trek)
-        {
-            string Status = "Активен";
-
-            string TargetAddress = (string)Trek[0];
-            string AircraftIdentification = (string)Trek[1];
-            string EmitterCategory = (string)Trek[2];
-            string AirportDepature = (string)Trek[3];
-            string AirportArrival = (string)Trek[4];
-            string BeginTime = (string)Trek[5];
-            string EndTime = (string)Trek[6];
-            string Interval = (string)Trek[7];
-            DataTable Aircraftmessage = (DataTable)Trek[8];
-
-            XmlDocument doc = new XmlDocument();
-            doc.InnerXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?> <gpx xmlns = \"http://www.topografix.com/GPX/1/1\" creator = \"MapSource 6.16.3\" version = \"1.1\"> </gpx>";
-
-            XmlElement name = doc.CreateElement("name");
-            name.InnerText = TargetAddress;
-
-            XmlElement rte = doc.CreateElement("rte");
-            rte.AppendChild(name);
-
-            for (int point = 0; point < Aircraftmessage.Rows.Count; point++)
-            {
-                XmlElement rtept = doc.CreateElement("rtept");
-                rtept.IsEmpty = true;
-                rtept.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
-                rtept.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
-                if (Convert.ToString(Aircraftmessage.Rows[point]["Height"]) != "")
-                {
-                    XmlElement ele = doc.CreateElement("ele");
-                    ele.InnerText = Convert.ToString(Aircraftmessage.Rows[point]["Height"]);
-                    rtept.AppendChild(ele);
-                }
-
-                    XmlElement sym = doc.CreateElement("sym");
-                if (point == 0)
-                {
-                sym.InnerText = "Airport";                
-                }
-                else
-                {
-                    sym.InnerText = "Waypoint";
-                }
-                rtept.AppendChild(sym);
-
-                rte.AppendChild(rtept);
-            }
-
-            doc.DocumentElement.AppendChild(rte);
-            doc.DocumentElement.InnerXml = doc.DocumentElement.InnerXml.Replace("xmlns=\"\"", "");
-
-            string insert = "INSERT INTO dbo.[Load] (TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, BeginTime, EndTime, Interval, Status, Gpx, AddTime) VALUES('" + TargetAddress + "','" + AircraftIdentification + "','" + EmitterCategory + "','" + AirportDepature + "','" + AirportArrival + "','" + BeginTime + "','" + EndTime + "','" + Interval + "','" + Status + "','" + doc.InnerXml + "', GETDATE())";
-            query(insert);
-        }
-        void UPDATE(object[] Trek, DataRow oldRow)
-        {
-            string OldEndTime = Convert.ToString(oldRow[7]);
-            string BeginTime = (string)Trek[5];
-
-            if ((DateTime.Parse(BeginTime) - DateTime.Parse(OldEndTime)) > TimeSpan.Parse("00:" + Convert.ToString(UPDATESTATUSMINUTE) + ":00"))
-            {
-                query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE Id =" + Convert.ToString(oldRow[0]));
-                INSERT(Trek);
-                return;
-            }
-            string OldBeginTime = Convert.ToString(oldRow[6]);
-            string EndTime = (string)Trek[6];
-            string Interval = (DateTime.Parse(EndTime) - DateTime.Parse(OldBeginTime)).ToString();
-
-            Interval = Interval.Replace("-","");
-
-            if (BeginTime != OldBeginTime)
-            {
-                DataTable Aircraftmessage = (DataTable)Trek[8];
-
-                XmlDocument doc = new XmlDocument();
-                doc.InnerXml = Convert.ToString(oldRow[10]);
-                XmlNodeList node = doc.DocumentElement.ChildNodes;
-
-                XmlNode newNode = node[0];
-                for (int point = 0; point < Aircraftmessage.Rows.Count; point++)
-                {
-                    XmlElement rtept = doc.CreateElement("rtept");
-                    rtept.IsEmpty = true;
-                    rtept.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
-                    rtept.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
-
-                    if (Convert.ToString(Aircraftmessage.Rows[point]["Height"]) != "")
-                    {
-                        XmlElement ele = doc.CreateElement("ele");
-                        ele.InnerText = Convert.ToString(Aircraftmessage.Rows[point]["Height"]);
-                        rtept.AppendChild(ele);
-                    }
-
-                    XmlElement sym = doc.CreateElement("sym");
-                    if (point == 0)
-                    {
-                        sym.InnerText = "Airport";
-                    }
-                    else
-                    {
-                        sym.InnerText = "Waypoint";
-                    }
-                    rtept.AppendChild(sym);
-
-                    newNode.AppendChild(rtept);
-                }
-                doc.DocumentElement.ReplaceChild(node[0], newNode);
-                doc.DocumentElement.InnerXml = doc.DocumentElement.InnerXml.Replace("xmlns=\"\"", "");
-
-                string update = "UPDATE dbo.[Load] SET EndTime = '" + EndTime + "', Interval = '" + Interval + "', Gpx = '" + doc.InnerXml + "', AddTime = GETDATE() WHERE Id = " + Convert.ToString(oldRow[0]);
-                query(update);
-            }
-        }
         private void LoadGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             if (userDeleting)
@@ -194,7 +56,7 @@ namespace ASTERIX
                         delete += " OR Id = '" + Convert.ToString(LoadGridView1[0, deleteCollection[i].Index].Value) + "'";
                     }
                 }
-                query(delete);
+                SQL.query(delete);
 
                 if (LoadGridView1.SelectedRows.Count > 1)
                 {
@@ -210,7 +72,7 @@ namespace ASTERIX
         void ShowDataGridView(bool autoPosition)
         {
             string f = filter();
-            UpdateDataGridView(query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
+            UpdateDataGridView(SQL.query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
         }
         public void UpdateDataGridView(DataTable table, bool autoPosition)
         {
@@ -286,7 +148,7 @@ namespace ASTERIX
                 return;
             }
             EmitterCategoryComboBox.Items.Clear();
-            DataTable Category = query("SELECT DISTINCT(EmitterCategory) FROM dbo.[Load]");
+            DataTable Category = SQL.query("SELECT DISTINCT(EmitterCategory) FROM dbo.[Load]");
             for (int row = 0; row < Category.Rows.Count; row++)
             {
                 EmitterCategoryComboBox.Items.Add(Convert.ToString(Category.Rows[row][0]));
@@ -437,13 +299,11 @@ namespace ASTERIX
         {
             return Convert.ToInt32(BitConverter.ToInt16(heightbytes.Reverse().ToArray(), 0) * 6.25 * 0.3048);
         }
-
         string TimeDecoder(double second)
         {
             return Convert.ToString(DateTime.UtcNow.Date.AddSeconds(second).ToLocalTime());
             // return Convert.ToString(query("SELECT CONVERT(DATETIME, SWITCHOFFSET(TODATETIMEOFFSET(DATEADD(SECOND, 10, CONVERT(DATETIME, CONVERT(DATE, GETUTCDATE()))), '+00:00'), DATENAME(TZ, SYSDATETIMEOFFSET())))").Rows[0][0]);    
         }
-
         bool chekcrash(int lengthSIG)
         {
             byte[] lengthPacket = new byte[2];
@@ -460,7 +320,6 @@ namespace ASTERIX
                 return false;
             }
         }
-
         bool chekEndPacket(int endPacket, int offset)
         {
             if (binStream.Position + offset > endPacket)
@@ -470,7 +329,6 @@ namespace ASTERIX
             }
             return true;
         }
-
         DataTable ReadFile(string filename)
         {
             DataTable message = new DataTable();
@@ -1149,17 +1007,17 @@ namespace ASTERIX
                                         Trek[n] = Treks[i, n];
                                     }
 
-                                    query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
+                                    SQL.query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
 
-                                    int countTargetAddress = Convert.ToInt32(query("SELECT COUNT(*) FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0][0]);
+                                    int countTargetAddress = Convert.ToInt32(SQL.query("SELECT COUNT(*) FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0][0]);
 
                                     if (countTargetAddress > 0)
                                     {
-                                        UPDATE(Trek, query("SELECT * FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0]);
+                                        SQL.UPDATE(Trek, SQL.query("SELECT * FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0]);
                                     }
                                     else
                                     {
-                                        INSERT(Trek);
+                                        SQL.INSERT(Trek);
                                     }
                                 }
                             }
@@ -1191,7 +1049,7 @@ namespace ASTERIX
             try
             {
                 XmlDocument doc = new XmlDocument();
-                doc.InnerXml = Convert.ToString(query("SELECT GPX FROM [LOAD] WHERE ID = '" + Convert.ToString(LoadGridView1[0, Convert.ToInt32(RowIndex)].Value) + "'").Rows[0][0]);
+                doc.InnerXml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Convert.ToString(LoadGridView1[0, Convert.ToInt32(RowIndex)].Value) + "'").Rows[0][0]);
                 if (File.Exists(TargetAddress + ".gpx"))
                 {
                     File.Delete(TargetAddress + ".gpx");
@@ -1522,7 +1380,7 @@ namespace ASTERIX
 
         int checksum()
         {
-            DataTable Category = query("SELECT CHECKSUM_AGG(GETCHECKSUM()) FROM dbo.[Load]");
+            DataTable Category = SQL.query("SELECT CHECKSUM_AGG(GETCHECKSUM()) FROM dbo.[Load]");
             if (Convert.ToString(Category.Rows[0][0]) != "")
             {
                 return Convert.ToInt32(Category.Rows[0][0]);
@@ -1537,7 +1395,7 @@ namespace ASTERIX
 
         void timerThread()
         {
-            query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
+            SQL.query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
             int newchcksum = checksum();
             if (chcksum != newchcksum)
             {
@@ -1553,20 +1411,9 @@ namespace ASTERIX
             updateThread.Start();
         }
 
-        public Form1()
+        public GUI()
         {
-            try
-            {
-                sqlConnection1 =
-              new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS;Initial Catalog=ADS-B(TEST);Persist Security Info=True;User ID=Adm;Password=Analiz2");
-                sqlConnection1.Open();
-            }
-            catch(SqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-                Environment.Exit(0);
-            }
-            if (sqlConnection1.State == ConnectionState.Open)
+            if (SQL.Connect())
             {
                 InitializeComponent();
                 FSPECtable21 = GetFSPECtable(21);
