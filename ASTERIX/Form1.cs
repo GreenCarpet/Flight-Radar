@@ -80,21 +80,26 @@ namespace ASTERIX
 
             XmlElement name = doc.CreateElement("name");
             name.InnerText = TargetAddress;
-            XmlElement trkseg = doc.CreateElement("trkseg");
+
+            XmlElement rte = doc.CreateElement("rte");
+            rte.AppendChild(name);
+
             for (int point = 0; point < Aircraftmessage.Rows.Count; point++)
             {
-                XmlElement trkpt = doc.CreateElement("trkpt");
-                trkpt.IsEmpty = true;
-                trkpt.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
-                trkpt.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
-                trkseg.AppendChild(trkpt);
+                XmlElement rtept = doc.CreateElement("rtept");
+                rtept.IsEmpty = true;
+                rtept.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
+                rtept.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
+               // if (point != 0)
+             //   {
+                    XmlElement sym = doc.CreateElement("sym");
+                    sym.InnerText = "Airport";
+                    rtept.AppendChild(sym);
+                //}
+                rte.AppendChild(rtept);
             }
 
-            XmlElement trk = doc.CreateElement("trk");
-            trk.AppendChild(name);
-            trk.AppendChild(trkseg);
-
-            doc.DocumentElement.AppendChild(trk);
+            doc.DocumentElement.AppendChild(rte);
             doc.DocumentElement.InnerXml = doc.DocumentElement.InnerXml.Replace("xmlns=\"\"", "");
 
             string insert = "INSERT INTO dbo.[Load] (TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, BeginTime, EndTime, Interval, Status, Gpx, AddTime) VALUES('" + TargetAddress + "','" + AircraftIdentification + "','" + EmitterCategory + "','" + AirportDepature + "','" + AirportArrival + "','" + BeginTime + "','" + EndTime + "','" + Interval + "','" + Status + "','" + doc.InnerXml + "', GETDATE())";
@@ -128,11 +133,11 @@ namespace ASTERIX
                 XmlNode newNode = node[0];
                 for (int point = 0; point < Aircraftmessage.Rows.Count; point++)
                 {
-                    XmlElement trkpt = doc.CreateElement("trkpt");
-                    trkpt.IsEmpty = true;
-                    trkpt.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
-                    trkpt.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
-                    newNode.ChildNodes[1].AppendChild(trkpt);
+                    XmlElement rtept = doc.CreateElement("rtept");
+                    rtept.IsEmpty = true;
+                    rtept.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
+                    rtept.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
+                    newNode.AppendChild(rtept);
                 }
                 doc.DocumentElement.ReplaceChild(node[0], newNode);
                 doc.DocumentElement.InnerXml = doc.DocumentElement.InnerXml.Replace("xmlns=\"\"", "");
