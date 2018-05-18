@@ -90,12 +90,24 @@ namespace ASTERIX
                 rtept.IsEmpty = true;
                 rtept.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
                 rtept.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
-               // if (point != 0)
-             //   {
+                if (Convert.ToString(Aircraftmessage.Rows[point]["Height"]) != "")
+                {
+                    XmlElement ele = doc.CreateElement("ele");
+                    ele.InnerText = Convert.ToString(Aircraftmessage.Rows[point]["Height"]);
+                    rtept.AppendChild(ele);
+                }
+
                     XmlElement sym = doc.CreateElement("sym");
-                    sym.InnerText = "Airport";
-                    rtept.AppendChild(sym);
-                //}
+                if (point == 0)
+                {
+                sym.InnerText = "Airport";                
+                }
+                else
+                {
+                    sym.InnerText = "Waypoint";
+                }
+                rtept.AppendChild(sym);
+
                 rte.AppendChild(rtept);
             }
 
@@ -137,6 +149,25 @@ namespace ASTERIX
                     rtept.IsEmpty = true;
                     rtept.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
                     rtept.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
+
+                    if (Convert.ToString(Aircraftmessage.Rows[point]["Height"]) != "")
+                    {
+                        XmlElement ele = doc.CreateElement("ele");
+                        ele.InnerText = Convert.ToString(Aircraftmessage.Rows[point]["Height"]);
+                        rtept.AppendChild(ele);
+                    }
+
+                    XmlElement sym = doc.CreateElement("sym");
+                    if (point == 0)
+                    {
+                        sym.InnerText = "Airport";
+                    }
+                    else
+                    {
+                        sym.InnerText = "Waypoint";
+                    }
+                    rtept.AppendChild(sym);
+
                     newNode.AppendChild(rtept);
                 }
                 doc.DocumentElement.ReplaceChild(node[0], newNode);
@@ -402,6 +433,11 @@ namespace ASTERIX
         {
             return Convert.ToDouble(BitConverter.ToInt32(coordinatebytes.Reverse().ToArray(), 0) * 0.00000536441802978515625);
         }
+        double HeightDecoder140(byte[] heightbytes)
+        {
+            return Convert.ToInt32(BitConverter.ToInt16(heightbytes.Reverse().ToArray(), 0) * 6.25 * 0.3048);
+        }
+
         string TimeDecoder(double second)
         {
             return Convert.ToString(DateTime.UtcNow.Date.AddSeconds(second).ToLocalTime());
@@ -445,6 +481,7 @@ namespace ASTERIX
             message.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
             message.Columns.Add("Latitude", System.Type.GetType("System.Double"));
             message.Columns.Add("Longitude", System.Type.GetType("System.Double"));
+            message.Columns.Add("Height", System.Type.GetType("System.String"));
             message.Columns.Add("DTime", System.Type.GetType("System.Double"));
 
             BitArray FSPEC;
@@ -457,6 +494,7 @@ namespace ASTERIX
             byte[] AirportDepaturebytes = new byte[4];
             byte[] AirportArrivalbytes = new byte[4];
             byte[] Callsing = new byte[7];
+            byte[] Heightbytes = new byte[2];
 
             openFileDialog1.FileName = filename;
 
@@ -488,9 +526,10 @@ namespace ASTERIX
                                     {
                                         string TargetAddress = "";
                                         string AircraftIdentification = "";
-                                        double Latitude = 0;
-                                        double Longitude = 0;
+                                        string Latitude = "";
+                                        string Longitude = "";
                                         string EmitterCategory = "";
+                                        string Height = "";
 
                                         FSPEC = GetVariableField();
                                         for (int FSPECbit = 0; FSPECbit < FSPEC.Length; FSPECbit++)
@@ -545,12 +584,12 @@ namespace ASTERIX
                                                                 {
                                                                     binStream.Read(Latitudebytes, 1, 3);
                                                                 }
-                                                                Latitude = CoordinateDecoder130(Latitudebytes);
+                                                                Latitude = Convert.ToString(CoordinateDecoder130(Latitudebytes));
                                                                 if (chekEndPacket(endPacket, 3))
                                                                 {
                                                                     binStream.Read(Longitudebytes, 1, 3);
                                                                 }
-                                                                Longitude = CoordinateDecoder130(Longitudebytes);
+                                                                Longitude = Convert.ToString(CoordinateDecoder130(Longitudebytes));
                                                                 break;
                                                             }
                                                         case "131":
@@ -559,12 +598,21 @@ namespace ASTERIX
                                                                 {
                                                                     binStream.Read(Latitudebytes, 0, 4);
                                                                 }
-                                                                Latitude = CoordinateDecoder131(Latitudebytes);
+                                                                Latitude = Convert.ToString(CoordinateDecoder131(Latitudebytes));
                                                                 if (chekEndPacket(endPacket, 4))
                                                                 {
                                                                     binStream.Read(Longitudebytes, 0, 4);
                                                                 }
-                                                                Longitude = CoordinateDecoder131(Longitudebytes);
+                                                                Longitude = Convert.ToString(CoordinateDecoder131(Longitudebytes));
+                                                                break;
+                                                            }
+                                                        case "140":
+                                                            {
+                                                                if (chekEndPacket(endPacket, 2))
+                                                                {
+                                                                    binStream.Read(Heightbytes, 0, 2);
+                                                                }
+                                                                Height = Convert.ToString(HeightDecoder140(Heightbytes));                                                              
                                                                 break;
                                                             }
                                                         case "170":
@@ -624,9 +672,9 @@ namespace ASTERIX
                                                 }
                                             }
                                         }
-                                        if (TargetAddress != "")
+                                        if ((TargetAddress != "") && (Latitude != "") && (Longitude != ""))
                                         {
-                                            message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, "", "", Latitude, Longitude, Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
+                                            message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, "", "", Latitude, Longitude, Height, Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
                                         }
                                     }
                                 }
@@ -648,8 +696,8 @@ namespace ASTERIX
                                     {
                                         string TargetAddress = "";
                                         string AircraftIdentification = "";
-                                        double Latitude = 0;
-                                        double Longitude = 0;
+                                        string Latitude = "";
+                                        string Longitude = "";
                                         string EmitterCategory = "";
                                         string AirportDepature = "";
                                         string AirportArrival = "";
@@ -696,7 +744,7 @@ namespace ASTERIX
                                                                 {
                                                                     break;
                                                                 }
-                                                                Latitude = CoordinateDecoder105(Latitudebytes);
+                                                                Latitude = Convert.ToString(CoordinateDecoder105(Latitudebytes));
                                                                 if (chekEndPacket(endPacket, 4))
                                                                 {
                                                                     binStream.Read(Longitudebytes, 0, 4);
@@ -705,7 +753,7 @@ namespace ASTERIX
                                                                 {
                                                                     break;
                                                                 }
-                                                                Longitude = CoordinateDecoder105(Longitudebytes);
+                                                                Longitude = Convert.ToString(CoordinateDecoder105(Longitudebytes));
                                                                 break;
                                                             }
                                                         case "110":
@@ -970,9 +1018,9 @@ namespace ASTERIX
                                             }
                                         }
 
-                                        if (TargetAddress != "")
+                                        if ((TargetAddress != "") && (Latitude != "") && (Longitude != ""))
                                         {
-                                            message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, Latitude, Longitude, Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
+                                            message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, Latitude, Longitude, "", Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
                                         }
                                     }
 
@@ -1006,6 +1054,7 @@ namespace ASTERIX
             NewTrek.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
             NewTrek.Columns.Add("Latitude", System.Type.GetType("System.Double"));
             NewTrek.Columns.Add("Longitude", System.Type.GetType("System.Double"));
+            NewTrek.Columns.Add("Height", System.Type.GetType("System.String"));
             NewTrek.Columns.Add("DTime", System.Type.GetType("System.Double"));
 
             int i = 0;
@@ -1050,6 +1099,7 @@ namespace ASTERIX
                         NewTrek.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
                         NewTrek.Columns.Add("Latitude", System.Type.GetType("System.Double"));
                         NewTrek.Columns.Add("Longitude", System.Type.GetType("System.Double"));
+                        NewTrek.Columns.Add("Height", System.Type.GetType("System.String"));
                         NewTrek.Columns.Add("DTime", System.Type.GetType("System.Double"));
 
                         i++;
