@@ -7,5 +7,11 @@ namespace ASTERIX.CAT
 {
     class _21
     {
+
+
+        public static void Decode(int endPacket)
+        {
+
+        }
     }
 }

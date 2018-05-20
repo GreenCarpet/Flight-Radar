@@ -29,15 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GUI));
             this.LoadGridView1 = new System.Windows.Forms.DataGridView();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.TargetAddressLabel = new System.Windows.Forms.Label();
             this.EndTimePicker = new System.Windows.Forms.DateTimePicker();
             this.BeginTimePicker = new System.Windows.Forms.DateTimePicker();
             this.AirportArrivalTextBox = new System.Windows.Forms.TextBox();
@@ -62,43 +61,43 @@
             this.LoadGridView1.AllowUserToAddRows = false;
             this.LoadGridView1.AllowUserToResizeColumns = false;
             this.LoadGridView1.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.MediumSeaGreen;
-            this.LoadGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.LoadGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
             this.LoadGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
             this.LoadGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
             this.LoadGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LoadGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.LoadGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.DarkSeaGreen;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.LoadGridView1.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.DarkSeaGreen;
+            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.LoadGridView1.DefaultCellStyle = dataGridViewCellStyle7;
             this.LoadGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LoadGridView1.GridColor = System.Drawing.Color.SeaGreen;
             this.LoadGridView1.Location = new System.Drawing.Point(0, 0);
             this.LoadGridView1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.LoadGridView1.Name = "LoadGridView1";
             this.LoadGridView1.ReadOnly = true;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
             this.LoadGridView1.RowHeadersWidth = 40;
             this.LoadGridView1.RowTemplate.Height = 25;
             this.LoadGridView1.RowTemplate.ReadOnly = true;
@@ -123,7 +122,6 @@
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer1.Panel1.Controls.Add(this.progressBar1);
-            this.splitContainer1.Panel1.Controls.Add(this.TargetAddressLabel);
             this.splitContainer1.Panel1.Controls.Add(this.EndTimePicker);
             this.splitContainer1.Panel1.Controls.Add(this.BeginTimePicker);
             this.splitContainer1.Panel1.Controls.Add(this.AirportArrivalTextBox);
@@ -148,15 +146,6 @@
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(260, 20);
             this.progressBar1.TabIndex = 1;
-            // 
-            // TargetAddressLabel
-            // 
-            this.TargetAddressLabel.AutoSize = true;
-            this.TargetAddressLabel.Location = new System.Drawing.Point(44, 17);
-            this.TargetAddressLabel.Name = "TargetAddressLabel";
-            this.TargetAddressLabel.Size = new System.Drawing.Size(18, 13);
-            this.TargetAddressLabel.TabIndex = 7;
-            this.TargetAddressLabel.Text = "0x";
             // 
             // EndTimePicker
             // 
@@ -221,9 +210,9 @@
             // 
             this.TargetAddressTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.TargetAddressTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.TargetAddressTextBox.Location = new System.Drawing.Point(64, 14);
+            this.TargetAddressTextBox.Location = new System.Drawing.Point(45, 14);
             this.TargetAddressTextBox.Name = "TargetAddressTextBox";
-            this.TargetAddressTextBox.Size = new System.Drawing.Size(60, 20);
+            this.TargetAddressTextBox.Size = new System.Drawing.Size(80, 20);
             this.TargetAddressTextBox.TabIndex = 1;
             this.TargetAddressTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.TargetAddressTextBox.TextChanged += new System.EventHandler(this.TargetAddressTextBox_TextChanged);
@@ -263,7 +252,7 @@
             // 
             this.UpdateTimer.Tick += new System.EventHandler(this.UpdateTimer_Tick);
             // 
-            // Form1
+            // GUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSize = true;
@@ -274,7 +263,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(1230, 800);
-            this.Name = "Form1";
+            this.Name = "GUI";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Flight Radar";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
@@ -299,7 +288,6 @@
         private System.Windows.Forms.TextBox AirportArrivalTextBox;
         private System.Windows.Forms.DateTimePicker BeginTimePicker;
         private System.Windows.Forms.DateTimePicker EndTimePicker;
-        private System.Windows.Forms.Label TargetAddressLabel;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.PictureBox StartStopBTN;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;

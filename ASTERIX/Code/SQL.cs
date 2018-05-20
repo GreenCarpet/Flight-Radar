@@ -35,7 +35,6 @@ namespace ASTERIX
                 return false;
             }
         }
-
         public static DataTable query(string query)
         {
             lock (locker)
@@ -54,7 +53,6 @@ namespace ASTERIX
             }
             return null;
         }
-
         public static void INSERT(object[] Trek)
         {
             string Status = "Активен";
@@ -111,13 +109,12 @@ namespace ASTERIX
             string insert = "INSERT INTO dbo.[Load] (TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, BeginTime, EndTime, Interval, Status, Gpx, AddTime) VALUES('" + TargetAddress + "','" + AircraftIdentification + "','" + EmitterCategory + "','" + AirportDepature + "','" + AirportArrival + "','" + BeginTime + "','" + EndTime + "','" + Interval + "','" + Status + "','" + doc.InnerXml + "', GETDATE())";
             query(insert);
         }
-
         public static void UPDATE(object[] Trek, DataRow oldRow)
         {
             string OldEndTime = Convert.ToString(oldRow[7]);
             string BeginTime = (string)Trek[5];
 
-            if ((DateTime.Parse(BeginTime) - DateTime.Parse(OldEndTime)) > TimeSpan.Parse("00:" + Convert.ToString(GUI.UPDATESTATUSMINUTE) + ":00"))
+            if ((DateTime.Parse(BeginTime) - DateTime.Parse(OldEndTime)) > TimeSpan.Parse("00:" + Convert.ToString(Protocol.UPDATESTATUSMINUTE) + ":00"))
             {
                 query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE Id =" + Convert.ToString(oldRow[0]));
                 INSERT(Trek);

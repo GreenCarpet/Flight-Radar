@@ -7,5 +7,6 @@ namespace ASTERIX.CAT
 {
     class _62
     {
+
     }
 }
