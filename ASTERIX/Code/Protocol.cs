@@ -14,8 +14,8 @@ namespace ASTERIX
         static GUI gui;
 
         static Stream binStream;
-        static DataTable FSPECtable21, FSPECtable62;
-        static List<string> ASCIIlist, EmitterCategorylist;
+        public static DataTable FSPECtable21, FSPECtable62;
+        public static List<string> ASCIIlist, EmitterCategorylist;
         public static Thread mythread;
 
         static List<string> pathList;
@@ -28,7 +28,7 @@ namespace ASTERIX
         {
             return Convert.ToDouble(BitConverter.ToInt32(coordinatebytes.Reverse().ToArray(), 0) * 0.00000536441802978515625);
         }
-        static string ASCIIDecoder(byte[] codebytes, List<string> ASCIItable)
+        public static string ASCIIDecoder(byte[] codebytes, List<string> ASCIItable)
         {
             BitArray bits = new BitArray(codebytes.Reverse().ToArray());
             BitArray codebits = new BitArray(8);
@@ -53,18 +53,7 @@ namespace ASTERIX
             return Convert.ToString(DateTime.UtcNow.Date.AddSeconds(second).ToLocalTime());
             // return Convert.ToString(query("SELECT CONVERT(DATETIME, SWITCHOFFSET(TODATETIMEOFFSET(DATEADD(SECOND, 10, CONVERT(DATETIME, CONVERT(DATE, GETUTCDATE()))), '+00:00'), DATENAME(TZ, SYSDATETIMEOFFSET())))").Rows[0][0]);    
         }
-        static double CoordinateDecoder130(byte[] coordinatebytes)
-        {
-            return Convert.ToDouble(BitConverter.ToInt32(coordinatebytes.Reverse().ToArray(), 0) * 0.000021457672119140625);
-        }
-        static double CoordinateDecoder131(byte[] coordinatebytes)
-        {
-            return Convert.ToDouble(BitConverter.ToInt32(coordinatebytes.Reverse().ToArray(), 0) / 5965232.3555555599221118074846386);
-        }
-        static double HeightDecoder140(byte[] heightbytes)
-        {
-            return Convert.ToInt32(BitConverter.ToInt16(heightbytes.Reverse().ToArray(), 0) * 6.25 * 0.3048);
-        }
+     
         #endregion
 
         public static void Init(GUI guiForm)
@@ -124,18 +113,18 @@ namespace ASTERIX
             }
         }
 
-        static BitArray GetVariableField()
+        public static BitArray GetVariableField(Stream stream)
         {
             List<byte> bytes = new List<byte>();
             do
             {
-                bytes.Add(Convert.ToByte(binStream.ReadByte()));
+                bytes.Add(Convert.ToByte(stream.ReadByte()));
             }
             while (new BitArray(BitConverter.GetBytes(bytes.Last())).Get(0) == true);
             bytes.Reverse();
             return (new BitArray(bytes.ToArray()));
         }
-        static DataTable GetFSPECtable(int category)
+        public static DataTable GetFSPECtable(int category)
         {
             DataTable FSPECtable = new DataTable();
             FSPECtable.Columns.Add("Data Item", System.Type.GetType("System.String"));
@@ -201,557 +190,395 @@ namespace ASTERIX
             message.Columns.Add("Height", System.Type.GetType("System.String"));
             message.Columns.Add("DTime", System.Type.GetType("System.Double"));
 
-            BitArray FSPEC;
-
-            byte[] TargetAddressbytes = new byte[4];
-            byte[] TimePosition = new byte[4];
-            byte[] Latitudebytes = new byte[4];
-            byte[] Longitudebytes = new byte[4];
-            byte[] AircraftIdentificationbytes = new byte[6];
-            byte[] AirportDepaturebytes = new byte[4];
-            byte[] AirportArrivalbytes = new byte[4];
-            byte[] Callsing = new byte[7];
-            byte[] Heightbytes = new byte[2];
-
             if ((binStream = File.Open(filename, FileMode.Open)) != null)
             {
                 byte[] lengthSIGBytes = new byte[2];
+                byte[] lengthPacketBytes = new byte[2];
                 int lengthPacket, lengthSIG;
-                long startPacket;
-                int endPacket = 0;
 
                 while (binStream.Position != binStream.Length)
                 {
                     binStream.Read(lengthSIGBytes, 0, 2);
                     lengthSIG = BitConverter.ToInt16(lengthSIGBytes.ToArray(), 0);
-                    startPacket = binStream.Position;
                     int category = binStream.ReadByte();
 
-                    switch (category)
+                    if ((category == 21) || (category == 62))
                     {
-                        case 21:
+                        binStream.Read(lengthPacketBytes, 0, 2);
+                        lengthPacket = BitConverter.ToInt16(lengthPacketBytes.Reverse().ToArray(), 0);
+
+                        if (Chekcrash(lengthSIG, lengthPacket, category))
+                        {
+                            byte[] ProtocolStreamBytes = new byte[lengthPacket - 3];
+                            binStream.Read(ProtocolStreamBytes, 0, lengthPacket - 3);
+                            MemoryStream ProtocolStream = new MemoryStream(ProtocolStreamBytes);
+
+                            switch (category)
                             {
-                                if (Chekcrash(lengthSIG))
-                                {
-                                    binStream.Position = startPacket + 3;
-                                    lengthPacket = lengthSIG;
-                                    endPacket = Convert.ToInt32(startPacket) + lengthPacket;
-
-                                    while (binStream.Position != endPacket)
+                                case 21:
                                     {
-                                        string TargetAddress = "";
-                                        string AircraftIdentification = "";
-                                        string Latitude = "";
-                                        string Longitude = "";
-                                        string EmitterCategory = "";
-                                        string Height = "";
-
-                                        FSPEC = GetVariableField();
-                                        for (int FSPECbit = 0; FSPECbit < FSPEC.Length; FSPECbit++)
-                                        {
-                                            if (FSPEC.Get((FSPEC.Length - 1) - FSPECbit) == true)
-                                            {
-                                                string di = Convert.ToString(FSPECtable21.Rows[FSPECbit]["Data Item"]);
-                                                if ((di == "040") || (di == "090") || (di == "220") || (di == "110") || (di == "271"))
-                                                {
-                                                    GetVariableField();
-                                                }
-                                                else
-                                                {
-                                                    switch (di)
-                                                    {
-                                                        case "020":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, 1))
-                                                                {
-                                                                    EmitterCategory = EmitterCategorylist[binStream.ReadByte()];
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "073":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, 3))
-                                                                {
-                                                                    binStream.Read(TimePosition, 1, 3);
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "080":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, 3))
-                                                                {
-                                                                    binStream.Read(TargetAddressbytes, 0, 3);
-                                                                }
-                                                                TargetAddress = "";
-                                                                for (int i = 0; i < 3; i++)
-                                                                {
-                                                                    if (Convert.ToString(TargetAddressbytes[i], 16).Length < 2)
-                                                                    {
-                                                                        TargetAddress += "0";
-                                                                    }
-                                                                    TargetAddress += Convert.ToString(TargetAddressbytes[i], 16).ToUpper();
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "130":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, 3))
-                                                                {
-                                                                    binStream.Read(Latitudebytes, 1, 3);
-                                                                }
-                                                                Latitude = Convert.ToString(CoordinateDecoder130(Latitudebytes));
-                                                                if (ChekEndPacket(endPacket, 3))
-                                                                {
-                                                                    binStream.Read(Longitudebytes, 1, 3);
-                                                                }
-                                                                Longitude = Convert.ToString(CoordinateDecoder130(Longitudebytes));
-                                                                break;
-                                                            }
-                                                        case "131":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, 4))
-                                                                {
-                                                                    binStream.Read(Latitudebytes, 0, 4);
-                                                                }
-                                                                Latitude = Convert.ToString(CoordinateDecoder131(Latitudebytes));
-                                                                if (ChekEndPacket(endPacket, 4))
-                                                                {
-                                                                    binStream.Read(Longitudebytes, 0, 4);
-                                                                }
-                                                                Longitude = Convert.ToString(CoordinateDecoder131(Longitudebytes));
-                                                                break;
-                                                            }
-                                                        case "140":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, 2))
-                                                                {
-                                                                    binStream.Read(Heightbytes, 0, 2);
-                                                                }
-                                                                Height = Convert.ToString(HeightDecoder140(Heightbytes));
-                                                                break;
-                                                            }
-                                                        case "170":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, 6))
-                                                                {
-                                                                    binStream.Read(AircraftIdentificationbytes, 0, 6);
-                                                                }
-                                                                AircraftIdentification = ASCIIDecoder(AircraftIdentificationbytes, ASCIIlist);
-                                                                break;
-                                                            }
-                                                        case "295":
-                                                            {
-                                                                BitArray DataAgesFSPEC = GetVariableField();
-                                                                int countoctet = 0;
-                                                                for (int bit = 0; bit < DataAgesFSPEC.Length; bit++)
-                                                                {
-                                                                    if (DataAgesFSPEC.Get(bit) == true)
-                                                                    {
-                                                                        countoctet++;
-                                                                    }
-                                                                }
-                                                                countoctet -= (DataAgesFSPEC.Length / 8 - 1);
-                                                                if (ChekEndPacket(endPacket, countoctet))
-                                                                {
-                                                                    binStream.Seek(countoctet, SeekOrigin.Current);
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "RE":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, binStream.ReadByte() - 1))
-                                                                {
-                                                                    binStream.Position -= 1;
-                                                                    binStream.Seek(binStream.ReadByte() - 1, SeekOrigin.Current);
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "SP":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, binStream.ReadByte() - 1))
-                                                                {
-                                                                    binStream.Position -= 1;
-                                                                    binStream.Seek(binStream.ReadByte() - 1, SeekOrigin.Current);
-                                                                }
-                                                                break;
-                                                            }
-                                                        default:
-                                                            {
-                                                                if (ChekEndPacket(endPacket, Convert.ToInt32(FSPECtable21.Rows[FSPECbit]["length"])))
-                                                                {
-                                                                    binStream.Seek(Convert.ToInt32(FSPECtable21.Rows[FSPECbit]["length"]), SeekOrigin.Current);
-                                                                }
-                                                                break;
-                                                            }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        if ((TargetAddress != "") && (Latitude != "") && (Longitude != ""))
-                                        {
-                                            message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, "", "", Latitude, Longitude, Height, Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
-                                        }
+                                        CAT._21.Decode(ProtocolStream, message);
+                                        ProtocolStream.Close();
+                                        break;
                                     }
-                                }
-                                else
-                                {
-                                    binStream.Position += (lengthSIG - 3);
-                                }
-                                break;
-                            }
-                        case 62:
-                            {
-                                if (Chekcrash(lengthSIG - 2))
-                                {
-                                    binStream.Position = startPacket + 3;
-                                    lengthPacket = lengthSIG - 2;
-                                    endPacket = Convert.ToInt32(startPacket) + lengthPacket;
-
-                                    while (binStream.Position != endPacket)
+                               /* case 62:
                                     {
-                                        string TargetAddress = "";
-                                        string AircraftIdentification = "";
-                                        string Latitude = "";
-                                        string Longitude = "";
-                                        string EmitterCategory = "";
-                                        string AirportDepature = "";
-                                        string AirportArrival = "";
-
-                                        FSPEC = GetVariableField();
-                                        int[] FSPEC110Length = { 1, 4, 6, 2, 2, 1, 1, 0 };
-                                        int[] FSPEC290Length = { 1, 1, 1, 1, 2, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0 };
-                                        int[] FSPEC295Length = { 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0 };
-                                        int[] FSPEC340Length = { 2, 4, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                                        int[] FSPEC380Length = { 0, 2, 2, 2, 9, 1, 2, 6, 0, 1, 8, 1, 2, 2, 2, 2, 0, 2, 2, 7, 2, 2, 16, 1, 0, 2, 2, 2, 2, 2, 6, 3 };
-                                        FSPEC380Length = FSPEC380Length.Reverse().ToArray();
-                                        int[] FSPEC390Length = { 0, 0, 0, 0, 7, 2, 7, 7, 0, 1, 6, 5, 2, 2, 3, 4, 0, 4, 1, 4, 1, 4, 7, 2 };
-                                        FSPEC390Length = FSPEC390Length.Reverse().ToArray();
-                                        int[] FSPEC500Length = { 4, 2, 4, 1, 1, 2, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
-
-                                        for (int FSPECbit = 0; FSPECbit < FSPEC.Length; FSPECbit++)
+                                        if (Chekcrash(lengthSIG, category))
                                         {
-                                            if ((FSPEC.Get((FSPEC.Length - 1) - FSPECbit) == true) && (FSPECbit < 39))
+                                            binStream.Position = startPacket + 3;
+                                            lengthPacket = lengthSIG - 2;
+                                            endPacket = Convert.ToInt32(startPacket) + lengthPacket;
+
+                                            while (binStream.Position != endPacket)
                                             {
-                                                string di = Convert.ToString(FSPECtable62.Rows[FSPECbit]["Data Item"]);
-                                                if ((di == "080") || (di == "270") || (di == "RE"))
+                                                string TargetAddress = "";
+                                                string AircraftIdentification = "";
+                                                string Latitude = "";
+                                                string Longitude = "";
+                                                string EmitterCategory = "";
+                                                string AirportDepature = "";
+                                                string AirportArrival = "";
+
+                                                FSPEC = GetVariableField();
+                                                int[] FSPEC110Length = { 1, 4, 6, 2, 2, 1, 1, 0 };
+                                                int[] FSPEC290Length = { 1, 1, 1, 1, 2, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0 };
+                                                int[] FSPEC295Length = { 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0 };
+                                                int[] FSPEC340Length = { 2, 4, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                                                int[] FSPEC380Length = { 0, 2, 2, 2, 9, 1, 2, 6, 0, 1, 8, 1, 2, 2, 2, 2, 0, 2, 2, 7, 2, 2, 16, 1, 0, 2, 2, 2, 2, 2, 6, 3 };
+                                                FSPEC380Length = FSPEC380Length.Reverse().ToArray();
+                                                int[] FSPEC390Length = { 0, 0, 0, 0, 7, 2, 7, 7, 0, 1, 6, 5, 2, 2, 3, 4, 0, 4, 1, 4, 1, 4, 7, 2 };
+                                                FSPEC390Length = FSPEC390Length.Reverse().ToArray();
+                                                int[] FSPEC500Length = { 4, 2, 4, 1, 1, 2, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
+
+                                                for (int FSPECbit = 0; FSPECbit < FSPEC.Length; FSPECbit++)
                                                 {
-                                                    GetVariableField();
-                                                }
-                                                else
-                                                {
-                                                    switch (di)
+                                                    if ((FSPEC.Get((FSPEC.Length - 1) - FSPECbit) == true) && (FSPECbit < 39))
                                                     {
-                                                        case "070":
+                                                        string di = Convert.ToString(FSPECtable62.Rows[FSPECbit]["Data Item"]);
+                                                        if ((di == "080") || (di == "270") || (di == "RE"))
+                                                        {
+                                                            GetVariableField();
+                                                        }
+                                                        else
+                                                        {
+                                                            switch (di)
                                                             {
-                                                                if (ChekEndPacket(endPacket, 3))
-                                                                {
-                                                                    binStream.Read(TimePosition, 1, 3);
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "105":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, 4))
-                                                                {
-                                                                    binStream.Read(Latitudebytes, 0, 4);
-                                                                }
-                                                                else
-                                                                {
-                                                                    break;
-                                                                }
-                                                                Latitude = Convert.ToString(CoordinateDecoder105(Latitudebytes));
-                                                                if (ChekEndPacket(endPacket, 4))
-                                                                {
-                                                                    binStream.Read(Longitudebytes, 0, 4);
-                                                                }
-                                                                else
-                                                                {
-                                                                    break;
-                                                                }
-                                                                Longitude = Convert.ToString(CoordinateDecoder105(Longitudebytes));
-                                                                break;
-                                                            }
-                                                        case "110":
-                                                            {
-                                                                BitArray DataAgesFSPEC = GetVariableField();
-                                                                for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
-                                                                {
-                                                                    if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC110Length.Length))
+                                                                case "070":
                                                                     {
-                                                                        if (ChekEndPacket(endPacket, FSPEC110Length[DataAgesFSPEC.Length - bit - 1]))
+                                                                        if (ChekEndPacket(endPacket, 3))
                                                                         {
-                                                                            binStream.Seek(FSPEC110Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                            binStream.Read(TimePosition, 1, 3);
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                case "105":
+                                                                    {
+                                                                        if (ChekEndPacket(endPacket, 4))
+                                                                        {
+                                                                            binStream.Read(Latitudebytes, 0, 4);
                                                                         }
                                                                         else
                                                                         {
                                                                             break;
                                                                         }
-                                                                    }
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "290":
-                                                            {
-                                                                BitArray DataAgesFSPEC = GetVariableField();
-                                                                for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
-                                                                {
-                                                                    if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC290Length.Length))
-                                                                    {
-                                                                        if (ChekEndPacket(endPacket, FSPEC290Length[DataAgesFSPEC.Length - bit - 1]))
+                                                                        Latitude = Convert.ToString(CoordinateDecoder105(Latitudebytes));
+                                                                        if (ChekEndPacket(endPacket, 4))
                                                                         {
-                                                                            binStream.Seek(FSPEC290Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                            binStream.Read(Longitudebytes, 0, 4);
                                                                         }
                                                                         else
                                                                         {
                                                                             break;
                                                                         }
+                                                                        Longitude = Convert.ToString(CoordinateDecoder105(Longitudebytes));
+                                                                        break;
                                                                     }
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "295":
-                                                            {
-                                                                BitArray DataAgesFSPEC = GetVariableField();
-                                                                for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
-                                                                {
-                                                                    if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC295Length.Length))
+                                                                case "110":
                                                                     {
-                                                                        if (ChekEndPacket(endPacket, FSPEC295Length[DataAgesFSPEC.Length - bit - 1]))
+                                                                        BitArray DataAgesFSPEC = GetVariableField();
+                                                                        for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
                                                                         {
-                                                                            binStream.Seek(FSPEC295Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            break;
-                                                                        }
-                                                                    }
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "340":
-                                                            {
-                                                                BitArray DataAgesFSPEC = GetVariableField();
-                                                                for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
-                                                                {
-                                                                    if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC340Length.Length))
-                                                                    {
-                                                                        if (ChekEndPacket(endPacket, FSPEC340Length[DataAgesFSPEC.Length - bit - 1]))
-                                                                        {
-                                                                            binStream.Seek(FSPEC340Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            break;
-                                                                        }
-                                                                    }
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "380":
-                                                            {
-                                                                BitArray DataAgesFSPEC = GetVariableField();
-                                                                for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
-                                                                {
-                                                                    if (DataAgesFSPEC.Get(bit) == true)
-                                                                    {
-                                                                        if (bit == DataAgesFSPEC.Length - 1)
-                                                                        {
-                                                                            if (ChekEndPacket(endPacket, 3))
+                                                                            if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC110Length.Length))
                                                                             {
-                                                                                binStream.Read(TargetAddressbytes, 0, 3);
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                break;
-                                                                            }
-                                                                            TargetAddress = "";
-                                                                            for (int i = 0; i < 3; i++)
-                                                                            {
-                                                                                if (Convert.ToString(TargetAddressbytes[i], 16).Length < 2)
+                                                                                if (ChekEndPacket(endPacket, FSPEC110Length[DataAgesFSPEC.Length - bit - 1]))
                                                                                 {
-                                                                                    TargetAddress += "0";
-                                                                                }
-                                                                                TargetAddress += Convert.ToString(TargetAddressbytes[i], 16).ToUpper();
-                                                                            }
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (bit == DataAgesFSPEC.Length - 2)
-                                                                            {
-                                                                                if (ChekEndPacket(endPacket, 6))
-                                                                                {
-                                                                                    binStream.Read(AircraftIdentificationbytes, 0, 6);
+                                                                                    binStream.Seek(FSPEC110Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
                                                                                 }
                                                                                 else
                                                                                 {
                                                                                     break;
                                                                                 }
-                                                                                AircraftIdentification = ASCIIDecoder(AircraftIdentificationbytes, ASCIIlist);
                                                                             }
-                                                                            else
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                case "290":
+                                                                    {
+                                                                        BitArray DataAgesFSPEC = GetVariableField();
+                                                                        for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
+                                                                        {
+                                                                            if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC290Length.Length))
                                                                             {
-                                                                                if (bit > DataAgesFSPEC.Length - FSPEC380Length.Length)
+                                                                                if (ChekEndPacket(endPacket, FSPEC290Length[DataAgesFSPEC.Length - bit - 1]))
                                                                                 {
-                                                                                    if (ChekEndPacket(endPacket, FSPEC380Length[DataAgesFSPEC.Length - bit - 1]))
+                                                                                    binStream.Seek(FSPEC290Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    break;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                case "295":
+                                                                    {
+                                                                        BitArray DataAgesFSPEC = GetVariableField();
+                                                                        for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
+                                                                        {
+                                                                            if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC295Length.Length))
+                                                                            {
+                                                                                if (ChekEndPacket(endPacket, FSPEC295Length[DataAgesFSPEC.Length - bit - 1]))
+                                                                                {
+                                                                                    binStream.Seek(FSPEC295Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    break;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                case "340":
+                                                                    {
+                                                                        BitArray DataAgesFSPEC = GetVariableField();
+                                                                        for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
+                                                                        {
+                                                                            if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC340Length.Length))
+                                                                            {
+                                                                                if (ChekEndPacket(endPacket, FSPEC340Length[DataAgesFSPEC.Length - bit - 1]))
+                                                                                {
+                                                                                    binStream.Seek(FSPEC340Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    break;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                case "380":
+                                                                    {
+                                                                        BitArray DataAgesFSPEC = GetVariableField();
+                                                                        for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
+                                                                        {
+                                                                            if (DataAgesFSPEC.Get(bit) == true)
+                                                                            {
+                                                                                if (bit == DataAgesFSPEC.Length - 1)
+                                                                                {
+                                                                                    if (ChekEndPacket(endPacket, 3))
                                                                                     {
-                                                                                        binStream.Seek(FSPEC380Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                                        binStream.Read(TargetAddressbytes, 0, 3);
                                                                                     }
                                                                                     else
                                                                                     {
                                                                                         break;
                                                                                     }
+                                                                                    TargetAddress = "";
+                                                                                    for (int i = 0; i < 3; i++)
+                                                                                    {
+                                                                                        if (Convert.ToString(TargetAddressbytes[i], 16).Length < 2)
+                                                                                        {
+                                                                                            TargetAddress += "0";
+                                                                                        }
+                                                                                        TargetAddress += Convert.ToString(TargetAddressbytes[i], 16).ToUpper();
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (bit == DataAgesFSPEC.Length - 2)
+                                                                                    {
+                                                                                        if (ChekEndPacket(endPacket, 6))
+                                                                                        {
+                                                                                            binStream.Read(AircraftIdentificationbytes, 0, 6);
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            break;
+                                                                                        }
+                                                                                        AircraftIdentification = ASCIIDecoder(AircraftIdentificationbytes, ASCIIlist);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        if (bit > DataAgesFSPEC.Length - FSPEC380Length.Length)
+                                                                                        {
+                                                                                            if (ChekEndPacket(endPacket, FSPEC380Length[DataAgesFSPEC.Length - bit - 1]))
+                                                                                            {
+                                                                                                binStream.Seek(FSPEC380Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                break;
+                                                                                            }
+                                                                                        }
+                                                                                    }
                                                                                 }
                                                                             }
                                                                         }
+                                                                        break;
                                                                     }
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "390":
-                                                            {
-                                                                BitArray DataAgesFSPEC = GetVariableField();
-                                                                for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
-                                                                {
-                                                                    if (DataAgesFSPEC.Get(bit) == true)
+                                                                case "390":
                                                                     {
-                                                                        if ((bit == DataAgesFSPEC.Length - 2) || (bit == DataAgesFSPEC.Length - 6) || (bit == DataAgesFSPEC.Length - 7) || (bit == DataAgesFSPEC.Length - 9))
+                                                                        BitArray DataAgesFSPEC = GetVariableField();
+                                                                        for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
                                                                         {
-                                                                            if (bit == DataAgesFSPEC.Length - 2)
+                                                                            if (DataAgesFSPEC.Get(bit) == true)
                                                                             {
-                                                                                if (ChekEndPacket(endPacket, 7))
+                                                                                if ((bit == DataAgesFSPEC.Length - 2) || (bit == DataAgesFSPEC.Length - 6) || (bit == DataAgesFSPEC.Length - 7) || (bit == DataAgesFSPEC.Length - 9))
                                                                                 {
-                                                                                    binStream.Read(Callsing, 0, 7);
+                                                                                    if (bit == DataAgesFSPEC.Length - 2)
+                                                                                    {
+                                                                                        if (ChekEndPacket(endPacket, 7))
+                                                                                        {
+                                                                                            binStream.Read(Callsing, 0, 7);
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            break;
+                                                                                        }
+                                                                                        AircraftIdentification = Encoding.ASCII.GetString(Callsing).Replace("'", "");
+                                                                                    }
+                                                                                    if (bit == DataAgesFSPEC.Length - 6)
+                                                                                    {
+                                                                                        switch (Convert.ToChar(binStream.ReadByte()))
+                                                                                        {
+                                                                                            case 'L':
+                                                                                                {
+                                                                                                    EmitterCategory = "LIGHT AIRCRAFT";
+                                                                                                    break;
+                                                                                                }
+                                                                                            case 'M':
+                                                                                                {
+                                                                                                    EmitterCategory = "MEDIUM AIRCRAFT";
+                                                                                                    break;
+                                                                                                }
+                                                                                            case 'H':
+                                                                                                {
+                                                                                                    EmitterCategory = "HIGH AIRCRAFT";
+                                                                                                    break;
+                                                                                                }
+                                                                                        }
+                                                                                    }
+                                                                                    if (bit == DataAgesFSPEC.Length - 7)
+                                                                                    {
+                                                                                        if (ChekEndPacket(endPacket, 4))
+                                                                                        {
+                                                                                            binStream.Read(AirportDepaturebytes, 0, 4);
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            break;
+                                                                                        }
+                                                                                        AirportDepature = Encoding.ASCII.GetString(AirportDepaturebytes);
+                                                                                    }
+                                                                                    if (bit == DataAgesFSPEC.Length - 9)
+                                                                                    {
+                                                                                        if (ChekEndPacket(endPacket, 4))
+                                                                                        {
+                                                                                            binStream.Read(AirportArrivalbytes, 0, 4);
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            break;
+                                                                                        }
+                                                                                        AirportArrival = Encoding.ASCII.GetString(AirportArrivalbytes);
+                                                                                    }
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    break;
-                                                                                }
-                                                                                AircraftIdentification = Encoding.ASCII.GetString(Callsing).Replace("'", "");
-                                                                            }
-                                                                            if (bit == DataAgesFSPEC.Length - 6)
-                                                                            {
-                                                                                switch (Convert.ToChar(binStream.ReadByte()))
-                                                                                {
-                                                                                    case 'L':
+                                                                                    if (bit > DataAgesFSPEC.Length - FSPEC390Length.Length)
+                                                                                    {
+                                                                                        if (ChekEndPacket(endPacket, FSPEC390Length[DataAgesFSPEC.Length - bit - 1]))
                                                                                         {
-                                                                                            EmitterCategory = "LIGHT AIRCRAFT";
+                                                                                            binStream.Seek(FSPEC390Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                                        }
+                                                                                        else
+                                                                                        {
                                                                                             break;
                                                                                         }
-                                                                                    case 'M':
-                                                                                        {
-                                                                                            EmitterCategory = "MEDIUM AIRCRAFT";
-                                                                                            break;
-                                                                                        }
-                                                                                    case 'H':
-                                                                                        {
-                                                                                            EmitterCategory = "HIGH AIRCRAFT";
-                                                                                            break;
-                                                                                        }
+                                                                                    }
                                                                                 }
-                                                                            }
-                                                                            if (bit == DataAgesFSPEC.Length - 7)
-                                                                            {
-                                                                                if (ChekEndPacket(endPacket, 4))
-                                                                                {
-                                                                                    binStream.Read(AirportDepaturebytes, 0, 4);
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    break;
-                                                                                }
-                                                                                AirportDepature = Encoding.ASCII.GetString(AirportDepaturebytes);
-                                                                            }
-                                                                            if (bit == DataAgesFSPEC.Length - 9)
-                                                                            {
-                                                                                if (ChekEndPacket(endPacket, 4))
-                                                                                {
-                                                                                    binStream.Read(AirportArrivalbytes, 0, 4);
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    break;
-                                                                                }
-                                                                                AirportArrival = Encoding.ASCII.GetString(AirportArrivalbytes);
                                                                             }
                                                                         }
-                                                                        else
-                                                                        {
-                                                                            if (bit > DataAgesFSPEC.Length - FSPEC390Length.Length)
-                                                                            {
-                                                                                if (ChekEndPacket(endPacket, FSPEC390Length[DataAgesFSPEC.Length - bit - 1]))
-                                                                                {
-                                                                                    binStream.Seek(FSPEC390Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    break;
-                                                                                }
-                                                                            }
-                                                                        }
+                                                                        break;
                                                                     }
-                                                                }
-                                                                break;
-                                                            }
-                                                        case "500":
-                                                            {
-                                                                BitArray DataAgesFSPEC = GetVariableField();
-                                                                for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
-                                                                {
-                                                                    if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC500Length.Length))
+                                                                case "500":
                                                                     {
-                                                                        if (ChekEndPacket(endPacket, FSPEC500Length[DataAgesFSPEC.Length - bit - 1]))
+                                                                        BitArray DataAgesFSPEC = GetVariableField();
+                                                                        for (int bit = DataAgesFSPEC.Length - 1; bit >= 0; bit--)
                                                                         {
-                                                                            binStream.Seek(FSPEC500Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                            if ((DataAgesFSPEC.Get(bit) == true) && (bit > DataAgesFSPEC.Length - FSPEC500Length.Length))
+                                                                            {
+                                                                                if (ChekEndPacket(endPacket, FSPEC500Length[DataAgesFSPEC.Length - bit - 1]))
+                                                                                {
+                                                                                    binStream.Seek(FSPEC500Length[DataAgesFSPEC.Length - bit - 1], SeekOrigin.Current);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    break;
+                                                                                }
+                                                                            }
                                                                         }
-                                                                        else
-                                                                        {
-                                                                            break;
-                                                                        }
+                                                                        break;
                                                                     }
-                                                                }
-                                                                break;
+                                                                case "SP":
+                                                                    {
+                                                                        if (ChekEndPacket(endPacket, binStream.ReadByte() - 1))
+                                                                        {
+                                                                            binStream.Position -= 1;
+                                                                            binStream.Seek(binStream.ReadByte() - 1, SeekOrigin.Current);
+                                                                        }
+                                                                        break;
+                                                                    }
+                                                                default:
+                                                                    {
+                                                                        if (ChekEndPacket(endPacket, Convert.ToInt32(FSPECtable62.Rows[FSPECbit]["length"])))
+                                                                        {
+                                                                            binStream.Seek(Convert.ToInt32(FSPECtable62.Rows[FSPECbit]["length"]), SeekOrigin.Current);
+                                                                        }
+                                                                        break;
+                                                                    }
                                                             }
-                                                        case "SP":
-                                                            {
-                                                                if (ChekEndPacket(endPacket, binStream.ReadByte() - 1))
-                                                                {
-                                                                    binStream.Position -= 1;
-                                                                    binStream.Seek(binStream.ReadByte() - 1, SeekOrigin.Current);
-                                                                }
-                                                                break;
-                                                            }
-                                                        default:
-                                                            {
-                                                                if (ChekEndPacket(endPacket, Convert.ToInt32(FSPECtable62.Rows[FSPECbit]["length"])))
-                                                                {
-                                                                    binStream.Seek(Convert.ToInt32(FSPECtable62.Rows[FSPECbit]["length"]), SeekOrigin.Current);
-                                                                }
-                                                                break;
-                                                            }
+                                                        }
                                                     }
                                                 }
+
+                                                if ((TargetAddress != "") && (Latitude != "") && (Longitude != ""))
+                                                {
+                                                    message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, Latitude, Longitude, "", Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
+                                                }
                                             }
-                                        }
 
-                                        if ((TargetAddress != "") && (Latitude != "") && (Longitude != ""))
+                                            binStream.Position += 2;
+                                        }
+                                        else
                                         {
-                                            message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, Latitude, Longitude, "", Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
+                                            binStream.Position += (lengthSIG - 3);
                                         }
-                                    }
-
-                                    binStream.Position += 2;
-                                }
-                                else
-                                {
-                                    binStream.Position += (lengthSIG - 3);
-                                }
-                                break;
+                                        break;
+                                    }*/
                             }
-                        default:
-                            {
-                                binStream.Position += lengthSIG - 1;
-                                break;
-                            }
+                        }
+                        else
+                        {
+                            binStream.Position += (lengthSIG - 3);
+                        }
+                    }
+                    else
+                    {
+                        binStream.Position += lengthSIG - 1;
                     }
                 }
                 binStream.Close();
@@ -832,14 +659,13 @@ namespace ASTERIX
 
             return TrekInfo;
         }
-        static bool Chekcrash(int lengthSIG)
+        static bool Chekcrash(int lengthSIG, int lengthPacket, int category)
         {
-            byte[] lengthPacket = new byte[2];
-            int length = 0;
-
-            binStream.Read(lengthPacket, 0, 2);
-            length = BitConverter.ToInt16(lengthPacket.Reverse().ToArray(), 0);
-            if (length == lengthSIG)
+            if (category == 62)
+            {
+                lengthSIG -= 2;
+            }
+            if (lengthPacket == lengthSIG)
             {
                 return true;
             }
@@ -848,11 +674,11 @@ namespace ASTERIX
                 return false;
             }
         }
-        static bool ChekEndPacket(int endPacket, int offset)
+        public static bool ChekEndPacket(Stream stream, int offset)
         {
-            if (binStream.Position + offset > endPacket)
+            if (stream.Position + offset > stream.Length)
             {
-                binStream.Position = endPacket;
+                stream.Position = stream.Length;
                 return false;
             }
             return true;
