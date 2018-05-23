@@ -12,19 +12,39 @@ namespace ASTERIX.CAT
     {
         static BitArray FSPEC;
 
+        /// <summary>
+        /// Декодирует координату. 130 спецификация.
+        /// </summary>
+        /// <param name="coordinatebytes">Массив байт координаты.</param>
+        /// <returns>Координата.</returns>
         static double CoordinateDecoder130(byte[] coordinatebytes)
         {
             return Convert.ToDouble(BitConverter.ToInt32(coordinatebytes.Reverse().ToArray(), 0) * 0.000021457672119140625);
         }
+        /// <summary>
+        /// Декодирует координату. 131 спецификация.
+        /// </summary>
+        /// <param name="coordinatebytes">Массив байт координаты.</param>
+        /// <returns>Координата.</returns>
         static double CoordinateDecoder131(byte[] coordinatebytes)
         {
             return Convert.ToDouble(BitConverter.ToInt32(coordinatebytes.Reverse().ToArray(), 0) / 5965232.3555555599221118074846386);
         }
+        /// <summary>
+        /// Декодирует высоту. 140 спецификация.
+        /// </summary>
+        /// <param name="heightbytes">Массив байт высоты.</param>
+        /// <returns>Высота.</returns>
         static double HeightDecoder140(byte[] heightbytes)
         {
             return Convert.ToInt32(BitConverter.ToInt16(heightbytes.Reverse().ToArray(), 0) * 6.25 * 0.3048);
         }
 
+        /// <summary>
+        /// Обрабатывает категорию.
+        /// </summary>
+        /// <param name="ProtocolStream">ASTERIX пакет.</param>
+        /// <param name="message">Таблица маршрутных точек.</param>
         public static void Decode(MemoryStream ProtocolStream, DataTable message)
         {
             while (ProtocolStream.Position != ProtocolStream.Length)

@@ -28,6 +28,10 @@ namespace ASTERIX
 
         int UPDATEGRIDMILLISECONDS = 5000;
 
+        /// <summary>
+        /// Формирует текущий фильтр.
+        /// </summary>
+        /// <returns>Фильтр.</returns>
         string filter()
         {
             string filter = "";
@@ -111,9 +115,14 @@ namespace ASTERIX
             }
             return filter;
         }
-        int checksum()
+        /// <summary>
+        /// Возвращает контрольную сумму таблицы.
+        /// </summary>
+        /// <param name="TableName">Имя таблицы</param>
+        /// <returns>Контрольная сумма.</returns>
+        int checksum(string TableName)
         {
-            DataTable Category = SQL.query("SELECT CHECKSUM_AGG(GETCHECKSUM()) FROM dbo.[Load]");
+            DataTable Category = SQL.query("SELECT CHECKSUM_AGG(GETCHECKSUM()) FROM dbo.[" + TableName + "]");
             if (Convert.ToString(Category.Rows[0][0]) != "")
             {
                 return Convert.ToInt32(Category.Rows[0][0]);
@@ -121,10 +130,13 @@ namespace ASTERIX
             return 0;
         }
 
+        /// <summary>
+        /// Контролирует состояние маршрутов. При необходимости изменяет статус на 'Завершен'.
+        /// </summary>
         void timerThread()
         {
             SQL.query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(Protocol.UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
-            int newchcksum = checksum();
+            int newchcksum = checksum("Load");
             if (chcksum != newchcksum)
             {
                 chcksum = newchcksum;
@@ -132,12 +144,20 @@ namespace ASTERIX
             }
             updateThread.Abort();
         }
+        /// <summary>
+        /// Запускает таймер контроля состояний маршрутов.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UpdateTimer_Tick(object sender, System.EventArgs e)
         {
             updateThread = new Thread(timerThread);
             updateThread.Start();
         }
 
+        /// <summary>
+        /// Начальная установка LoadGridView.
+        /// </summary>
         public void LoadGridViewSetting()
         {
             if (InvokeRequired)
@@ -159,6 +179,11 @@ namespace ASTERIX
                 LoadGridView1.Columns[column].Visible = true;
             }
         }
+        /// <summary>
+        /// Удаляет строки из БД, выбранные в LoadGridView.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoadGridView1_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             if (userDeleting)
@@ -189,6 +214,11 @@ namespace ASTERIX
                 userDeleting = true;
             }
         }
+        /// <summary>
+        /// Двойной клик по маршруту. Отображает маршрут.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoadGridView1_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if ((e.Button == MouseButtons.Left) && (e.RowIndex >= 0))
@@ -197,6 +227,11 @@ namespace ASTERIX
                 DeleteThread.Start();
             }
         }
+        /// <summary>
+        /// Выбор маршрута клавишей Enter. Отображает маршрут.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void LoadGridView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
@@ -209,11 +244,20 @@ namespace ASTERIX
                 }
             }
         }
+        /// <summary>
+        /// Отображает LoadGridView с учетом фильтра.
+        /// </summary>
+        /// <param name="autoPosition">Фиксация положения в таблице. Использовать только при добавлении данных в таблицу (когда предыдущие строки не изменяются).</param>
         void ShowDataGridView(bool autoPosition)
         {
             string f = filter();
             UpdateDataGridView(SQL.query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
         }
+        /// <summary>
+        /// Обновляет данные в LoadGridView.
+        /// </summary>
+        /// <param name="table">Таблица данных.</param>
+        /// <param name="autoPosition">Фиксация положения в таблице. Использовать только при добавлении данных в таблицу (когда предыдущие строки не изменяются).</param>
         public void UpdateDataGridView(DataTable table, bool autoPosition)
         {
             if (InvokeRequired)
@@ -280,6 +324,10 @@ namespace ASTERIX
                 }
             }
         }
+        /// <summary>
+        /// Отображает выбранный маршрут.
+        /// </summary>
+        /// <param name="RowIndex">Индекс выбранной строки в LoadGridView.</param>
         void openGPXThread(object RowIndex)
         {
             string TargetAddress = Convert.ToString(LoadGridView1[1, Convert.ToInt32(RowIndex)].Value);
@@ -308,6 +356,11 @@ namespace ASTERIX
             Thread.CurrentThread.Abort();
         }
 
+        /// <summary>
+        /// Получает значение бокса. Необходимо при обращении к боксу, не принадлежащему данному потоку.
+        /// </summary>
+        /// <param name="Box">Имя бокса.</param>
+        /// <returns>Значение бокса.</returns>
         public string GetBoxValue(string Box)
         {
             string result = "";
@@ -356,6 +409,9 @@ namespace ASTERIX
             }
             return result;
         }
+        /// <summary>
+        /// Заполняет ComboBox данными EmitterCategory.
+        /// </summary>
         public void ComboBoxFill()
         {
             if (InvokeRequired)
@@ -371,6 +427,10 @@ namespace ASTERIX
             }
         }
 
+        /// <summary>
+        /// Устанавливает максимальное значение ProgressBar.
+        /// </summary>
+        /// <param name="max">Максимальное значание</param>
         public void ProgressBarMax(int max)
         {
             if (InvokeRequired)
@@ -380,6 +440,10 @@ namespace ASTERIX
             }
             progressBar1.Maximum = max;
         }
+        /// <summary>
+        /// Устанавливает минимальное значение ProgressBar.
+        /// </summary>
+        /// <param name="value">Минимальное значение.</param>
         public void ProgressBarValue(int value)
         {
             if (InvokeRequired)
@@ -390,36 +454,66 @@ namespace ASTERIX
             progressBar1.Value = value;
         }
 
+        /// <summary>
+        /// Обновляет LoadGridView при изменении текста в TargetAddressTextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TargetAddressTextBox_TextChanged(object sender, EventArgs e)
         {
             ShowDataGridView(false);
         }
+        /// <summary>
+        /// Обновляет LoadGridView при изменении текста в AircraftIdetificationTextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AircraftIdetificationTextBox_TextChanged(object sender, EventArgs e)
         {
             ShowDataGridView(false);
         }
-        private void AircraftIdetificationTextBox_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            AircraftIdetificationTextBox.BackColor = Color.FromKnownColor(KnownColor.ScrollBar);
-        }
+        /// <summary>
+        /// Обновляет LoadGridView при изменении текста в AirportDepatureTextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AirportDepatureTextBox_TextChanged(object sender, EventArgs e)
         {
             ShowDataGridView(false);
         }
+        /// <summary>
+        /// Обновляет LoadGridView при изменении текста в AirportArrivalTextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AirportArrivalTextBox_TextChanged(object sender, EventArgs e)
         {
             ShowDataGridView(false);
         }
-
+        /// <summary>
+        /// Обновляет LoadGridView при выборе EmitterCategory в EmitterCategoryComboBox. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EmitterCategoryComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             ShowDataGridView(false);
         }
+        /// <summary>
+        /// Обновляет содержимое ComboBox по клику.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EmitterCategoryComboBox_Click(object sender, EventArgs e)
         {
             ComboBoxFill();
         }
 
+        /// <summary>
+        /// Обрабатывает нажатие клавиши СТАРТ/СТОП. Запускает, либо останавливает обработку протокола.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartStopBTN_Click(object sender, EventArgs e)
         {
             if (start == false)
@@ -445,6 +539,11 @@ namespace ASTERIX
                 Protocol.STOP();                
             }
         }
+        /// <summary>
+        /// Изменяет вид кнопки. Происходит, когда указатель мыши входит в видимую часть кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartStopBTN_MouseEnter(object sender, EventArgs e)
         {
             if (start)
@@ -456,6 +555,11 @@ namespace ASTERIX
                 StartStopBTN.BackgroundImage = Properties.Resources.mouseenterStop;
             }
         }
+        /// <summary>
+        /// Изменяет вид кнопки. Происходит, когда указатель мыши выходит за пределы кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void StartStopBTN_MouseLeave(object sender, EventArgs e)
         {
             if (start)
@@ -468,11 +572,21 @@ namespace ASTERIX
             }
         }
 
+        /// <summary>
+        /// Обновляет LoadGridView при развертывании календаря.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EndTimePicker_DropDown(object sender, EventArgs e)
         {
             EnableEndTimePicker = true;
             ShowDataGridView(false);
         }
+        /// <summary>
+        ///  Обновляет LoadGridView по клику на календарь.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EndTimePicker_MouseDown(object sender, MouseEventArgs e)
         {
             if (EnableEndTimePicker != EndTimePicker.Checked)
@@ -481,16 +595,31 @@ namespace ASTERIX
                 ShowDataGridView(false);
             }
         }
+        /// <summary>
+        ///  Обновляет LoadGridView при изменении значения календаря.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EndTimePicker_ValueChanged(object sender, EventArgs e)
         {
             ShowDataGridView(false);
         }
 
+        /// <summary>
+        /// Обновляет LoadGridView при развертывании календаря.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BeginTimePicker_DropDown(object sender, EventArgs e)
         {
             EnableBeginTimePicker = true;
             ShowDataGridView(false);
         }
+        /// <summary>
+        /// Обновляет LoadGridView по клику на календарь.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BeginTimePicker_MouseDown(object sender, MouseEventArgs e)
         {
             if (EnableBeginTimePicker != BeginTimePicker.Checked)
@@ -499,11 +628,21 @@ namespace ASTERIX
                 ShowDataGridView(false);
             }
         }
+        /// <summary>
+        /// Обновляет LoadGridView при изменении значения календаря.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BeginTimePicker_ValueChanged(object sender, EventArgs e)
         {
             ShowDataGridView(false);
         }
 
+        /// <summary>
+        /// Останавливает процесс обработки, завершает все потоки. Происходит при закрытии формы.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
             Protocol.STOP();
@@ -514,13 +653,16 @@ namespace ASTERIX
             }
         }
 
+        /// <summary>
+        /// Основная функция формы. Производит инициализацию компонентов.
+        /// </summary>
         public GUI()
         {
             if (SQL.Connect())
             {
                 InitializeComponent();
                 Protocol.Init(this);
-                chcksum = checksum();
+                chcksum = checksum("Load");
                 ShowDataGridView(false);
                 UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
                 UpdateTimer.Enabled = true;

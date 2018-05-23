@@ -23,7 +23,12 @@ namespace ASTERIX
 
         public static int UPDATESTATUSMINUTE = 20;
 
-        #region CAT
+        /// <summary>
+        /// Декодирует 5 битный ASCII код.
+        /// </summary>
+        /// <param name="codebytes">Декодируемый массив байт.</param>
+        /// <param name="ASCIItable">Таблица ASCII символов.</param>
+        /// <returns>Декодированная строка.</returns>
         public static string ASCIIDecoder(byte[] codebytes, List<string> ASCIItable)
         {
             BitArray bits = new BitArray(codebytes.Reverse().ToArray());
@@ -44,14 +49,21 @@ namespace ASTERIX
             }
             return result;
         }
+        /// <summary>
+        /// Рассчитывает время, относительно полуночи текущей даты в формате UTC.
+        /// </summary>
+        /// <param name="second">Количество секунд.</param>
+        /// <returns>Строковое представление DateTime.</returns>
         static string TimeDecoder(double second)
         {
             return Convert.ToString(DateTime.UtcNow.Date.AddSeconds(second).ToLocalTime());
             // return Convert.ToString(query("SELECT CONVERT(DATETIME, SWITCHOFFSET(TODATETIMEOFFSET(DATEADD(SECOND, 10, CONVERT(DATETIME, CONVERT(DATE, GETUTCDATE()))), '+00:00'), DATENAME(TZ, SYSDATETIMEOFFSET())))").Rows[0][0]);    
         }
-     
-        #endregion
 
+        /// <summary>
+        /// Инициализирует переменные, необходимые для вызова функций текущего класса.
+        /// </summary>
+        /// <param name="guiForm">Основная форма.</param>
         public static void Init(GUI guiForm)
         {
             gui = guiForm;
@@ -60,11 +72,17 @@ namespace ASTERIX
             ASCIIlist = GetList(Properties.Resources.Symbol);
             EmitterCategorylist = GetList(Properties.Resources.Emitter_Category);
         }
+        /// <summary>
+        /// Запускает обработку протокола.
+        /// </summary>
         public static void START()
         {
             mythread = new Thread(Thread);
             mythread.Start();
         }
+        /// <summary>
+        /// Останавливает обработку протокола.
+        /// </summary>
         public static void STOP()
         {
             if (mythread != null)
@@ -78,6 +96,11 @@ namespace ASTERIX
             }
         }
 
+        /// <summary>
+        /// Получает список файлов директории.
+        /// </summary>
+        /// <param name="path">Путь директории.</param>
+        /// <param name="format">Формат файлов.</param>
         public static void GetFiles(string path, string format)
         {
             pathList = new List<string>();
@@ -85,6 +108,11 @@ namespace ASTERIX
             for (int i = 0; i < files.Length; i++)
                 pathList.Add(files[i]);
         }
+        /// <summary>
+        /// Обрабатывает изменения в директории.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
         static void OnChanged(object source, FileSystemEventArgs e)
         {
             if (e.ChangeType.ToString() == "Created")
@@ -92,6 +120,11 @@ namespace ASTERIX
             else
                 pathList.Remove(e.FullPath);
         }
+        /// <summary>
+        /// Запускает сканирование директории.
+        /// </summary>
+        /// <param name="path">Путь директории.</param>
+        /// <param name="format">Формат файлов.</param>
         public static void STARTscanfolder(string path, string format)
         {
             watcher = new FileSystemWatcher();
@@ -101,6 +134,9 @@ namespace ASTERIX
             watcher.Deleted += new FileSystemEventHandler(OnChanged);
             watcher.EnableRaisingEvents = true;
         }
+        /// <summary>
+        /// Останавливает сканирование директории.
+        /// </summary>
         public static void STOPscanfolder()
         {
             if (watcher != null)
@@ -109,6 +145,11 @@ namespace ASTERIX
             }
         }
 
+        /// <summary>
+        /// Получает поле переменной длины. Собирает байты, пока последний бит байта не установится в 0.
+        /// </summary>
+        /// <param name="stream">Поток данных</param>
+        /// <returns></returns>
         public static BitArray GetVariableField(Stream stream)
         {
             List<byte> bytes = new List<byte>();
@@ -127,6 +168,11 @@ namespace ASTERIX
             bytes.Reverse();
             return (new BitArray(bytes.ToArray()));
         }
+        /// <summary>
+        /// Получает FSPEC таблицу.
+        /// </summary>
+        /// <param name="category">Категория.</param>
+        /// <returns>FSPEC таблица</returns>
         public static DataTable GetFSPECtable(int category)
         {
             DataTable FSPECtable = new DataTable();
@@ -169,6 +215,11 @@ namespace ASTERIX
 
             return FSPECtable;
         }
+        /// <summary>
+        /// Преобразует строку в список.
+        /// </summary>
+        /// <param name="data">Строка для обработки.</param>
+        /// <returns>Список</returns>
         static List<string> GetList(string data)
         {
             List<string> list = new List<string>();
@@ -180,6 +231,11 @@ namespace ASTERIX
             }
             return list;
         }
+        /// <summary>
+        /// Считывает все маршрутные точки, содержащиеся в файле.
+        /// </summary>
+        /// <param name="filename">Путь к файлу.</param>
+        /// <returns>Маршрутные точки.</returns>
         static DataTable ReadFile(string filename)
         {
             DataTable message = new DataTable();
@@ -247,6 +303,12 @@ namespace ASTERIX
             }
             return message;
         }
+        /// <summary>
+        /// Обрабатывает маршрутные точки. Формирует массив маршрутов.
+        /// </summary>
+        /// <param name="CoordinateTable">Маршрутные точки.</param>
+        /// <param name="TargetAddress">Адрес.</param>
+        /// <returns>Массив маршрутов</returns>
         static object[,] ReadTrek(DataTable CoordinateTable, string TargetAddress)
         {
             DataTable TrekCoordinate = CoordinateTable.Select("TargetAddress = '" + TargetAddress + "'").CopyToDataTable().Select().OrderBy(ms => ms["DTime"]).CopyToDataTable();
@@ -321,6 +383,14 @@ namespace ASTERIX
 
             return TrekInfo;
         }
+
+        /// <summary>
+        /// Проверяет целостность пакета.
+        /// </summary>
+        /// <param name="lengthSIG">Длина .sig заголовка пакета.</param>
+        /// <param name="lengthPacket">Длина, указанная в пакете.</param>
+        /// <param name="category">Категория.</param>
+        /// <returns>Целостность пакета.</returns>
         static bool Chekcrash(int lengthSIG, int lengthPacket, int category)
         {
             if (category == 62)
@@ -336,6 +406,12 @@ namespace ASTERIX
                 return false;
             }
         }
+        /// <summary>
+        /// Проверяет возможность чтения потока данных.
+        /// </summary>
+        /// <param name="stream">Поток данных.</param>
+        /// <param name="offset">Количество считываемых байт.</param>
+        /// <returns>Возможность чтения потока данных.</returns>
         public static bool ChekEndPacket(Stream stream, int offset)
         {
             if (stream.Position + offset > stream.Length)
@@ -346,6 +422,9 @@ namespace ASTERIX
             return true;
         }
 
+        /// <summary>
+        /// Основной поток обработки протокола.
+        /// </summary>
         static void Thread()
         {
             int file = 0;

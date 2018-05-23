@@ -12,7 +12,10 @@ namespace ASTERIX
         static SqlConnection sqlConnection1;
 
         static object locker = new object();
-
+        /// <summary>
+        /// Устанавливает соединение с БД.
+        /// </summary>
+        /// <returns>Состояние подключения.</returns>
         public static bool Connect()
         {
             try
@@ -35,8 +38,13 @@ namespace ASTERIX
                 return false;
             }
         }
+        /// <summary>
+        /// Выполняет запрос к БД.
+        /// </summary>
+        /// <param name="query">Строка запроса.</param>
+        /// <returns>Результат запроса.</returns>
         public static DataTable query(string query)
-        {
+        {  
             lock (locker)
             {
                 try
@@ -53,8 +61,12 @@ namespace ASTERIX
             }
             return null;
         }
+        /// <summary>
+        /// Добавляет маршрут в БД.
+        /// </summary>
+        /// <param name="Trek">Маршрут. Содержит поля { string TargetAddress, string AircraftIdentification, string EmitterCategory, string AirportDepature, string AirportArrival, string BeginTime, string EndTime, string Interval, DataTable Aircraftmessage }.</param>
         public static void INSERT(object[] Trek)
-        {
+        {         
             string Status = "Активен";
 
             string TargetAddress = (string)Trek[0];
@@ -109,6 +121,11 @@ namespace ASTERIX
             string insert = "INSERT INTO dbo.[Load] (TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, BeginTime, EndTime, Interval, Status, Gpx, AddTime) VALUES('" + TargetAddress + "','" + AircraftIdentification + "','" + EmitterCategory + "','" + AirportDepature + "','" + AirportArrival + "','" + BeginTime + "','" + EndTime + "','" + Interval + "','" + Status + "','" + doc.InnerXml + "', GETDATE())";
             query(insert);
         }
+        /// <summary>
+        /// Обновляет маршрут в БД.
+        /// </summary>
+        /// <param name="Trek">Маршрут. Содержит поля { string TargetAddress, string AircraftIdentification, string EmitterCategory, string AirportDepature, string AirportArrival, string BeginTime, string EndTime, string Interval, DataTable Aircraftmessage }.</param>
+        /// <param name="oldRow">Редактируемая строка.</param>
         public static void UPDATE(object[] Trek, DataRow oldRow)
         {
             string OldEndTime = Convert.ToString(oldRow[7]);

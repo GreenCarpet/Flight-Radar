@@ -20,11 +20,21 @@ namespace ASTERIX.CAT
         static int[] FSPEC390Length = { 2, 7, 4, 1, 4, 1, 4, 0, 4, 3, 2, 2, 5, 6, 1, 0, 7, 7, 2, 7, 0, 0, 0, 0 };
         static int[] FSPEC500Length = { 4, 2, 4, 1, 1, 2, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0 };
 
+        /// <summary>
+        /// Декодирует координату. 105 спецификация.
+        /// </summary>
+        /// <param name="coordinatebytes">Массив байт координаты.</param>
+        /// <returns>Координата.</returns>
         static double CoordinateDecoder105(byte[] coordinatebytes)
         {
             return Convert.ToDouble(BitConverter.ToInt32(coordinatebytes.Reverse().ToArray(), 0) * 0.00000536441802978515625);
         }
 
+        /// <summary>
+        /// Обрабатывает категорию.
+        /// </summary>
+        /// <param name="ProtocolStream">ASTERIX пакет.</param>
+        /// <param name="message">Таблица маршрутных точек.</param>
         public static void Decode(MemoryStream ProtocolStream, DataTable message)
         {
             while (ProtocolStream.Position != ProtocolStream.Length)
