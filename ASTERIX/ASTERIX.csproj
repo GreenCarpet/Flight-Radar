@@ -98,18 +98,6 @@
     <None Include="Resources\Emitter_Category.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Data_Item_21.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Length_21.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Data_Item_62.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Length_62.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\mouseenterStart.png" />
   </ItemGroup>
   <ItemGroup>

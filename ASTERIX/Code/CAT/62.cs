@@ -59,17 +59,14 @@ namespace ASTERIX.CAT
                 string Height = "";
 
                 FSPEC = Protocol.GetVariableField(ProtocolStream);
-                for (int FSPECbit = 0; FSPECbit < FSPEC.Length; FSPECbit++)
+                if (FSPEC.Length <= Protocol.FSPECtable62.Rows.Count)
                 {
-                    if ((FSPEC.Get((FSPEC.Length - 1) - FSPECbit) == true) && (FSPECbit < 39))
+                    for (int FSPECbit = 0; FSPECbit < FSPEC.Length; FSPECbit++)
                     {
-                        string di = Convert.ToString(Protocol.FSPECtable62.Rows[FSPECbit]["Data Item"]);
-                        if ((di == "080") || (di == "270") || (di == "RE"))
+                        if (FSPEC.Get((FSPEC.Length - 1) - FSPECbit) == true)
                         {
-                            Protocol.GetVariableField(ProtocolStream);
-                        }
-                        else
-                        {
+                            string di = Convert.ToString(Protocol.FSPECtable62.Rows[FSPECbit]["Data Item"]);
+
                             switch (di)
                             {
                                 case "070":
@@ -353,21 +350,36 @@ namespace ASTERIX.CAT
                                     }
                                 default:
                                     {
-                                        if (Protocol.ChekEndPacket(ProtocolStream, Convert.ToInt32(Protocol.FSPECtable62.Rows[FSPECbit]["length"])))
+                                        string length = Convert.ToString(Protocol.FSPECtable62.Rows[FSPECbit]["length"]);
+                                        switch (length)
                                         {
-                                            ProtocolStream.Seek(Convert.ToInt32(Protocol.FSPECtable62.Rows[FSPECbit]["length"]), SeekOrigin.Current);
+                                            case "variable":
+                                                {
+                                                    Protocol.GetVariableField(ProtocolStream);
+                                                    break;
+                                                }
+                                            case "":
+                                                {
+                                                    break;
+                                                }
+                                            default:
+                                                {
+                                                    ProtocolStream.Seek(Convert.ToInt32(length), SeekOrigin.Current);
+                                                    break;
+                                                }
                                         }
                                         break;
                                     }
                             }
                         }
                     }
-                }
-                if ((TargetAddress != "") && (Latitude != "") && (Longitude != ""))
-                {
-                    message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, Latitude, Longitude, Height, Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
+
+                    if ((TargetAddress != "") && (Latitude != "") && (Longitude != ""))
+                    {
+                        message.Rows.Add(new object[] { TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, Latitude, Longitude, Height, Convert.ToDouble(BitConverter.ToInt32(TimePosition.Reverse().ToArray(), 0) / 128) });
+                    }
                 }
             }
         }
-    }
+}
 }

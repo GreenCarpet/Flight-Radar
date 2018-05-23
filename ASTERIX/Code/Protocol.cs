@@ -6,6 +6,7 @@ using System.Text;
 using System.IO;
 using System.Collections;
 using System.Threading;
+using System.Xml;
 
 namespace ASTERIX
 {
@@ -177,42 +178,44 @@ namespace ASTERIX
         {
             DataTable FSPECtable = new DataTable();
             FSPECtable.Columns.Add("Data Item", System.Type.GetType("System.String"));
-            FSPECtable.Columns.Add("Length", System.Type.GetType("System.Int32"));
+            FSPECtable.Columns.Add("Length", System.Type.GetType("System.String"));
 
-            string data;
-            string length;
+            XmlDocument doc = new XmlDocument();
+            doc.Load("FSPEC.xml");
 
-            StringReader dataReader;
-            StringReader lengthReader;
-
-            if (category == 21)
+            XmlNodeList CategoryList = doc.DocumentElement.ChildNodes;
+            for(int cat = 0; cat < CategoryList.Count; cat++)
             {
-                data = Properties.Resources.Data_Item_21;
-                length = Properties.Resources.Length_21;
-
-                dataReader = new StringReader(data);
-                lengthReader = new StringReader(length);
-
-                for (int i = 0; i < 55; i++)
+                XmlNode Category = CategoryList[cat];
+                if (Convert.ToInt32(Category.Attributes["value"].InnerText) == category)
                 {
-                    FSPECtable.Rows.Add(new object[] { dataReader.ReadLine(), Convert.ToInt32(lengthReader.ReadLine()) });
+                    XmlNodeList FRNList = Category.ChildNodes;
+                    for (int frn = 0; frn < FRNList.Count; frn++)
+                    {
+                        string FRN = FRNList[frn].Attributes["value"].InnerText;
+                        if (FRN == "FX")
+                        {
+                            FSPECtable.Rows.Add(new object[] { "FX", "" });
+                        }
+                        else
+                        {
+                            if (FRNList[frn].Attributes.Count == 3)
+                            {
+                                string Data_Item = FRNList[frn].Attributes["Data_Item"].InnerText;
+                                string Length = FRNList[frn].Attributes["Length"].InnerText;
+
+                                FSPECtable.Rows.Add(new object[] { Data_Item, Length });
+                            }
+                            else
+                            {
+                                FSPECtable.Rows.Add(new object[] { "", "" });
+                            }
+                        }
+
+                    }
                 }
             }
-
-            if (category == 62)
-            {
-                data = Properties.Resources.Data_Item_62;
-                length = Properties.Resources.Length_62;
-
-                dataReader = new StringReader(data);
-                lengthReader = new StringReader(length);
-
-                for (int i = 0; i < 39; i++)
-                {
-                    FSPECtable.Rows.Add(new object[] { dataReader.ReadLine(), Convert.ToInt32(lengthReader.ReadLine()) });
-                }
-            }
-
+            
             return FSPECtable;
         }
         /// <summary>
