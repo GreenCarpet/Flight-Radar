@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Code\CAT\21.cs" />
     <Compile Include="Code\CAT\62.cs" />
     <Compile Include="GUI.cs">
       <SubType>Form</SubType>

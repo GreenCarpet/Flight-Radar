@@ -523,9 +523,7 @@ namespace ASTERIX
                     StartStopBTN.BackgroundImage = Properties.Resources.stop;
                     start = true;
 
-                    Protocol.GetFiles(folderBrowserDialog1.SelectedPath, "*.sig");
-                    Protocol.STARTscanfolder(folderBrowserDialog1.SelectedPath, "*.sig");
-                    Protocol.START();
+                    Protocol.START(folderBrowserDialog1.SelectedPath, "*.sig");
                 }             
             }
 
@@ -535,7 +533,6 @@ namespace ASTERIX
                 progressBar1.Value = 0;
                 start = false;
 
-                Protocol.STOPscanfolder();
                 Protocol.STOP();                
             }
         }

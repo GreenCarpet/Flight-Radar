@@ -7,6 +7,7 @@ using System.IO;
 using System.Collections;
 using System.Threading;
 using System.Xml;
+using System.Reflection;
 
 namespace ASTERIX
 {
@@ -15,8 +16,6 @@ namespace ASTERIX
         static GUI gui;
 
         static Stream binStream;
-        public static DataTable FSPECtable21, FSPECtable62;
-        public static List<string> ASCIIlist, EmitterCategorylist;
         public static Thread mythread;
 
         static List<string> pathList;
@@ -24,32 +23,9 @@ namespace ASTERIX
 
         public static int UPDATESTATUSMINUTE = 20;
 
-        /// <summary>
-        /// Декодирует 5 битный ASCII код.
-        /// </summary>
-        /// <param name="codebytes">Декодируемый массив байт.</param>
-        /// <param name="ASCIItable">Таблица ASCII символов.</param>
-        /// <returns>Декодированная строка.</returns>
-        public static string ASCIIDecoder(byte[] codebytes, List<string> ASCIItable)
-        {
-            BitArray bits = new BitArray(codebytes.Reverse().ToArray());
-            BitArray codebits = new BitArray(8);
-            string result = "";
-            byte[] code = new byte[1];
-            int pos = bits.Length - 1;
-            while (pos > 5)
-            {
-                codebits.SetAll(false);
-                for (int bit = 5; bit >= 0; bit--)
-                {
-                    codebits.Set(bit, bits.Get(pos));
-                    pos--;
-                }
-                codebits.CopyTo(code, 0);
-                result += ASCIItable[Convert.ToInt32(code[0])];
-            }
-            return result;
-        }
+        static object[] modules;
+        static List<int> categories;
+
         /// <summary>
         /// Рассчитывает время, относительно полуночи текущей даты в формате UTC.
         /// </summary>
@@ -62,30 +38,79 @@ namespace ASTERIX
         }
 
         /// <summary>
+        /// Сканирует папку Modules на наличие модулей.
+        /// </summary>
+        /// <returns>Таблица модулей. </returns>
+        public static DataTable GetDirectoryModules()
+        {
+            List<string> pathModules = new List<string>();
+            pathModules = Directory.GetFiles("Modules", "*.dll").ToList();
+
+            DataTable modules = new DataTable();
+            modules.Columns.Add("Status", Type.GetType("System.Boolean"));
+            modules.Columns.Add("Name", Type.GetType("System.String"));
+            modules.Columns.Add("CAT", Type.GetType("System.String"));
+            modules.Columns.Add("Version", Type.GetType("System.String"));
+            modules.Columns.Add("Developer", Type.GetType("System.String"));
+            modules.Columns.Add("Assembly", Type.GetType("System.Reflection.Assembly"));
+            
+            for (int path = 0; path < pathModules.Count; path++)
+            {
+                Assembly asm = Assembly.LoadFile(Path.GetFullPath(pathModules[path]));
+
+                IList<CustomAttributeData> attr = asm.GetCustomAttributesData();
+
+                string DllType = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyTitleAttribute)).First().ConstructorArguments.ElementAt(0).Value.ToString();
+
+                if (DllType == "Module")
+                {
+                    string Name = Path.GetFileNameWithoutExtension(pathModules[path]);
+                    string CAT = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyDescriptionAttribute)).First().ConstructorArguments.ElementAt(0).ToString();
+                    string Version = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyFileVersionAttribute)).First().ConstructorArguments.ElementAt(0).ToString();
+                    string Developer  = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyCompanyAttribute)).First().ConstructorArguments.ElementAt(0).ToString();
+                    
+                    modules.Rows.Add(new object[] { false, Name, CAT, Version, Developer, asm });
+                    asm.GetType("Module").GetMethod("Init").Invoke(null, null);
+                }
+            }
+            return modules;
+        }
+
+
+        /// <summary>
         /// Инициализирует переменные, необходимые для вызова функций текущего класса.
         /// </summary>
         /// <param name="guiForm">Основная форма.</param>
         public static void Init(GUI guiForm)
         {
             gui = guiForm;
-            FSPECtable21 = GetFSPECtable(21);
-            FSPECtable62 = GetFSPECtable(62);
-            ASCIIlist = GetList(Properties.Resources.Symbol);
-            EmitterCategorylist = GetList(Properties.Resources.Emitter_Category);
+
+            GetDirectoryModules();
+
+            string mod = "Обнаружены модули:\n";
+            for (int i =0; i < categories.Count; i++)
+            {
+                mod += Convert.ToString(categories[i]) + ".dll\n";
+            }
         }
         /// <summary>
         /// Запускает обработку протокола.
         /// </summary>
-        public static void START()
+        public static void START(string path, string format)
         {
+            pathList = Directory.GetFiles(path, "*" + format).ToList();
+            STARTscanfolder(path, format);
+
             mythread = new Thread(Thread);
             mythread.Start();
-        }
+        } 
         /// <summary>
         /// Останавливает обработку протокола.
         /// </summary>
         public static void STOP()
         {
+            STOPscanfolder();
+
             if (mythread != null)
             {
                 mythread.Abort();
@@ -97,18 +122,6 @@ namespace ASTERIX
             }
         }
 
-        /// <summary>
-        /// Получает список файлов директории.
-        /// </summary>
-        /// <param name="path">Путь директории.</param>
-        /// <param name="format">Формат файлов.</param>
-        public static void GetFiles(string path, string format)
-        {
-            pathList = new List<string>();
-            string[] files = Directory.GetFiles(path);
-            for (int i = 0; i < files.Length; i++)
-                pathList.Add(files[i]);
-        }
         /// <summary>
         /// Обрабатывает изменения в директории.
         /// </summary>
@@ -146,99 +159,6 @@ namespace ASTERIX
             }
         }
 
-        /// <summary>
-        /// Получает поле переменной длины. Собирает байты, пока последний бит байта не установится в 0.
-        /// </summary>
-        /// <param name="stream">Поток данных</param>
-        /// <returns></returns>
-        public static BitArray GetVariableField(Stream stream)
-        {
-            List<byte> bytes = new List<byte>();
-            do
-            {
-                if (ChekEndPacket(stream, 1))
-                {
-                    bytes.Add(Convert.ToByte(stream.ReadByte()));
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (new BitArray(BitConverter.GetBytes(bytes.Last())).Get(0) == true);
-            bytes.Reverse();
-            return (new BitArray(bytes.ToArray()));
-        }
-        /// <summary>
-        /// Получает FSPEC таблицу.
-        /// </summary>
-        /// <param name="category">Категория.</param>
-        /// <returns>FSPEC таблица</returns>
-        public static DataTable GetFSPECtable(int category)
-        {
-            DataTable FSPECtable = new DataTable();
-            FSPECtable.Columns.Add("Data Item", System.Type.GetType("System.String"));
-            FSPECtable.Columns.Add("Length", System.Type.GetType("System.String"));
-
-            XmlDocument doc = new XmlDocument();
-            doc.Load("FSPEC.xml");
-
-            XmlNodeList CategoryList = doc.DocumentElement.ChildNodes;
-            for(int cat = 0; cat < CategoryList.Count; cat++)
-            {
-                XmlNode Category = CategoryList[cat];
-                if (Convert.ToInt32(Category.Attributes["value"].InnerText) == category)
-                {
-                    XmlNodeList FRNList = Category.ChildNodes;
-                    for (int frn = 0; frn < FRNList.Count; frn++)
-                    {
-                        string FRN = FRNList[frn].Attributes["value"].InnerText;
-                        if (FRN == "FX")
-                        {
-                            FSPECtable.Rows.Add(new object[] { "FX", "" });
-                        }
-                        else
-                        {
-                            if (FRNList[frn].Attributes.Count == 3)
-                            {
-                                string Data_Item = FRNList[frn].Attributes["Data_Item"].InnerText;
-                                string Length = FRNList[frn].Attributes["Length"].InnerText;
-
-                                FSPECtable.Rows.Add(new object[] { Data_Item, Length });
-                            }
-                            else
-                            {
-                                FSPECtable.Rows.Add(new object[] { "", "" });
-                            }
-                        }
-
-                    }
-                }
-            }
-            
-            return FSPECtable;
-        }
-        /// <summary>
-        /// Преобразует строку в список.
-        /// </summary>
-        /// <param name="data">Строка для обработки.</param>
-        /// <returns>Список</returns>
-        static List<string> GetList(string data)
-        {
-            List<string> list = new List<string>();
-            StringReader dataReader = new StringReader(data);
-            string str = "";
-            while ((str = dataReader.ReadLine()) != null)
-            {
-                list.Add(str);
-            }
-            return list;
-        }
-        /// <summary>
-        /// Считывает все маршрутные точки, содержащиеся в файле.
-        /// </summary>
-        /// <param name="filename">Путь к файлу.</param>
-        /// <returns>Маршрутные точки.</returns>
         static DataTable ReadFile(string filename)
         {
             DataTable message = new DataTable();
@@ -257,50 +177,33 @@ namespace ASTERIX
                 byte[] lengthSIGBytes = new byte[2];
                 byte[] lengthPacketBytes = new byte[2];
                 int lengthPacket, lengthSIG;
+                long endPacket;
 
                 while (binStream.Position != binStream.Length)
                 {
                     binStream.Read(lengthSIGBytes, 0, 2);
                     lengthSIG = BitConverter.ToInt16(lengthSIGBytes.ToArray(), 0);
+                    endPacket = binStream.Position + lengthSIG;
                     int category = binStream.ReadByte();
 
-                    if ((category == 21) || (category == 62))
+                    if (categories.Contains(category))
                     {
                         binStream.Read(lengthPacketBytes, 0, 2);
                         lengthPacket = BitConverter.ToInt16(lengthPacketBytes.Reverse().ToArray(), 0);
 
-                        if (Chekcrash(lengthSIG, lengthPacket, category))
-                        {
-                            byte[] ProtocolStreamBytes = new byte[lengthPacket - 3];
-                            binStream.Read(ProtocolStreamBytes, 0, lengthPacket - 3);
-                            MemoryStream ProtocolStream = new MemoryStream(ProtocolStreamBytes);
+                        byte[] ProtocolStreamBytes = new byte[lengthPacket - 3];
+                        binStream.Read(ProtocolStreamBytes, 0, lengthPacket - 3);
+                        MemoryStream ProtocolStream = new MemoryStream(ProtocolStreamBytes);
 
-                            switch (category)
-                            {
-                                case 21:
-                                    {
-                                        CAT._21.Decode(ProtocolStream, message);
-                                        ProtocolStream.Close();
-                                        break;
-                                    }
-                                case 62:
-                                    {
-                                        CAT._62.Decode(ProtocolStream, message);
-                                        ProtocolStream.Close();
-                                        binStream.Position += 2;
-                                        break;
-                                    }
-                            }
-                        }
-                        else
-                        {
-                            binStream.Position += (lengthSIG - 3);
-                        }
+                        ((Assembly)modules[categories.IndexOf(category)]).GetType("Module").GetMethod("Decode").Invoke(null, new object[] { ProtocolStream, message });
+
+                        ProtocolStream.Close();
                     }
-                    else
+                    if (binStream.Position != endPacket)
                     {
-                        binStream.Position += lengthSIG - 1;
+                        binStream.Position = endPacket;
                     }
+
                 }
                 binStream.Close();
             }
@@ -408,21 +311,6 @@ namespace ASTERIX
             {
                 return false;
             }
-        }
-        /// <summary>
-        /// Проверяет возможность чтения потока данных.
-        /// </summary>
-        /// <param name="stream">Поток данных.</param>
-        /// <param name="offset">Количество считываемых байт.</param>
-        /// <returns>Возможность чтения потока данных.</returns>
-        public static bool ChekEndPacket(Stream stream, int offset)
-        {
-            if (stream.Position + offset > stream.Length)
-            {
-                stream.Position = stream.Length;
-                return false;
-            }
-            return true;
         }
 
         /// <summary>
