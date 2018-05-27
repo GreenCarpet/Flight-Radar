@@ -38,54 +38,12 @@ namespace ASTERIX
         }
 
         /// <summary>
-        /// Сканирует папку Modules на наличие модулей.
-        /// </summary>
-        /// <returns>Таблица модулей. </returns>
-        public static DataTable GetDirectoryModules()
-        {
-            List<string> pathModules = new List<string>();
-            pathModules = Directory.GetFiles("Modules", "*.dll").ToList();
-
-            DataTable modules = new DataTable();
-            modules.Columns.Add("Status", Type.GetType("System.Boolean"));
-            modules.Columns.Add("Name", Type.GetType("System.String"));
-            modules.Columns.Add("CAT", Type.GetType("System.String"));
-            modules.Columns.Add("Version", Type.GetType("System.String"));
-            modules.Columns.Add("Developer", Type.GetType("System.String"));
-            modules.Columns.Add("Assembly", Type.GetType("System.Reflection.Assembly"));
-            
-            for (int path = 0; path < pathModules.Count; path++)
-            {
-                Assembly asm = Assembly.LoadFile(Path.GetFullPath(pathModules[path]));
-
-                IList<CustomAttributeData> attr = asm.GetCustomAttributesData();
-
-                string DllType = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyTitleAttribute)).First().ConstructorArguments.ElementAt(0).Value.ToString();
-
-                if (DllType == "Module")
-                {
-                    string Name = Path.GetFileNameWithoutExtension(pathModules[path]);
-                    string CAT = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyDescriptionAttribute)).First().ConstructorArguments.ElementAt(0).ToString();
-                    string Version = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyFileVersionAttribute)).First().ConstructorArguments.ElementAt(0).ToString();
-                    string Developer  = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyCompanyAttribute)).First().ConstructorArguments.ElementAt(0).ToString();
-                    
-                    modules.Rows.Add(new object[] { false, Name, CAT, Version, Developer, asm });
-                    asm.GetType("Module").GetMethod("Init").Invoke(null, null);
-                }
-            }
-            return modules;
-        }
-
-
-        /// <summary>
         /// Инициализирует переменные, необходимые для вызова функций текущего класса.
         /// </summary>
         /// <param name="guiForm">Основная форма.</param>
         public static void Init(GUI guiForm)
         {
             gui = guiForm;
-
-            GetDirectoryModules();
 
             string mod = "Обнаружены модули:\n";
             for (int i =0; i < categories.Count; i++)
