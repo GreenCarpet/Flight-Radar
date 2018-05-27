@@ -117,7 +117,6 @@ namespace ASTERIX
 
             return DirectoryModules;
         }
-
         /// <summary>
         /// Выгружает текущию конфигурацию модулей в Settings.xml
         /// </summary>
@@ -150,42 +149,31 @@ namespace ASTERIX
         /// <summary>
         /// Добавляет новый модуль.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AddModuleButton_Click(object sender, EventArgs e)
+        /// <param name="filename">Путь к модулю.</param>
+        /// <returns>Результат операции.</returns>
+        bool AddModule(string filename)
         {
-            try
+            Assembly asm = Assembly.Load(LoadFile(filename));
+
+            IList<CustomAttributeData> attr = asm.GetCustomAttributesData();
+
+            string DllType = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyTitleAttribute)).First().ConstructorArguments.ElementAt(0).Value.ToString();
+
+            if (DllType == "Module")
             {
-                ImportModuleDialog.Filter = "DLL files (*.dll)|*.dll";
-                if (ImportModuleDialog.ShowDialog() == DialogResult.OK)
-                {
-                    Assembly asm = Assembly.Load(LoadFile(ImportModuleDialog.FileName));
-
-                    IList<CustomAttributeData> attr = asm.GetCustomAttributesData();
-
-                    string DllType = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyTitleAttribute)).First().ConstructorArguments.ElementAt(0).Value.ToString();
-
-                    if (DllType == "Module")
-                    {
-                        File.Copy(ImportModuleDialog.FileName, "Modules/" + ImportModuleDialog.SafeFileName);
-                        Modules_Load(null, null);
-                    }
-                    else
-                    {
-                        MessageBox.Show("Выбранный файл не является модулем Flight Radar");
-                    }
-                }
+                File.Copy(filename, "Modules/" + Path.GetFileName(filename));
+                return true;
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Выбранный файл не является модулем Flight Radar");
+                return false;
             }
         }
-
         /// <summary>
-        /// Удаляет файл модуля.
+        /// Удаляет модуль.
         /// </summary>
-        /// <param name="module"></param>
+        /// <param name="module">Таблица модулей.</param>
         /// <returns>Результат операции.</returns>
         bool DeleteModule(DataGridViewRow module)
         {
@@ -202,6 +190,55 @@ namespace ASTERIX
             }
         }
         /// <summary>
+        /// Изменяет состояние модуля.
+        /// </summary>
+        /// <param name="modules">Таблица модулей.</param>
+        /// <param name="row">Индекс изменяемой позиции.</param>
+        static void UpdateStatus(DataTable modules, int row)
+        {
+            if ((bool)modules.Rows[row]["Status"] == true)
+            {
+                modules.Rows[row]["Status"] = false;
+            }
+            else
+            {
+                string CAT = modules.Rows[row]["CAT"].ToString();
+                for (int module = 0; module < modules.Rows.Count; module++)
+                {
+                    if (modules.Rows[module]["CAT"].ToString() == CAT)
+                    {
+                        modules.Rows[module]["Status"] = false;
+                    }
+                }
+                modules.Rows[row]["Status"] = true;
+            }
+
+        }
+
+        /// <summary>
+        /// Обработчик кнопки. Добавляет новый модуль.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddModuleButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ImportModuleDialog.Filter = "DLL files (*.dll)|*.dll";
+                if (ImportModuleDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (AddModule(ImportModuleDialog.FileName))
+                    {
+                        Modules_Load(null, null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        /// <summary>
         /// Обработчик кнопки. Удаляет файл модуля.
         /// </summary>
         /// <param name="sender"></param>
@@ -215,35 +252,21 @@ namespace ASTERIX
                 UpdateModules(modules);
             }
         }
-
         /// <summary>
-        /// Изменяет состояние модуля.
+        /// Обработчик клика под модулю. Изменяет состояние.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ModulesGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if ((bool)modules.Rows[e.RowIndex]["Status"] == true)
+            if (e.RowIndex != -1)
             {
-                modules.Rows[e.RowIndex]["Status"] = false;
+                UpdateStatus(modules, e.RowIndex);
+                UpdateModules(modules);
             }
-            else
-            {
-                string CAT = modules.Rows[e.RowIndex]["CAT"].ToString();
-                for (int module = 0; module < modules.Rows.Count; module++)
-                {
-                    if (modules.Rows[module]["CAT"].ToString() == CAT)
-                    {
-                        modules.Rows[module]["Status"] = false;
-                    }
-                }
-                modules.Rows[e.RowIndex]["Status"] = true;
-            }
-
-            UpdateModules(modules);
         }
         /// <summary>
-        /// Удаляет выбранный модуль.
+        /// Обработчик удаления строки из GridView. Удаляет выбранный модуль.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -255,7 +278,7 @@ namespace ASTERIX
             }
         }
         /// <summary>
-        /// Обновляет таблицу модулей.
+        /// Обработчик после удаления строки из GridView. Обновляет таблицу модулей.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -264,11 +287,6 @@ namespace ASTERIX
             UpdateModules(modules);
         }
 
-        /// <summary>
-        /// Инициализация ModulesGridView.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void Modules_Load(object sender, EventArgs e)
         {
             modules = GetModules();
@@ -285,13 +303,12 @@ namespace ASTERIX
             ModulesGridView.Columns["Name"].SortMode = DataGridViewColumnSortMode.NotSortable;
             ModulesGridView.Columns["CAT"].SortMode = DataGridViewColumnSortMode.NotSortable;
             ModulesGridView.Columns["Version"].SortMode = DataGridViewColumnSortMode.NotSortable;
-            ModulesGridView.Columns["Developer"].SortMode = DataGridViewColumnSortMode.NotSortable; 
+            ModulesGridView.Columns["Developer"].SortMode = DataGridViewColumnSortMode.NotSortable;
         }
 
         public Modules()
         {
             InitializeComponent();
         }
-
     }
 }

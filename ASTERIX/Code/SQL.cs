@@ -21,7 +21,7 @@ namespace ASTERIX
             try
             {
                 sqlConnection1 =
-              new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS;Initial Catalog=ADS-B(TEST);Persist Security Info=True;User ID=Adm;Password=Analiz2");
+              new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS;Initial Catalog=ADS-B;Persist Security Info=True;User ID=Adm;Password=Analiz2");
                 sqlConnection1.Open();
             }
             catch (SqlException ex)

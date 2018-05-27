@@ -108,6 +108,12 @@ namespace ASTERIX
             }
         }
 
+        /// <summary>
+        /// Считывает все маршрутные точки, содержащиеся в файле.
+        /// </summary>
+        /// <param name="filename">Путь к файлу.</param>
+        /// <param name="modules">Включенные модули.</param>
+        /// <returns>Маршрутные точки.</returns>
         static DataTable ReadFile(string filename, DataRow[] modules)
         {
             DataTable message = new DataTable();
@@ -140,21 +146,23 @@ namespace ASTERIX
                     if (mod.Length != 0)
                     {
                         binStream.Read(lengthPacketBytes, 0, 2);
-                        lengthPacket = BitConverter.ToInt16(lengthPacketBytes.Reverse().ToArray(), 0);
+                        lengthPacket = Math.Abs(BitConverter.ToInt16(lengthPacketBytes.Reverse().ToArray(), 0));
 
-                        byte[] ProtocolStreamBytes = new byte[lengthPacket - 3];
-                        binStream.Read(ProtocolStreamBytes, 0, lengthPacket - 3);
-                        MemoryStream ProtocolStream = new MemoryStream(ProtocolStreamBytes);
+                        if (Chekcrash(lengthSIG, lengthPacket))
+                        {
+                            byte[] ProtocolStreamBytes = new byte[lengthPacket - 3];
+                            binStream.Read(ProtocolStreamBytes, 0, lengthPacket - 3);
+                            MemoryStream ProtocolStream = new MemoryStream(ProtocolStreamBytes);
 
-                        ((Assembly)mod.First()["Assembly"]).GetType("Module").GetMethod("Decode").Invoke(null, new object[] { ProtocolStream, message });
+                            ((Assembly)mod.First()["Assembly"]).GetType("Module").GetMethod("Decode").Invoke(null, new object[] { ProtocolStream, message });
 
-                        ProtocolStream.Close();
+                            ProtocolStream.Close();
+                        }
                     }
                     if (binStream.Position != endPacket)
                     {
                         binStream.Position = endPacket;
                     }
-
                 }
                 binStream.Close();
             }
@@ -248,13 +256,9 @@ namespace ASTERIX
         /// <param name="lengthPacket">Длина, указанная в пакете.</param>
         /// <param name="category">Категория.</param>
         /// <returns>Целостность пакета.</returns>
-        static bool Chekcrash(int lengthSIG, int lengthPacket, int category)
+        static bool Chekcrash(int lengthSIG, int lengthPacket)
         {
-            if (category == 62)
-            {
-                lengthSIG -= 2;
-            }
-            if (lengthPacket == lengthSIG)
+            if (lengthPacket <= lengthSIG)
             {
                 return true;
             }
