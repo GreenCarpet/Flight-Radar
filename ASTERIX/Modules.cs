@@ -14,7 +14,7 @@ namespace ASTERIX
 {
     public partial class Modules : Form
     {
-        DataTable modules;
+        static DataTable modules;
 
         /// <summary>
         /// Возвращает байтовое представление файла.
@@ -63,9 +63,6 @@ namespace ASTERIX
                     string Developer = attr.Where(x => x.Constructor.DeclaringType == typeof(AssemblyCompanyAttribute)).First().ConstructorArguments.ElementAt(0).ToString().Replace("\"", "");
 
                     DirectoryModules.Rows.Add(new object[] { false, Name, CAT, Version, Developer, asm });
-
-
-                    //asm.GetType("Module").GetMethod("Init").Invoke(null, null);
                 }
 
             }
@@ -104,7 +101,7 @@ namespace ASTERIX
         /// Возвращает модули текущей конфигурации.
         /// </summary>
         /// <returns>Модули текущей конфигурации.</returns>
-        static DataTable GetModules()
+        public static DataTable GetModules()
         {
             DataTable DirectoryModules = GetDirectoryModules();
             DataTable SettingsModules = GetModulesSettings();
@@ -226,7 +223,23 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void ModulesGridView_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            modules.Rows[e.RowIndex]["Status"] = !(bool)modules.Rows[e.RowIndex]["Status"];
+            if ((bool)modules.Rows[e.RowIndex]["Status"] == true)
+            {
+                modules.Rows[e.RowIndex]["Status"] = false;
+            }
+            else
+            {
+                string CAT = modules.Rows[e.RowIndex]["CAT"].ToString();
+                for (int module = 0; module < modules.Rows.Count; module++)
+                {
+                    if (modules.Rows[module]["CAT"].ToString() == CAT)
+                    {
+                        modules.Rows[module]["Status"] = false;
+                    }
+                }
+                modules.Rows[e.RowIndex]["Status"] = true;
+            }
+
             UpdateModules(modules);
         }
         /// <summary>
@@ -251,15 +264,14 @@ namespace ASTERIX
             UpdateModules(modules);
         }
 
-        public Modules()
-        {
-            InitializeComponent();
-        }
-
+        /// <summary>
+        /// Инициализация ModulesGridView.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Modules_Load(object sender, EventArgs e)
         {
             modules = GetModules();
-            UpdateModules(modules);
 
             ModulesGridView.DataSource = modules;
             ModulesGridView.Columns["Assembly"].Visible = false;
@@ -274,6 +286,11 @@ namespace ASTERIX
             ModulesGridView.Columns["CAT"].SortMode = DataGridViewColumnSortMode.NotSortable;
             ModulesGridView.Columns["Version"].SortMode = DataGridViewColumnSortMode.NotSortable;
             ModulesGridView.Columns["Developer"].SortMode = DataGridViewColumnSortMode.NotSortable; 
+        }
+
+        public Modules()
+        {
+            InitializeComponent();
         }
 
     }
