@@ -23,9 +23,6 @@ namespace ASTERIX
 
         public static int UPDATESTATUSMINUTE = 20;
 
-        static object[] modules;
-        static List<int> categories;
-
         /// <summary>
         /// Рассчитывает время, относительно полуночи текущей даты в формате UTC.
         /// </summary>
@@ -44,12 +41,6 @@ namespace ASTERIX
         public static void Init(GUI guiForm)
         {
             gui = guiForm;
-
-            string mod = "Обнаружены модули:\n";
-            for (int i =0; i < categories.Count; i++)
-            {
-                mod += Convert.ToString(categories[i]) + ".dll\n";
-            }
         }
         /// <summary>
         /// Запускает обработку протокола.
@@ -117,7 +108,7 @@ namespace ASTERIX
             }
         }
 
-        static DataTable ReadFile(string filename)
+        static DataTable ReadFile(string filename, DataRow[] modules)
         {
             DataTable message = new DataTable();
             message.Columns.Add("TargetAddress", System.Type.GetType("System.String"));
@@ -144,7 +135,9 @@ namespace ASTERIX
                     endPacket = binStream.Position + lengthSIG;
                     int category = binStream.ReadByte();
 
-                    if (categories.Contains(category))
+                    DataRow[] mod = modules.Where(module => module["CAT"].ToString() == Convert.ToString(category)).ToArray();
+
+                    if (mod.Length != 0)
                     {
                         binStream.Read(lengthPacketBytes, 0, 2);
                         lengthPacket = BitConverter.ToInt16(lengthPacketBytes.Reverse().ToArray(), 0);
@@ -153,7 +146,7 @@ namespace ASTERIX
                         binStream.Read(ProtocolStreamBytes, 0, lengthPacket - 3);
                         MemoryStream ProtocolStream = new MemoryStream(ProtocolStreamBytes);
 
-                        ((Assembly)modules[categories.IndexOf(category)]).GetType("Module").GetMethod("Decode").Invoke(null, new object[] { ProtocolStream, message });
+                        ((Assembly)mod.First()["Assembly"]).GetType("Module").GetMethod("Decode").Invoke(null, new object[] { ProtocolStream, message });
 
                         ProtocolStream.Close();
                     }
@@ -276,6 +269,12 @@ namespace ASTERIX
         /// </summary>
         static void Thread()
         {
+            DataRow[] modules = Modules.GetModules().Select().Where(module => (bool)module["Status"] == true).ToArray();
+            for (int mod = 0; mod < modules.Length; mod++)
+            {
+                ((Assembly)modules[mod]["Assembly"]).GetType("Module").GetMethod("Init").Invoke(null, null);
+            }
+
             int file = 0;
             while (gui.start)
             {
@@ -283,7 +282,7 @@ namespace ASTERIX
                 {
                     try
                     {
-                        DataTable CoordinateTable = ReadFile(Convert.ToString(pathList[file]));
+                        DataTable CoordinateTable = ReadFile(Convert.ToString(pathList[file]), modules);
 
                         List<string> TargetAddress = new List<string>();
 
