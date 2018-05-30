@@ -78,6 +78,11 @@ namespace ASTERIX
             string EndTime = (string)Trek[6];
             string Interval = (string)Trek[7];
             DataTable Aircraftmessage = (DataTable)Trek[8];
+            string SAC = (string)Trek[9];
+            string SIC = (string)Trek[10];
+            string Mode3A = (string)Trek[11];
+            string CAT = (string)Trek[12];
+
 
             XmlDocument doc = new XmlDocument();
             doc.InnerXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?> <gpx xmlns = \"http://www.topografix.com/GPX/1/1\" creator = \"MapSource 6.16.3\" version = \"1.1\"> </gpx>";
@@ -118,7 +123,7 @@ namespace ASTERIX
             doc.DocumentElement.AppendChild(rte);
             doc.DocumentElement.InnerXml = doc.DocumentElement.InnerXml.Replace("xmlns=\"\"", "");
 
-            string insert = "INSERT INTO dbo.[Load] (TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, BeginTime, EndTime, Interval, Status, Gpx, AddTime) VALUES('" + TargetAddress + "','" + AircraftIdentification + "','" + EmitterCategory + "','" + AirportDepature + "','" + AirportArrival + "','" + BeginTime + "','" + EndTime + "','" + Interval + "','" + Status + "','" + doc.InnerXml + "', GETDATE())";
+            string insert = "INSERT INTO dbo.[Load] (TargetAddress, AircraftIdentification, EmitterCategory, AirportDepature, AirportArrival, BeginTime, EndTime, Interval, Status, Gpx, AddTime, SAC, SIC, Mode3A, CAT) VALUES('" + TargetAddress + "','" + AircraftIdentification + "','" + EmitterCategory + "','" + AirportDepature + "','" + AirportArrival + "','" + BeginTime + "','" + EndTime + "','" + Interval + "','" + Status + "','" + doc.InnerXml + "', GETDATE(), " + SAC + "," + SIC + ",'" + Mode3A +"'," +  CAT + ")";
             query(insert);
         }
         /// <summary>

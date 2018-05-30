@@ -122,10 +122,14 @@ namespace ASTERIX
             message.Columns.Add("EmitterCategory", System.Type.GetType("System.String"));
             message.Columns.Add("AirportDepature", System.Type.GetType("System.String"));
             message.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
-            message.Columns.Add("Latitude", System.Type.GetType("System.Double"));
-            message.Columns.Add("Longitude", System.Type.GetType("System.Double"));
+            message.Columns.Add("Latitude", System.Type.GetType("System.String"));
+            message.Columns.Add("Longitude", System.Type.GetType("System.String"));
             message.Columns.Add("Height", System.Type.GetType("System.String"));
             message.Columns.Add("DTime", System.Type.GetType("System.Double"));
+            message.Columns.Add("SAC", System.Type.GetType("System.String"));
+            message.Columns.Add("SIC", System.Type.GetType("System.String"));
+            message.Columns.Add("Mode3A", System.Type.GetType("System.String"));
+            message.Columns.Add("CAT", System.Type.GetType("System.String"));
 
             if ((binStream = File.Open(filename, FileMode.Open)) != null)
             {
@@ -154,7 +158,7 @@ namespace ASTERIX
                             binStream.Read(ProtocolStreamBytes, 0, lengthPacket - 3);
                             MemoryStream ProtocolStream = new MemoryStream(ProtocolStreamBytes);
 
-                            ((Assembly)mod.First()["Assembly"]).GetType("Module").GetMethod("Decode").Invoke(null, new object[] { ProtocolStream, message });
+                            ((Assembly)mod.First()["Assembly"]).GetType("Module").GetMethod("Decode").Invoke(null, new object[] { ProtocolStream, message, category });
 
                             ProtocolStream.Close();
                         }
@@ -183,10 +187,14 @@ namespace ASTERIX
             NewTrek.Columns.Add("EmitterCategory", System.Type.GetType("System.String"));
             NewTrek.Columns.Add("AirportDepature", System.Type.GetType("System.String"));
             NewTrek.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
-            NewTrek.Columns.Add("Latitude", System.Type.GetType("System.Double"));
-            NewTrek.Columns.Add("Longitude", System.Type.GetType("System.Double"));
+            NewTrek.Columns.Add("Latitude", System.Type.GetType("System.String"));
+            NewTrek.Columns.Add("Longitude", System.Type.GetType("System.String"));
             NewTrek.Columns.Add("Height", System.Type.GetType("System.String"));
             NewTrek.Columns.Add("DTime", System.Type.GetType("System.Double"));
+            NewTrek.Columns.Add("SAC", System.Type.GetType("System.String"));
+            NewTrek.Columns.Add("SIC", System.Type.GetType("System.String"));
+            NewTrek.Columns.Add("Mode3A", System.Type.GetType("System.String"));
+            NewTrek.Columns.Add("CAT", System.Type.GetType("System.String"));
 
             int i = 0;
 
@@ -198,7 +206,7 @@ namespace ASTERIX
                 }
             }
 
-            object[,] TrekInfo = new object[i + 1, 9];
+            object[,] TrekInfo = new object[i + 1, 13];
 
             i = 0;
 
@@ -221,6 +229,10 @@ namespace ASTERIX
                         TrekInfo[i, 6] = EndTime;
                         TrekInfo[i, 7] = Interval;
                         TrekInfo[i, 8] = NewTrek;
+                        TrekInfo[i, 9] = NewTrek.Rows[0]["SAC"];
+                        TrekInfo[i, 10] = NewTrek.Rows[0]["SIC"];
+                        TrekInfo[i, 11] = NewTrek.Rows[0]["Mode3A"];
+                        TrekInfo[i, 12] = NewTrek.Rows[0]["CAT"];
 
                         NewTrek = new DataTable();
                         NewTrek.Columns.Add("TargetAddress", System.Type.GetType("System.String"));
@@ -228,10 +240,14 @@ namespace ASTERIX
                         NewTrek.Columns.Add("EmitterCategory", System.Type.GetType("System.String"));
                         NewTrek.Columns.Add("AirportDepature", System.Type.GetType("System.String"));
                         NewTrek.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
-                        NewTrek.Columns.Add("Latitude", System.Type.GetType("System.Double"));
-                        NewTrek.Columns.Add("Longitude", System.Type.GetType("System.Double"));
+                        NewTrek.Columns.Add("Latitude", System.Type.GetType("System.String"));
+                        NewTrek.Columns.Add("Longitude", System.Type.GetType("System.String"));
                         NewTrek.Columns.Add("Height", System.Type.GetType("System.String"));
                         NewTrek.Columns.Add("DTime", System.Type.GetType("System.Double"));
+                        NewTrek.Columns.Add("SAC", System.Type.GetType("System.String"));
+                        NewTrek.Columns.Add("SIC", System.Type.GetType("System.String"));
+                        NewTrek.Columns.Add("Mode3A", System.Type.GetType("System.String"));
+                        NewTrek.Columns.Add("CAT", System.Type.GetType("System.String"));
 
                         i++;
                     }
@@ -304,8 +320,8 @@ namespace ASTERIX
                             {
                                 if (Treks[i, 0] != null)
                                 {
-                                    object[] Trek = new object[9];
-                                    for (int n = 0; n < 9; n++)
+                                    object[] Trek = new object[13];
+                                    for (int n = 0; n < Trek.Length; n++)
                                     {
                                         Trek[n] = Treks[i, n];
                                     }
