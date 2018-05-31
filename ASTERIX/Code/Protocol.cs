@@ -178,7 +178,7 @@ namespace ASTERIX
         /// <param name="CoordinateTable">Маршрутные точки.</param>
         /// <param name="TargetAddress">Адрес.</param>
         /// <returns>Массив маршрутов</returns>
-        static object[,] ReadTrek(DataTable CoordinateTable, string TargetAddress)
+        static DataTable ReadTrek(DataTable CoordinateTable, string TargetAddress)
         {
             DataTable TrekCoordinate = CoordinateTable.Select("TargetAddress = '" + TargetAddress + "'").CopyToDataTable().Select().OrderBy(ms => ms["DTime"]).CopyToDataTable();
             DataTable NewTrek = new DataTable();
@@ -196,19 +196,24 @@ namespace ASTERIX
             NewTrek.Columns.Add("Mode3A", System.Type.GetType("System.String"));
             NewTrek.Columns.Add("CAT", System.Type.GetType("System.String"));
 
-            int i = 0;
-
-            for (int time = 0; time < TrekCoordinate.Rows.Count - 1; time++)
-            {
-                if (Convert.ToDouble(TrekCoordinate.Rows[time + 1]["DTime"]) - Convert.ToDouble(TrekCoordinate.Rows[time]["DTime"]) > UPDATESTATUSMINUTE * 60)
-                {
-                    i++;
-                }
-            }
-
-            object[,] TrekInfo = new object[i + 1, 13];
-
-            i = 0;
+            DataTable TrekInfo = new DataTable();
+            TrekInfo.Columns.Add("TargetAddress", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("AircraftIdentification", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("EmitterCategory", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("AirportDepature", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("AirportArrival", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("BeginTime", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("EndTime", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("Interval", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("NewTrek", typeof(DataTable));
+            TrekInfo.Columns.Add("SAC", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("SIC", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("Mode3A", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("CAT", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("Registration", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("TypeAircraft", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("Class", System.Type.GetType("System.String"));
+            TrekInfo.Columns.Add("Country", System.Type.GetType("System.String"));
 
             for (int time = 0; time < TrekCoordinate.Rows.Count; time++)
             {
@@ -219,20 +224,40 @@ namespace ASTERIX
                         string BeginTime = TimeDecoder(Convert.ToDouble(NewTrek.Rows[0]["DTime"]));
                         string EndTime = TimeDecoder(Convert.ToDouble(NewTrek.Rows[NewTrek.Rows.Count - 1]["DTime"]));
                         string Interval = (DateTime.Parse(EndTime) - DateTime.Parse(BeginTime)).ToString();
+                        string Registration = "";
+                        string TypeAircraft = "";
+                        string Class = "";
+                        string Country = "";
 
-                        TrekInfo[i, 0] = NewTrek.Rows[0]["TargetAddress"];
-                        TrekInfo[i, 1] = NewTrek.Rows[0]["AircraftIdentification"];
-                        TrekInfo[i, 2] = NewTrek.Rows[0]["EmitterCategory"];
-                        TrekInfo[i, 3] = NewTrek.Rows[0]["AirportDepature"];
-                        TrekInfo[i, 4] = NewTrek.Rows[0]["AirportArrival"];
-                        TrekInfo[i, 5] = BeginTime;
-                        TrekInfo[i, 6] = EndTime;
-                        TrekInfo[i, 7] = Interval;
-                        TrekInfo[i, 8] = NewTrek;
-                        TrekInfo[i, 9] = NewTrek.Rows[0]["SAC"];
-                        TrekInfo[i, 10] = NewTrek.Rows[0]["SIC"];
-                        TrekInfo[i, 11] = NewTrek.Rows[0]["Mode3A"];
-                        TrekInfo[i, 12] = NewTrek.Rows[0]["CAT"];
+                        DataTable Aircraft = SQL.query("SELECT * FROM [Aircraft] WHERE TARGETADDRESS = '" + TargetAddress + "'");
+
+                        if  (Aircraft.Rows.Count != 0)
+                        {
+                            Registration = Aircraft.Rows[0]["Registration"].ToString();
+                            TypeAircraft = Aircraft.Rows[0]["TypeAircraft"].ToString();
+                            Class = Aircraft.Rows[0]["Class"].ToString();
+                            Country = Aircraft.Rows[0]["Country"].ToString();
+                        }
+
+                        DataRow Info = TrekInfo.NewRow();
+                        Info["TargetAddress"] = NewTrek.Rows[0]["TargetAddress"];
+                        Info["AircraftIdentification"] = NewTrek.Rows[0]["AircraftIdentification"];
+                        Info["EmitterCategory"] = NewTrek.Rows[0]["EmitterCategory"];
+                        Info["AirportDepature"] = NewTrek.Rows[0]["AirportDepature"];
+                        Info["AirportArrival"] = NewTrek.Rows[0]["AirportArrival"];
+                        Info["BeginTime"] = BeginTime;
+                        Info["EndTime"] = EndTime;
+                        Info["Interval"] = Interval;
+                        Info["NewTrek"] = NewTrek;
+                        Info["SAC"] = NewTrek.Rows[0]["SAC"];
+                        Info["SIC"] = NewTrek.Rows[0]["SIC"];
+                        Info["Mode3A"] = NewTrek.Rows[0]["Mode3A"];
+                        Info["CAT"] = NewTrek.Rows[0]["CAT"];
+                        Info["Registration"] = Registration;
+                        Info["TypeAircraft"] = TypeAircraft;
+                        Info["Class"] = Class;
+                        Info["Country"] = Country;
+                        TrekInfo.Rows.Add(Info);
 
                         NewTrek = new DataTable();
                         NewTrek.Columns.Add("TargetAddress", System.Type.GetType("System.String"));
@@ -248,8 +273,6 @@ namespace ASTERIX
                         NewTrek.Columns.Add("SIC", System.Type.GetType("System.String"));
                         NewTrek.Columns.Add("Mode3A", System.Type.GetType("System.String"));
                         NewTrek.Columns.Add("CAT", System.Type.GetType("System.String"));
-
-                        i++;
                     }
                     else
                     {
@@ -315,29 +338,20 @@ namespace ASTERIX
                         gui.ProgressBarMax(TargetAddress.Count);
                         for (int Address = 0; Address < TargetAddress.Count; Address++)
                         {
-                            object[,] Treks = ReadTrek(CoordinateTable, TargetAddress[Address]);
-                            for (int i = 0; i <= Treks.GetUpperBound(0); i++)
+                           DataTable Treks = ReadTrek(CoordinateTable, TargetAddress[Address]);
+                            for (int i = 0; i < Treks.Rows.Count; i++)
                             {
-                                if (Treks[i, 0] != null)
+                                SQL.query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
+
+                                int countTargetAddress = Convert.ToInt32(SQL.query("SELECT COUNT(*) FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Treks.Rows[i]["AircraftIdentification"]) + "' AND Status = 'Активен'").Rows[0][0]);
+
+                                if (countTargetAddress > 0)
                                 {
-                                    object[] Trek = new object[13];
-                                    for (int n = 0; n < Trek.Length; n++)
-                                    {
-                                        Trek[n] = Treks[i, n];
-                                    }
-
-                                    SQL.query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
-
-                                    int countTargetAddress = Convert.ToInt32(SQL.query("SELECT COUNT(*) FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0][0]);
-
-                                    if (countTargetAddress > 0)
-                                    {
-                                        SQL.UPDATE(Trek, SQL.query("SELECT * FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Trek[1]) + "' AND Status = 'Активен'").Rows[0]);
-                                    }
-                                    else
-                                    {
-                                        SQL.INSERT(Trek);
-                                    }
+                                    SQL.UPDATE(Treks.Rows[i], SQL.query("SELECT * FROM dbo.[Load] WHERE TargetAddress = '" + TargetAddress[Address] + "' AND AircraftIdentification = '" + Convert.ToString(Treks.Rows[i]["AircraftIdentification"]) + "' AND Status = 'Активен'").Rows[0]);
+                                }
+                                else
+                                {
+                                    SQL.INSERT(Treks.Rows[i]);
                                 }
                             }
 
@@ -346,9 +360,8 @@ namespace ASTERIX
                         File.Delete(pathList[file]);
                         gui.ProgressBarValue(0);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
-                        // MessageBox.Show(ex.Message);
                         if (binStream != null)
                         {
                             binStream.Close();

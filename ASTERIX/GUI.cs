@@ -166,14 +166,7 @@ namespace ASTERIX
                 return;
             }
 
-            int[] WidthColumn = { 90, 130, 150, 130, 130, 130, 130, 150, 115 };
-
-            for (int column = 1; column < LoadGridView1.ColumnCount; column++)
-            {
-                LoadGridView1.Columns[column].Width = WidthColumn[column - 1];
-            }
-
-            LoadGridView1.Columns[0].Visible = false;
+            LoadGridView1.Columns["Id"].Visible = false;
             for (int column = 1; column < LoadGridView1.ColumnCount; column++)
             {
                 LoadGridView1.Columns[column].Visible = true;
@@ -251,7 +244,7 @@ namespace ASTERIX
         void ShowDataGridView(bool autoPosition)
         {
             string f = filter();
-            UpdateDataGridView(SQL.query("SELECT Id, TargetAddress AS 'Адрес', AircraftIdentification AS 'Идентификатор', EmitterCategory AS 'Категория', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
+            UpdateDataGridView(SQL.query("SELECT Id, TargetAddress AS 'Адрес', Mode3A, AircraftIdentification AS 'Позывной', Registration AS 'Бортовой', EmitterCategory AS 'Категория', TypeAircraft AS 'Тип', Class AS 'Класс', Country AS 'Государство', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', SAC, SIC, CAT, BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
         }
         /// <summary>
         /// Обновляет данные в LoadGridView.
