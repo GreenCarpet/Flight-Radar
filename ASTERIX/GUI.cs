@@ -244,7 +244,7 @@ namespace ASTERIX
         void ShowDataGridView(bool autoPosition)
         {
             string f = filter();
-            UpdateDataGridView(SQL.query("SELECT Id, TargetAddress AS 'Адрес', Mode3A, AircraftIdentification AS 'Позывной', Registration AS 'Бортовой', EmitterCategory AS 'Категория', TypeAircraft AS 'Тип', Class AS 'Класс', Country AS 'Государство', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', SAC, SIC, CAT, BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
+            UpdateDataGridView(SQL.query("SELECT Id, TargetAddress AS 'ICAO24', Mode3A, AircraftIdentification AS 'Позывной', Registration AS 'Бортовой', EmitterCategory AS 'Категория', TypeAircraft AS 'Тип', Class AS 'Класс', Country AS 'Государство', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', SAC, SIC, CAT, BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
         }
         /// <summary>
         /// Обновляет данные в LoadGridView.
@@ -513,7 +513,6 @@ namespace ASTERIX
             {
                 if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
-                    StartStopBTN.BackgroundImage = Properties.Resources.stop;
                     start = true;
 
                     Protocol.START(folderBrowserDialog1.SelectedPath, "*.sig");
@@ -522,45 +521,13 @@ namespace ASTERIX
 
             else
             {
-                StartStopBTN.BackgroundImage = Properties.Resources.mouseenterStop;
                 progressBar1.Value = 0;
                 start = false;
 
                 Protocol.STOP();                
             }
         }
-        /// <summary>
-        /// Изменяет вид кнопки. Происходит, когда указатель мыши входит в видимую часть кнопки.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StartStopBTN_MouseEnter(object sender, EventArgs e)
-        {
-            if (start)
-            {
-                StartStopBTN.BackgroundImage = Properties.Resources.mouseenterStart;
-            }
-            else
-            {
-                StartStopBTN.BackgroundImage = Properties.Resources.mouseenterStop;
-            }
-        }
-        /// <summary>
-        /// Изменяет вид кнопки. Происходит, когда указатель мыши выходит за пределы кнопки.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StartStopBTN_MouseLeave(object sender, EventArgs e)
-        {
-            if (start)
-            {
-                StartStopBTN.BackgroundImage = Properties.Resources.stop;
-            }
-            else
-            {
-                StartStopBTN.BackgroundImage = Properties.Resources.start;
-            }
-        }
+
 
         /// <summary>
         /// Обновляет LoadGridView при развертывании календаря.
@@ -659,9 +626,53 @@ namespace ASTERIX
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        void ResetBackColor()
         {
-            new Modules().Show();
+            ScanPicture.BackColor = Color.Transparent;
+            StartStopBTN.BackColor = Color.Transparent;
+            MapPicture.BackColor = Color.Transparent;
+            MapBTN.BackColor = Color.Transparent;
+            AircraftPicture.BackColor = Color.Transparent;
+            AircraftBTN.BackColor = Color.Transparent;
+            SettingsPicture.BackColor = Color.Transparent;
+            SettingsBTN.BackColor = Color.Transparent;
+        }
+
+        private void MapBTN_Click(object sender, EventArgs e)
+        {
+            ResetBackColor();
+
+            MapPicture.BackColor = Color.CornflowerBlue;
+            MapBTN.BackColor = Color.CornflowerBlue;
+            ColorPanel.BackColor = Color.CornflowerBlue;
+
+            pagePanel.Controls.Clear();
+            pagePanel.Controls.Add(MapPanel);
+        }
+
+        private void SettingsBTN_Click(object sender, EventArgs e)
+        {
+            ResetBackColor();
+
+            SettingsPicture.BackColor = Color.DarkGray;
+            SettingsBTN.BackColor = Color.DarkGray;
+            ColorPanel.BackColor = Color.DarkGray;
+
+            pagePanel.Controls.Clear();
+            pagePanel.Controls.Add(SettingsPanel);
+        }
+
+        private void AircraftBTN_Click(object sender, EventArgs e)
+        {
+            ResetBackColor();
+
+            AircraftPicture.BackColor = Color.LightSeaGreen;
+            AircraftBTN.BackColor = Color.LightSeaGreen;
+            ColorPanel.BackColor = Color.LightSeaGreen;
+
+            pagePanel.Controls.Clear();
+            pagePanel.Controls.Add(AircraftPanel);
         }
     }
 }
