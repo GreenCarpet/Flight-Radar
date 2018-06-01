@@ -28,6 +28,8 @@ namespace ASTERIX
 
         int UPDATEGRIDMILLISECONDS = 5000;
 
+        int SearchSplitterPosition = 100;
+
         /// <summary>
         /// Формирует текущий фильтр.
         /// </summary>
@@ -511,16 +513,23 @@ namespace ASTERIX
         {
             if (start == false)
             {
-                if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                tabTable.RowStyles[1].Height = 15;
+                progressBar1.Visible = true;
+                start = true;
+
+              /*  if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                 {
                     start = true;
 
                     Protocol.START(folderBrowserDialog1.SelectedPath, "*.sig");
-                }             
+                }    */         
             }
 
             else
             {
+                tabTable.RowStyles[1].Height = 0;
+                progressBar1.Visible = false;
+
                 progressBar1.Value = 0;
                 start = false;
 
@@ -618,6 +627,11 @@ namespace ASTERIX
             if (SQL.Connect())
             {
                 InitializeComponent();
+
+                MapBTN_Click(null, null);
+                SearchContainer.Panel1MinSize = HideSearchBTN.Size.Height;
+                SearchContainer.SplitterDistance = SearchContainer.Panel1MinSize;
+
                 Protocol.Init(this);
                 chcksum = checksum("Load");
                 ShowDataGridView(false);
@@ -626,7 +640,9 @@ namespace ASTERIX
             }
         }
 
-
+        /// <summary>
+        /// Сбрасывает BackColor для контролов меню
+        /// </summary>
         void ResetBackColor()
         {
             ScanPicture.BackColor = Color.Transparent;
@@ -639,6 +655,11 @@ namespace ASTERIX
             SettingsBTN.BackColor = Color.Transparent;
         }
 
+        /// <summary>
+        /// Выбор меню "Карта"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MapBTN_Click(object sender, EventArgs e)
         {
             ResetBackColor();
@@ -650,7 +671,27 @@ namespace ASTERIX
             pagePanel.Controls.Clear();
             pagePanel.Controls.Add(MapPanel);
         }
+        /// <summary>
+        /// Выбор меню "Привязки"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AircraftBTN_Click(object sender, EventArgs e)
+        {
+            ResetBackColor();
 
+            AircraftPicture.BackColor = Color.LightSeaGreen;
+            AircraftBTN.BackColor = Color.LightSeaGreen;
+            ColorPanel.BackColor = Color.LightSeaGreen;
+
+            pagePanel.Controls.Clear();
+            pagePanel.Controls.Add(AircraftPanel);
+        }
+        /// <summary>
+        /// Выбор меню "Настройки"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SettingsBTN_Click(object sender, EventArgs e)
         {
             ResetBackColor();
@@ -663,16 +704,19 @@ namespace ASTERIX
             pagePanel.Controls.Add(SettingsPanel);
         }
 
-        private void AircraftBTN_Click(object sender, EventArgs e)
+        private void HideSearchBTN_Click(object sender, EventArgs e)
         {
-            ResetBackColor();
-
-            AircraftPicture.BackColor = Color.LightSeaGreen;
-            AircraftBTN.BackColor = Color.LightSeaGreen;
-            ColorPanel.BackColor = Color.LightSeaGreen;
-
-            pagePanel.Controls.Clear();
-            pagePanel.Controls.Add(AircraftPanel);
+            if (SearchContainer.SplitterDistance == HideSearchBTN.Size.Height)
+            {
+                SearchContainer.SplitterDistance = SearchSplitterPosition;
+                SearchPanel.AutoScroll = true;
+            }
+            else
+            {
+                SearchSplitterPosition = SearchContainer.SplitterDistance;
+                SearchContainer.SplitterDistance = HideSearchBTN.Size.Height;
+                SearchPanel.AutoScroll = false;
+            }
         }
     }
 }

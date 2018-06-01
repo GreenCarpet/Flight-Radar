@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GUI));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -55,6 +55,14 @@
             this.MapPanel = new System.Windows.Forms.Panel();
             this.MapContainer = new System.Windows.Forms.SplitContainer();
             this.SearchContainer = new System.Windows.Forms.SplitContainer();
+            this.HideSearchBTN = new System.Windows.Forms.Button();
+            this.LoadGridView1 = new System.Windows.Forms.DataGridView();
+            this.RouteContainer = new System.Windows.Forms.SplitContainer();
+            this.AircraftPage = new System.Windows.Forms.TabPage();
+            this.AircraftPanel = new System.Windows.Forms.Panel();
+            this.SettingsPage = new System.Windows.Forms.TabPage();
+            this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.SearchPanel = new System.Windows.Forms.Panel();
             this.TargetAddressTextBox = new System.Windows.Forms.TextBox();
             this.EndTimePicker = new System.Windows.Forms.DateTimePicker();
             this.AircraftIdetificationTextBox = new System.Windows.Forms.TextBox();
@@ -62,12 +70,6 @@
             this.EmitterCategoryComboBox = new System.Windows.Forms.ComboBox();
             this.AirportArrivalTextBox = new System.Windows.Forms.TextBox();
             this.AirportDepatureTextBox = new System.Windows.Forms.TextBox();
-            this.LoadGridView1 = new System.Windows.Forms.DataGridView();
-            this.RouteContainer = new System.Windows.Forms.SplitContainer();
-            this.AircraftPage = new System.Windows.Forms.TabPage();
-            this.AircraftPanel = new System.Windows.Forms.Panel();
-            this.SettingsPage = new System.Windows.Forms.TabPage();
-            this.SettingsPanel = new System.Windows.Forms.Panel();
             this.tabPanel.SuspendLayout();
             this.tabTable.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AircraftPicture)).BeginInit();
@@ -91,17 +93,19 @@
             this.RouteContainer.SuspendLayout();
             this.AircraftPage.SuspendLayout();
             this.SettingsPage.SuspendLayout();
+            this.SearchPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // progressBar1
             // 
             this.tabTable.SetColumnSpan(this.progressBar1, 2);
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar1.Location = new System.Drawing.Point(0, 45);
+            this.progressBar1.Location = new System.Drawing.Point(0, 40);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(0);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(167, 24);
+            this.progressBar1.Size = new System.Drawing.Size(167, 1);
             this.progressBar1.TabIndex = 1;
+            this.progressBar1.Visible = false;
             // 
             // openFileDialog1
             // 
@@ -140,14 +144,14 @@
             this.tabTable.Location = new System.Drawing.Point(0, 0);
             this.tabTable.Margin = new System.Windows.Forms.Padding(0);
             this.tabTable.Name = "tabTable";
-            this.tabTable.RowCount = 5;
-            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
-            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12F));
-            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
-            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
-            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 22F));
-            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tabTable.Size = new System.Drawing.Size(167, 208);
+            this.tabTable.RowCount = 6;
+            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 0F));
+            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
+            this.tabTable.Size = new System.Drawing.Size(167, 193);
             this.tabTable.TabIndex = 0;
             // 
             // AircraftBTN
@@ -156,10 +160,10 @@
             this.AircraftBTN.BackColor = System.Drawing.Color.Transparent;
             this.AircraftBTN.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AircraftBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AircraftBTN.Location = new System.Drawing.Point(33, 114);
+            this.AircraftBTN.Location = new System.Drawing.Point(33, 80);
             this.AircraftBTN.Margin = new System.Windows.Forms.Padding(0);
             this.AircraftBTN.Name = "AircraftBTN";
-            this.AircraftBTN.Size = new System.Drawing.Size(134, 45);
+            this.AircraftBTN.Size = new System.Drawing.Size(134, 40);
             this.AircraftBTN.TabIndex = 6;
             this.AircraftBTN.Text = "Привязки";
             this.AircraftBTN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -170,11 +174,11 @@
             this.AircraftPicture.BackColor = System.Drawing.Color.Transparent;
             this.AircraftPicture.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AircraftPicture.Image = ((System.Drawing.Image)(resources.GetObject("AircraftPicture.Image")));
-            this.AircraftPicture.Location = new System.Drawing.Point(0, 114);
+            this.AircraftPicture.Location = new System.Drawing.Point(0, 80);
             this.AircraftPicture.Margin = new System.Windows.Forms.Padding(0);
             this.AircraftPicture.Name = "AircraftPicture";
             this.AircraftPicture.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.AircraftPicture.Size = new System.Drawing.Size(33, 45);
+            this.AircraftPicture.Size = new System.Drawing.Size(33, 40);
             this.AircraftPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.AircraftPicture.TabIndex = 5;
             this.AircraftPicture.TabStop = false;
@@ -187,7 +191,7 @@
             this.ScanPicture.Location = new System.Drawing.Point(0, 0);
             this.ScanPicture.Margin = new System.Windows.Forms.Padding(0);
             this.ScanPicture.Name = "ScanPicture";
-            this.ScanPicture.Size = new System.Drawing.Size(33, 45);
+            this.ScanPicture.Size = new System.Drawing.Size(33, 40);
             this.ScanPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ScanPicture.TabIndex = 0;
             this.ScanPicture.TabStop = false;
@@ -201,20 +205,21 @@
             this.StartStopBTN.Location = new System.Drawing.Point(33, 0);
             this.StartStopBTN.Margin = new System.Windows.Forms.Padding(0);
             this.StartStopBTN.Name = "StartStopBTN";
-            this.StartStopBTN.Size = new System.Drawing.Size(134, 45);
+            this.StartStopBTN.Size = new System.Drawing.Size(134, 40);
             this.StartStopBTN.TabIndex = 1;
             this.StartStopBTN.Text = "Сканирование";
             this.StartStopBTN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.StartStopBTN.Click += new System.EventHandler(this.StartStopBTN_Click);
             // 
             // MapPicture
             // 
             this.MapPicture.BackColor = System.Drawing.Color.Transparent;
             this.MapPicture.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MapPicture.Image = ((System.Drawing.Image)(resources.GetObject("MapPicture.Image")));
-            this.MapPicture.Location = new System.Drawing.Point(0, 69);
+            this.MapPicture.Location = new System.Drawing.Point(0, 40);
             this.MapPicture.Margin = new System.Windows.Forms.Padding(0);
             this.MapPicture.Name = "MapPicture";
-            this.MapPicture.Size = new System.Drawing.Size(33, 45);
+            this.MapPicture.Size = new System.Drawing.Size(33, 40);
             this.MapPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.MapPicture.TabIndex = 2;
             this.MapPicture.TabStop = false;
@@ -225,10 +230,10 @@
             this.MapBTN.BackColor = System.Drawing.Color.Transparent;
             this.MapBTN.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MapBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.MapBTN.Location = new System.Drawing.Point(33, 69);
+            this.MapBTN.Location = new System.Drawing.Point(33, 40);
             this.MapBTN.Margin = new System.Windows.Forms.Padding(0);
             this.MapBTN.Name = "MapBTN";
-            this.MapBTN.Size = new System.Drawing.Size(134, 45);
+            this.MapBTN.Size = new System.Drawing.Size(134, 40);
             this.MapBTN.TabIndex = 3;
             this.MapBTN.Text = "Карта";
             this.MapBTN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -239,10 +244,10 @@
             this.SettingsPicture.BackColor = System.Drawing.Color.Transparent;
             this.SettingsPicture.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SettingsPicture.Image = ((System.Drawing.Image)(resources.GetObject("SettingsPicture.Image")));
-            this.SettingsPicture.Location = new System.Drawing.Point(0, 159);
+            this.SettingsPicture.Location = new System.Drawing.Point(0, 120);
             this.SettingsPicture.Margin = new System.Windows.Forms.Padding(0);
             this.SettingsPicture.Name = "SettingsPicture";
-            this.SettingsPicture.Size = new System.Drawing.Size(33, 49);
+            this.SettingsPicture.Size = new System.Drawing.Size(33, 40);
             this.SettingsPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.SettingsPicture.TabIndex = 4;
             this.SettingsPicture.TabStop = false;
@@ -253,10 +258,10 @@
             this.SettingsBTN.BackColor = System.Drawing.Color.Transparent;
             this.SettingsBTN.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SettingsBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SettingsBTN.Location = new System.Drawing.Point(33, 159);
+            this.SettingsBTN.Location = new System.Drawing.Point(33, 120);
             this.SettingsBTN.Margin = new System.Windows.Forms.Padding(0);
             this.SettingsBTN.Name = "SettingsBTN";
-            this.SettingsBTN.Size = new System.Drawing.Size(134, 49);
+            this.SettingsBTN.Size = new System.Drawing.Size(134, 40);
             this.SettingsBTN.TabIndex = 5;
             this.SettingsBTN.Text = "Настройки";
             this.SettingsBTN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -346,138 +351,77 @@
             // 
             // SearchContainer.Panel1
             // 
-            this.SearchContainer.Panel1.Controls.Add(this.TargetAddressTextBox);
-            this.SearchContainer.Panel1.Controls.Add(this.EndTimePicker);
-            this.SearchContainer.Panel1.Controls.Add(this.AircraftIdetificationTextBox);
-            this.SearchContainer.Panel1.Controls.Add(this.BeginTimePicker);
-            this.SearchContainer.Panel1.Controls.Add(this.EmitterCategoryComboBox);
-            this.SearchContainer.Panel1.Controls.Add(this.AirportArrivalTextBox);
-            this.SearchContainer.Panel1.Controls.Add(this.AirportDepatureTextBox);
+            this.SearchContainer.Panel1.Controls.Add(this.SearchPanel);
+            this.SearchContainer.Panel1.Controls.Add(this.HideSearchBTN);
+            this.SearchContainer.Panel1MinSize = 0;
             // 
             // SearchContainer.Panel2
             // 
             this.SearchContainer.Panel2.Controls.Add(this.LoadGridView1);
             this.SearchContainer.Size = new System.Drawing.Size(1031, 290);
-            this.SearchContainer.SplitterDistance = 127;
+            this.SearchContainer.SplitterDistance = 101;
             this.SearchContainer.TabIndex = 0;
             // 
-            // TargetAddressTextBox
+            // HideSearchBTN
             // 
-            this.TargetAddressTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.TargetAddressTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.TargetAddressTextBox.Location = new System.Drawing.Point(57, 20);
-            this.TargetAddressTextBox.Name = "TargetAddressTextBox";
-            this.TargetAddressTextBox.Size = new System.Drawing.Size(80, 20);
-            this.TargetAddressTextBox.TabIndex = 1;
-            this.TargetAddressTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // EndTimePicker
-            // 
-            this.EndTimePicker.Checked = false;
-            this.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.EndTimePicker.Location = new System.Drawing.Point(424, 46);
-            this.EndTimePicker.Name = "EndTimePicker";
-            this.EndTimePicker.ShowCheckBox = true;
-            this.EndTimePicker.Size = new System.Drawing.Size(120, 20);
-            this.EndTimePicker.TabIndex = 6;
-            // 
-            // AircraftIdetificationTextBox
-            // 
-            this.AircraftIdetificationTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.AircraftIdetificationTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.AircraftIdetificationTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AircraftIdetificationTextBox.Location = new System.Drawing.Point(57, 46);
-            this.AircraftIdetificationTextBox.Name = "AircraftIdetificationTextBox";
-            this.AircraftIdetificationTextBox.Size = new System.Drawing.Size(120, 20);
-            this.AircraftIdetificationTextBox.TabIndex = 0;
-            this.AircraftIdetificationTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // BeginTimePicker
-            // 
-            this.BeginTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.BeginTimePicker.Location = new System.Drawing.Point(424, 20);
-            this.BeginTimePicker.Name = "BeginTimePicker";
-            this.BeginTimePicker.ShowCheckBox = true;
-            this.BeginTimePicker.Size = new System.Drawing.Size(120, 20);
-            this.BeginTimePicker.TabIndex = 5;
-            // 
-            // EmitterCategoryComboBox
-            // 
-            this.EmitterCategoryComboBox.FormattingEnabled = true;
-            this.EmitterCategoryComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.EmitterCategoryComboBox.Location = new System.Drawing.Point(57, 72);
-            this.EmitterCategoryComboBox.MaxDropDownItems = 50;
-            this.EmitterCategoryComboBox.Name = "EmitterCategoryComboBox";
-            this.EmitterCategoryComboBox.Size = new System.Drawing.Size(140, 21);
-            this.EmitterCategoryComboBox.TabIndex = 2;
-            // 
-            // AirportArrivalTextBox
-            // 
-            this.AirportArrivalTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.AirportArrivalTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AirportArrivalTextBox.Location = new System.Drawing.Point(247, 46);
-            this.AirportArrivalTextBox.Name = "AirportArrivalTextBox";
-            this.AirportArrivalTextBox.Size = new System.Drawing.Size(120, 20);
-            this.AirportArrivalTextBox.TabIndex = 4;
-            this.AirportArrivalTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // AirportDepatureTextBox
-            // 
-            this.AirportDepatureTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.AirportDepatureTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AirportDepatureTextBox.Location = new System.Drawing.Point(247, 20);
-            this.AirportDepatureTextBox.Name = "AirportDepatureTextBox";
-            this.AirportDepatureTextBox.Size = new System.Drawing.Size(120, 20);
-            this.AirportDepatureTextBox.TabIndex = 3;
-            this.AirportDepatureTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.HideSearchBTN.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.HideSearchBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.HideSearchBTN.Location = new System.Drawing.Point(0, 81);
+            this.HideSearchBTN.Margin = new System.Windows.Forms.Padding(0);
+            this.HideSearchBTN.Name = "HideSearchBTN";
+            this.HideSearchBTN.Size = new System.Drawing.Size(1031, 20);
+            this.HideSearchBTN.TabIndex = 7;
+            this.HideSearchBTN.Text = "Поиск";
+            this.HideSearchBTN.UseVisualStyleBackColor = true;
+            this.HideSearchBTN.Click += new System.EventHandler(this.HideSearchBTN_Click);
             // 
             // LoadGridView1
             // 
             this.LoadGridView1.AllowUserToAddRows = false;
             this.LoadGridView1.AllowUserToResizeColumns = false;
             this.LoadGridView1.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.MediumSeaGreen;
-            this.LoadGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.LoadGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle9;
             this.LoadGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
             this.LoadGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
             this.LoadGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LoadGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle10;
             this.LoadGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.DarkSeaGreen;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.LoadGridView1.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.DarkSeaGreen;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.LoadGridView1.DefaultCellStyle = dataGridViewCellStyle11;
             this.LoadGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LoadGridView1.GridColor = System.Drawing.Color.SeaGreen;
             this.LoadGridView1.Location = new System.Drawing.Point(0, 0);
             this.LoadGridView1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.LoadGridView1.Name = "LoadGridView1";
             this.LoadGridView1.ReadOnly = true;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
             this.LoadGridView1.RowHeadersWidth = 40;
             this.LoadGridView1.RowTemplate.Height = 25;
             this.LoadGridView1.RowTemplate.ReadOnly = true;
             this.LoadGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.LoadGridView1.Size = new System.Drawing.Size(1031, 159);
+            this.LoadGridView1.Size = new System.Drawing.Size(1031, 185);
             this.LoadGridView1.TabIndex = 0;
             this.LoadGridView1.TabStop = false;
             // 
@@ -533,6 +477,92 @@
             this.SettingsPanel.Size = new System.Drawing.Size(1031, 730);
             this.SettingsPanel.TabIndex = 1;
             // 
+            // SearchPanel
+            // 
+            this.SearchPanel.Controls.Add(this.TargetAddressTextBox);
+            this.SearchPanel.Controls.Add(this.EndTimePicker);
+            this.SearchPanel.Controls.Add(this.AircraftIdetificationTextBox);
+            this.SearchPanel.Controls.Add(this.BeginTimePicker);
+            this.SearchPanel.Controls.Add(this.EmitterCategoryComboBox);
+            this.SearchPanel.Controls.Add(this.AirportArrivalTextBox);
+            this.SearchPanel.Controls.Add(this.AirportDepatureTextBox);
+            this.SearchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SearchPanel.Location = new System.Drawing.Point(0, 0);
+            this.SearchPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.SearchPanel.Name = "SearchPanel";
+            this.SearchPanel.Size = new System.Drawing.Size(1031, 81);
+            this.SearchPanel.TabIndex = 8;
+            // 
+            // TargetAddressTextBox
+            // 
+            this.TargetAddressTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.TargetAddressTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.TargetAddressTextBox.Location = new System.Drawing.Point(100, 3);
+            this.TargetAddressTextBox.Name = "TargetAddressTextBox";
+            this.TargetAddressTextBox.Size = new System.Drawing.Size(80, 20);
+            this.TargetAddressTextBox.TabIndex = 8;
+            this.TargetAddressTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // EndTimePicker
+            // 
+            this.EndTimePicker.Checked = false;
+            this.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.EndTimePicker.Location = new System.Drawing.Point(467, 29);
+            this.EndTimePicker.Name = "EndTimePicker";
+            this.EndTimePicker.ShowCheckBox = true;
+            this.EndTimePicker.Size = new System.Drawing.Size(120, 20);
+            this.EndTimePicker.TabIndex = 13;
+            // 
+            // AircraftIdetificationTextBox
+            // 
+            this.AircraftIdetificationTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.AircraftIdetificationTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.AircraftIdetificationTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.AircraftIdetificationTextBox.Location = new System.Drawing.Point(100, 29);
+            this.AircraftIdetificationTextBox.Name = "AircraftIdetificationTextBox";
+            this.AircraftIdetificationTextBox.Size = new System.Drawing.Size(120, 20);
+            this.AircraftIdetificationTextBox.TabIndex = 7;
+            this.AircraftIdetificationTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // BeginTimePicker
+            // 
+            this.BeginTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.BeginTimePicker.Location = new System.Drawing.Point(467, 3);
+            this.BeginTimePicker.Name = "BeginTimePicker";
+            this.BeginTimePicker.ShowCheckBox = true;
+            this.BeginTimePicker.Size = new System.Drawing.Size(120, 20);
+            this.BeginTimePicker.TabIndex = 12;
+            // 
+            // EmitterCategoryComboBox
+            // 
+            this.EmitterCategoryComboBox.FormattingEnabled = true;
+            this.EmitterCategoryComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.EmitterCategoryComboBox.Location = new System.Drawing.Point(100, 55);
+            this.EmitterCategoryComboBox.MaxDropDownItems = 50;
+            this.EmitterCategoryComboBox.Name = "EmitterCategoryComboBox";
+            this.EmitterCategoryComboBox.Size = new System.Drawing.Size(140, 21);
+            this.EmitterCategoryComboBox.TabIndex = 9;
+            // 
+            // AirportArrivalTextBox
+            // 
+            this.AirportArrivalTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.AirportArrivalTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.AirportArrivalTextBox.Location = new System.Drawing.Point(290, 29);
+            this.AirportArrivalTextBox.Name = "AirportArrivalTextBox";
+            this.AirportArrivalTextBox.Size = new System.Drawing.Size(120, 20);
+            this.AirportArrivalTextBox.TabIndex = 11;
+            this.AirportArrivalTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // AirportDepatureTextBox
+            // 
+            this.AirportDepatureTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.AirportDepatureTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.AirportDepatureTextBox.Location = new System.Drawing.Point(290, 3);
+            this.AirportDepatureTextBox.Name = "AirportDepatureTextBox";
+            this.AirportDepatureTextBox.Size = new System.Drawing.Size(120, 20);
+            this.AirportDepatureTextBox.TabIndex = 10;
+            this.AirportDepatureTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // GUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -564,7 +594,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.MapContainer)).EndInit();
             this.MapContainer.ResumeLayout(false);
             this.SearchContainer.Panel1.ResumeLayout(false);
-            this.SearchContainer.Panel1.PerformLayout();
             this.SearchContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.SearchContainer)).EndInit();
             this.SearchContainer.ResumeLayout(false);
@@ -573,6 +602,8 @@
             this.RouteContainer.ResumeLayout(false);
             this.AircraftPage.ResumeLayout(false);
             this.SettingsPage.ResumeLayout(false);
+            this.SearchPanel.ResumeLayout(false);
+            this.SearchPanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -599,6 +630,14 @@
         private System.Windows.Forms.Panel MapPanel;
         private System.Windows.Forms.SplitContainer MapContainer;
         private System.Windows.Forms.SplitContainer SearchContainer;
+        private System.Windows.Forms.DataGridView LoadGridView1;
+        private System.Windows.Forms.SplitContainer RouteContainer;
+        private System.Windows.Forms.TabPage AircraftPage;
+        private System.Windows.Forms.Panel AircraftPanel;
+        private System.Windows.Forms.TabPage SettingsPage;
+        private System.Windows.Forms.Panel SettingsPanel;
+        private System.Windows.Forms.Button HideSearchBTN;
+        private System.Windows.Forms.Panel SearchPanel;
         private System.Windows.Forms.TextBox TargetAddressTextBox;
         private System.Windows.Forms.DateTimePicker EndTimePicker;
         private System.Windows.Forms.TextBox AircraftIdetificationTextBox;
@@ -606,12 +645,6 @@
         private System.Windows.Forms.ComboBox EmitterCategoryComboBox;
         private System.Windows.Forms.TextBox AirportArrivalTextBox;
         private System.Windows.Forms.TextBox AirportDepatureTextBox;
-        private System.Windows.Forms.DataGridView LoadGridView1;
-        private System.Windows.Forms.SplitContainer RouteContainer;
-        private System.Windows.Forms.TabPage AircraftPage;
-        private System.Windows.Forms.Panel AircraftPanel;
-        private System.Windows.Forms.TabPage SettingsPage;
-        private System.Windows.Forms.Panel SettingsPanel;
     }
 }
 
