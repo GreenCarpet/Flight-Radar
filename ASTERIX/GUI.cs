@@ -246,7 +246,7 @@ namespace ASTERIX
         void ShowDataGridView(bool autoPosition)
         {
             string f = filter();
-            UpdateDataGridView(SQL.query("SELECT Id, TargetAddress AS 'ICAO24', Mode3A, AircraftIdentification AS 'Позывной', Registration AS 'Бортовой', EmitterCategory AS 'Категория', TypeAircraft AS 'Тип', Class AS 'Класс', Country AS 'Государство', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытитя', SAC, SIC, CAT, BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
+            UpdateDataGridView(SQL.query("SELECT Id, TargetAddress AS 'ICAO24', Mode3A, AircraftIdentification AS 'Позывной', Registration AS 'Бортовой', EmitterCategory AS 'Категория', TypeAircraft AS 'Тип', Class AS 'Класс', Country AS 'Государство', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытия', SAC, SIC, CAT, BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
         }
         /// <summary>
         /// Обновляет данные в LoadGridView.
@@ -504,6 +504,16 @@ namespace ASTERIX
             ComboBoxFill();
         }
 
+
+        /// <summary>
+        /// Выбор меню "Сканирование"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ScanPicture_Click(object sender, EventArgs e)
+        {
+            StartStopBTN_Click(null, null);
+        }
         /// <summary>
         /// Обрабатывает нажатие клавиши СТАРТ/СТОП. Запускает, либо останавливает обработку протокола.
         /// </summary>
@@ -641,7 +651,7 @@ namespace ASTERIX
         }
 
         /// <summary>
-        /// Сбрасывает BackColor для контролов меню
+        /// Сбрасывает BackColor для контролов меню.
         /// </summary>
         void ResetBackColor()
         {
@@ -656,7 +666,16 @@ namespace ASTERIX
         }
 
         /// <summary>
-        /// Выбор меню "Карта"
+        /// Выбор меню "Карта".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MapPicture_Click(object sender, EventArgs e)
+        {
+            MapBTN_Click(null, null);
+        }
+        /// <summary>
+        /// Выбор меню "Карта".
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -672,7 +691,16 @@ namespace ASTERIX
             pagePanel.Controls.Add(MapPanel);
         }
         /// <summary>
-        /// Выбор меню "Привязки"
+        /// Выбор меню "Привязки".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AircraftPicture_Click(object sender, EventArgs e)
+        {
+            AircraftBTN_Click(null, null);
+        }
+        /// <summary>
+        /// Выбор меню "Привязки".
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -688,7 +716,16 @@ namespace ASTERIX
             pagePanel.Controls.Add(AircraftPanel);
         }
         /// <summary>
-        /// Выбор меню "Настройки"
+        /// Выбор меню "Настройки".
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SettingsPicture_Click(object sender, EventArgs e)
+        {
+            SettingsBTN_Click(null, null);
+        }
+        /// <summary>
+        /// Выбор меню "Настройки".
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -718,5 +755,6 @@ namespace ASTERIX
                 SearchPanel.AutoScroll = false;
             }
         }
+
     }
 }
