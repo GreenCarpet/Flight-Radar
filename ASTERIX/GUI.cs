@@ -368,12 +368,12 @@ namespace ASTERIX
             {
                 case "TargetAddress":
                     {
-                        result = TargetAddressTextBox.Text;
+                        result = TargetAddressTextBox.TextField;
                         break;
                     }
                 case "AircraftIdentification":
                     {
-                        result = AircraftIdetificationTextBox.Text;
+                        result = AircraftIdetificationTextBox.TextField;
                         break;
                     }
                 case "EmitterCategory":
@@ -383,12 +383,12 @@ namespace ASTERIX
                     }
                 case "AirportDepature":
                     {
-                        result = AirportDepatureTextBox.Text;
+                        result = AirportDepatureTextBox.TextField;
                         break;
                     }
                 case "AirportArrival":
                     {
-                        result = AirportArrivalTextBox.Text;
+                        result = AirportArrivalTextBox.TextField;
                         break;
                     }
                 case "BeginTime":
@@ -741,20 +741,26 @@ namespace ASTERIX
             pagePanel.Controls.Add(SettingsPanel);
         }
 
-        private void HideSearchBTN_Click(object sender, EventArgs e)
+
+        private void HideSearchBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            SearchPanel.Focus();
+        }
+        private void HideSearchBTN_MouseUp(object sender, MouseEventArgs e)
         {
             if (SearchContainer.SplitterDistance == HideSearchBTN.Size.Height)
             {
+                HideSearchBTN.Text = "Фильтр";
+                SearchContainer.Panel1MinSize = 100;
                 SearchContainer.SplitterDistance = SearchSplitterPosition;
-                SearchPanel.AutoScroll = true;
             }
             else
             {
+                HideSearchBTN.Text = "Нажмите для настройки фильтра";
+                SearchContainer.Panel1MinSize = 0;
                 SearchSplitterPosition = SearchContainer.SplitterDistance;
                 SearchContainer.SplitterDistance = HideSearchBTN.Size.Height;
-                SearchPanel.AutoScroll = false;
             }
         }
-
     }
 }

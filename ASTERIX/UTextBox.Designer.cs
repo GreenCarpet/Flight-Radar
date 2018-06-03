@@ -63,6 +63,7 @@
             this.textBox.TabIndex = 1;
             this.textBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.textBox.TextChanged += new System.EventHandler(this.textBox_TextChanged);
+            this.textBox.Enter += new System.EventHandler(this.textBox_Enter);
             this.textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox_KeyDown);
             this.textBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.textBox_MouseDown);
             // 

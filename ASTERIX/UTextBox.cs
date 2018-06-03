@@ -18,7 +18,7 @@ namespace ASTERIX
         private Color textColor = Color.Black;
         private Color ClearBTNBackColor = Color.LightGray;
         private Color mouseBackColor = Color.Gray;
-        private Color BackColor = Color.White;
+        private Color textBoxBackColor = Color.White;
         public event EventHandler ControlTextChanged;
 
         public CharacterCasing CharacterCasingField
@@ -122,13 +122,13 @@ namespace ASTERIX
         {
             get
             {
-                return BackColor;
+                return textBoxBackColor;
             }
             set
             {
-                BackColor = value;
-                UTextBoxPanel.BackColor = BackColor;
-                textBox.BackColor = BackColor;
+                textBoxBackColor = value;
+                UTextBoxPanel.BackColor = textBoxBackColor;
+                textBox.BackColor = textBoxBackColor;
             }
         }
         public Color MaskColoField
@@ -195,7 +195,6 @@ namespace ASTERIX
             if ((textBox.Text == "") && (text != null))
             {
                 ClearBTN_MouseUp(null, null);
-                text = null;
             }
             if ((textBox.Text != MaskField) && (textBox.ForeColor == maskColor) && (textBox.Text != ""))
             {
@@ -236,12 +235,19 @@ namespace ASTERIX
         }
         private void ClearBTN_MouseUp(object sender, MouseEventArgs e)
         {
+            text = null;
             textBox.Text = null;
             ClearBTN.Visible = false;
+            this.ControlTextChanged?.Invoke(this, e);
 
             textBox.ForeColor = maskColor;
             textBox.Text = MaskField;
         }
 
+        private void textBox_Enter(object sender, EventArgs e)
+        {
+            textBox.SelectionStart = 0;
+            textBox.SelectionLength = 0;
+        }
     }
 }

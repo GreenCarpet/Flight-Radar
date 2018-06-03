@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GUI));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle73 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle74 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle75 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle76 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -56,45 +56,29 @@
             this.MapContainer = new System.Windows.Forms.SplitContainer();
             this.SearchContainer = new System.Windows.Forms.SplitContainer();
             this.SearchPanel = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.HideSearchBTN = new System.Windows.Forms.Button();
             this.LoadGridView1 = new System.Windows.Forms.DataGridView();
             this.RouteContainer = new System.Windows.Forms.SplitContainer();
             this.ClassComboBox = new System.Windows.Forms.ComboBox();
-            this.SACtextBox = new System.Windows.Forms.TextBox();
-            this.SICtextBox = new System.Windows.Forms.TextBox();
-            this.AirportDepatureTextBox = new System.Windows.Forms.TextBox();
-            this.AirportArrivalTextBox = new System.Windows.Forms.TextBox();
-            this.CATcomboBox = new System.Windows.Forms.ComboBox();
-            this.EmitterCategoryComboBox = new System.Windows.Forms.ComboBox();
-            this.CountryTextBox = new System.Windows.Forms.TextBox();
             this.BeginTimePicker = new System.Windows.Forms.DateTimePicker();
-            this.Mode3ATextBox = new System.Windows.Forms.TextBox();
-            this.AircraftIdetificationTextBox = new System.Windows.Forms.TextBox();
-            this.TypeAircraftTextBox = new System.Windows.Forms.TextBox();
             this.EndTimePicker = new System.Windows.Forms.DateTimePicker();
-            this.RegistationTextBox = new System.Windows.Forms.TextBox();
-            this.TargetAddressTextBox = new System.Windows.Forms.TextBox();
             this.AircraftPage = new System.Windows.Forms.TabPage();
             this.AircraftPanel = new System.Windows.Forms.Panel();
             this.SettingsPage = new System.Windows.Forms.TabPage();
             this.SettingsPanel = new System.Windows.Forms.Panel();
-            this.uTextBox1 = new ASTERIX.UTextBox();
-            this.uTextBox2 = new ASTERIX.UTextBox();
-            this.uTextBox3 = new ASTERIX.UTextBox();
-            this.uTextBox4 = new ASTERIX.UTextBox();
-            this.uTextBox5 = new ASTERIX.UTextBox();
-            this.uTextBox6 = new ASTERIX.UTextBox();
-            this.uTextBox7 = new ASTERIX.UTextBox();
-            this.uTextBox8 = new ASTERIX.UTextBox();
-            this.uTextBox9 = new ASTERIX.UTextBox();
-            this.uTextBox10 = new ASTERIX.UTextBox();
-            this.uTextBox11 = new ASTERIX.UTextBox();
-            this.uTextBox12 = new ASTERIX.UTextBox();
-            this.uTextBox13 = new ASTERIX.UTextBox();
-            this.uTextBox14 = new ASTERIX.UTextBox();
-            this.uTextBox15 = new ASTERIX.UTextBox();
-            this.uTextBox17 = new ASTERIX.UTextBox();
+            this.AirportArrivalTextBox = new ASTERIX.UTextBox();
+            this.AirportDepatureTextBox = new ASTERIX.UTextBox();
+            this.Mode3ATextBox = new ASTERIX.UTextBox();
+            this.TypeAircraftTextBox = new ASTERIX.UTextBox();
+            this.RegistrationTextBox = new ASTERIX.UTextBox();
+            this.AircraftIdetificationTextBox = new ASTERIX.UTextBox();
+            this.TargetAddressTextBox = new ASTERIX.UTextBox();
+            this.EmitterCategoryComboBox = new System.Windows.Forms.ComboBox();
+            this.SACtextBox = new ASTERIX.UTextBox();
+            this.SICtextBox = new ASTERIX.UTextBox();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.CountryComboBox = new System.Windows.Forms.ComboBox();
+            this.CATcomboBox = new System.Windows.Forms.ComboBox();
             this.tabPanel.SuspendLayout();
             this.tabTable.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AircraftPicture)).BeginInit();
@@ -114,13 +98,12 @@
             this.SearchContainer.Panel2.SuspendLayout();
             this.SearchContainer.SuspendLayout();
             this.SearchPanel.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LoadGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RouteContainer)).BeginInit();
-            this.RouteContainer.Panel2.SuspendLayout();
             this.RouteContainer.SuspendLayout();
             this.AircraftPage.SuspendLayout();
             this.SettingsPage.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // progressBar1
@@ -404,46 +387,9 @@
             this.SearchPanel.Size = new System.Drawing.Size(1331, 131);
             this.SearchPanel.TabIndex = 8;
             // 
-            // tableLayoutPanel1
-            // 
-            this.tableLayoutPanel1.ColumnCount = 7;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 2.056807F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.32387F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.32387F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.32387F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.32387F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.32387F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 16.32387F));
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox17, 5, 2);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox15, 5, 1);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox14, 6, 0);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox13, 5, 0);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox5, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox4, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox3, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox2, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox6, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox7, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox8, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox9, 3, 1);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox10, 3, 2);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox11, 4, 1);
-            this.tableLayoutPanel1.Controls.Add(this.uTextBox12, 4, 2);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1331, 131);
-            this.tableLayoutPanel1.TabIndex = 0;
-            // 
             // HideSearchBTN
             // 
-            this.HideSearchBTN.BackColor = System.Drawing.Color.LightGray;
+            this.HideSearchBTN.BackColor = System.Drawing.Color.CornflowerBlue;
             this.HideSearchBTN.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.HideSearchBTN.FlatAppearance.BorderSize = 0;
             this.HideSearchBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -452,52 +398,53 @@
             this.HideSearchBTN.Name = "HideSearchBTN";
             this.HideSearchBTN.Size = new System.Drawing.Size(1331, 20);
             this.HideSearchBTN.TabIndex = 7;
-            this.HideSearchBTN.Text = "Фильтр";
+            this.HideSearchBTN.Text = "Нажмите для настройки фильтра";
             this.HideSearchBTN.UseVisualStyleBackColor = false;
-            this.HideSearchBTN.Click += new System.EventHandler(this.HideSearchBTN_Click);
+            this.HideSearchBTN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HideSearchBTN_MouseDown);
+            this.HideSearchBTN.MouseUp += new System.Windows.Forms.MouseEventHandler(this.HideSearchBTN_MouseUp);
             // 
             // LoadGridView1
             // 
             this.LoadGridView1.AllowUserToAddRows = false;
             this.LoadGridView1.AllowUserToResizeColumns = false;
             this.LoadGridView1.AllowUserToResizeRows = false;
-            dataGridViewCellStyle73.BackColor = System.Drawing.Color.MediumSeaGreen;
-            this.LoadGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle73;
-            this.LoadGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.LoadGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.LoadGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
             this.LoadGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
             this.LoadGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LoadGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle74.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle74.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle74.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle74.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle74.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle74.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle74.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle74;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.LoadGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle75.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle75.BackColor = System.Drawing.Color.DarkSeaGreen;
-            dataGridViewCellStyle75.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle75.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle75.SelectionBackColor = System.Drawing.SystemColors.HotTrack;
-            dataGridViewCellStyle75.SelectionForeColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle75.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.LoadGridView1.DefaultCellStyle = dataGridViewCellStyle75;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.DarkSeaGreen;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.LoadGridView1.DefaultCellStyle = dataGridViewCellStyle3;
+            this.LoadGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LoadGridView1.GridColor = System.Drawing.Color.SeaGreen;
             this.LoadGridView1.Location = new System.Drawing.Point(0, 0);
             this.LoadGridView1.Margin = new System.Windows.Forms.Padding(3, 0, 3, 3);
             this.LoadGridView1.Name = "LoadGridView1";
             this.LoadGridView1.ReadOnly = true;
-            dataGridViewCellStyle76.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle76.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle76.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle76.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle76.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle76.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle76.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle76;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.LoadGridView1.RowHeadersWidth = 40;
             this.LoadGridView1.RowTemplate.Height = 25;
             this.LoadGridView1.RowTemplate.ReadOnly = true;
@@ -512,169 +459,45 @@
             this.RouteContainer.Location = new System.Drawing.Point(0, 0);
             this.RouteContainer.Margin = new System.Windows.Forms.Padding(0);
             this.RouteContainer.Name = "RouteContainer";
-            // 
-            // RouteContainer.Panel2
-            // 
-            this.RouteContainer.Panel2.Controls.Add(this.ClassComboBox);
-            this.RouteContainer.Panel2.Controls.Add(this.SACtextBox);
-            this.RouteContainer.Panel2.Controls.Add(this.SICtextBox);
-            this.RouteContainer.Panel2.Controls.Add(this.AirportDepatureTextBox);
-            this.RouteContainer.Panel2.Controls.Add(this.AirportArrivalTextBox);
-            this.RouteContainer.Panel2.Controls.Add(this.CATcomboBox);
-            this.RouteContainer.Panel2.Controls.Add(this.EmitterCategoryComboBox);
-            this.RouteContainer.Panel2.Controls.Add(this.CountryTextBox);
-            this.RouteContainer.Panel2.Controls.Add(this.BeginTimePicker);
-            this.RouteContainer.Panel2.Controls.Add(this.Mode3ATextBox);
-            this.RouteContainer.Panel2.Controls.Add(this.AircraftIdetificationTextBox);
-            this.RouteContainer.Panel2.Controls.Add(this.TypeAircraftTextBox);
-            this.RouteContainer.Panel2.Controls.Add(this.EndTimePicker);
-            this.RouteContainer.Panel2.Controls.Add(this.RegistationTextBox);
-            this.RouteContainer.Panel2.Controls.Add(this.TargetAddressTextBox);
             this.RouteContainer.Size = new System.Drawing.Size(1331, 436);
             this.RouteContainer.SplitterDistance = 441;
             this.RouteContainer.TabIndex = 0;
             // 
             // ClassComboBox
             // 
+            this.ClassComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.ClassComboBox.FormattingEnabled = true;
-            this.ClassComboBox.Location = new System.Drawing.Point(701, 37);
+            this.ClassComboBox.Location = new System.Drawing.Point(1060, 11);
             this.ClassComboBox.Name = "ClassComboBox";
-            this.ClassComboBox.Size = new System.Drawing.Size(105, 21);
-            this.ClassComboBox.TabIndex = 21;
-            // 
-            // SACtextBox
-            // 
-            this.SACtextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.SACtextBox.Location = new System.Drawing.Point(563, 62);
-            this.SACtextBox.Name = "SACtextBox";
-            this.SACtextBox.Size = new System.Drawing.Size(105, 20);
-            this.SACtextBox.TabIndex = 19;
-            this.SACtextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // SICtextBox
-            // 
-            this.SICtextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.SICtextBox.Location = new System.Drawing.Point(563, 88);
-            this.SICtextBox.Name = "SICtextBox";
-            this.SICtextBox.Size = new System.Drawing.Size(105, 20);
-            this.SICtextBox.TabIndex = 20;
-            this.SICtextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // AirportDepatureTextBox
-            // 
-            this.AirportDepatureTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.AirportDepatureTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AirportDepatureTextBox.Location = new System.Drawing.Point(296, 63);
-            this.AirportDepatureTextBox.Name = "AirportDepatureTextBox";
-            this.AirportDepatureTextBox.Size = new System.Drawing.Size(105, 20);
-            this.AirportDepatureTextBox.TabIndex = 10;
-            this.AirportDepatureTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // AirportArrivalTextBox
-            // 
-            this.AirportArrivalTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.AirportArrivalTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AirportArrivalTextBox.Location = new System.Drawing.Point(296, 88);
-            this.AirportArrivalTextBox.Name = "AirportArrivalTextBox";
-            this.AirportArrivalTextBox.Size = new System.Drawing.Size(105, 20);
-            this.AirportArrivalTextBox.TabIndex = 11;
-            this.AirportArrivalTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // CATcomboBox
-            // 
-            this.CATcomboBox.FormattingEnabled = true;
-            this.CATcomboBox.Location = new System.Drawing.Point(563, 37);
-            this.CATcomboBox.Name = "CATcomboBox";
-            this.CATcomboBox.Size = new System.Drawing.Size(105, 21);
-            this.CATcomboBox.TabIndex = 18;
-            // 
-            // EmitterCategoryComboBox
-            // 
-            this.EmitterCategoryComboBox.FormattingEnabled = true;
-            this.EmitterCategoryComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.EmitterCategoryComboBox.Location = new System.Drawing.Point(167, 36);
-            this.EmitterCategoryComboBox.MaxDropDownItems = 50;
-            this.EmitterCategoryComboBox.Name = "EmitterCategoryComboBox";
-            this.EmitterCategoryComboBox.Size = new System.Drawing.Size(105, 21);
-            this.EmitterCategoryComboBox.TabIndex = 9;
-            // 
-            // CountryTextBox
-            // 
-            this.CountryTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.CountryTextBox.Location = new System.Drawing.Point(296, 37);
-            this.CountryTextBox.Name = "CountryTextBox";
-            this.CountryTextBox.Size = new System.Drawing.Size(105, 20);
-            this.CountryTextBox.TabIndex = 17;
-            this.CountryTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ClassComboBox.Size = new System.Drawing.Size(167, 21);
+            this.ClassComboBox.TabIndex = 16;
             // 
             // BeginTimePicker
             // 
-            this.BeginTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.BeginTimePicker.Location = new System.Drawing.Point(429, 37);
+            this.BeginTimePicker.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.BeginTimePicker.Location = new System.Drawing.Point(675, 11);
+            this.BeginTimePicker.Margin = new System.Windows.Forms.Padding(0);
             this.BeginTimePicker.Name = "BeginTimePicker";
             this.BeginTimePicker.ShowCheckBox = true;
-            this.BeginTimePicker.Size = new System.Drawing.Size(105, 20);
-            this.BeginTimePicker.TabIndex = 12;
-            // 
-            // Mode3ATextBox
-            // 
-            this.Mode3ATextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.Mode3ATextBox.Location = new System.Drawing.Point(167, 88);
-            this.Mode3ATextBox.Name = "Mode3ATextBox";
-            this.Mode3ATextBox.Size = new System.Drawing.Size(105, 20);
-            this.Mode3ATextBox.TabIndex = 16;
-            this.Mode3ATextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // AircraftIdetificationTextBox
-            // 
-            this.AircraftIdetificationTextBox.BackColor = System.Drawing.SystemColors.Window;
-            this.AircraftIdetificationTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.AircraftIdetificationTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AircraftIdetificationTextBox.Location = new System.Drawing.Point(38, 62);
-            this.AircraftIdetificationTextBox.Name = "AircraftIdetificationTextBox";
-            this.AircraftIdetificationTextBox.Size = new System.Drawing.Size(105, 20);
-            this.AircraftIdetificationTextBox.TabIndex = 7;
-            this.AircraftIdetificationTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // TypeAircraftTextBox
-            // 
-            this.TypeAircraftTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.TypeAircraftTextBox.Location = new System.Drawing.Point(167, 62);
-            this.TypeAircraftTextBox.Name = "TypeAircraftTextBox";
-            this.TypeAircraftTextBox.Size = new System.Drawing.Size(105, 20);
-            this.TypeAircraftTextBox.TabIndex = 15;
-            this.TypeAircraftTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.BeginTimePicker.Size = new System.Drawing.Size(167, 20);
+            this.BeginTimePicker.TabIndex = 10;
+            this.BeginTimePicker.ValueChanged += new System.EventHandler(this.BeginTimePicker_ValueChanged);
+            this.BeginTimePicker.DropDown += new System.EventHandler(this.BeginTimePicker_DropDown);
+            this.BeginTimePicker.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BeginTimePicker_MouseDown);
             // 
             // EndTimePicker
             // 
+            this.EndTimePicker.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.EndTimePicker.Checked = false;
-            this.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.EndTimePicker.Location = new System.Drawing.Point(429, 63);
+            this.EndTimePicker.Location = new System.Drawing.Point(675, 54);
+            this.EndTimePicker.Margin = new System.Windows.Forms.Padding(0);
             this.EndTimePicker.Name = "EndTimePicker";
             this.EndTimePicker.ShowCheckBox = true;
-            this.EndTimePicker.Size = new System.Drawing.Size(105, 20);
-            this.EndTimePicker.TabIndex = 13;
-            // 
-            // RegistationTextBox
-            // 
-            this.RegistationTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.RegistationTextBox.Location = new System.Drawing.Point(38, 88);
-            this.RegistationTextBox.Name = "RegistationTextBox";
-            this.RegistationTextBox.Size = new System.Drawing.Size(105, 20);
-            this.RegistationTextBox.TabIndex = 14;
-            this.RegistationTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // TargetAddressTextBox
-            // 
-            this.TargetAddressTextBox.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.TargetAddressTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.TargetAddressTextBox.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.TargetAddressTextBox.Location = new System.Drawing.Point(38, 36);
-            this.TargetAddressTextBox.Name = "TargetAddressTextBox";
-            this.TargetAddressTextBox.Size = new System.Drawing.Size(105, 20);
-            this.TargetAddressTextBox.TabIndex = 8;
-            this.TargetAddressTextBox.Text = "\r\n";
-            this.TargetAddressTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.EndTimePicker.Size = new System.Drawing.Size(167, 20);
+            this.EndTimePicker.TabIndex = 11;
+            this.EndTimePicker.ValueChanged += new System.EventHandler(this.EndTimePicker_ValueChanged);
+            this.EndTimePicker.DropDown += new System.EventHandler(this.EndTimePicker_DropDown);
+            this.EndTimePicker.MouseDown += new System.Windows.Forms.MouseEventHandler(this.EndTimePicker_MouseDown);
             // 
             // AircraftPage
             // 
@@ -718,331 +541,268 @@
             this.SettingsPanel.Size = new System.Drawing.Size(1331, 730);
             this.SettingsPanel.TabIndex = 1;
             // 
-            // uTextBox1
+            // AirportArrivalTextBox
             // 
-            this.uTextBox1.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox1.BackColoField = System.Drawing.Color.White;
-            this.uTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox1.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox1.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox1.Location = new System.Drawing.Point(27, 54);
-            this.uTextBox1.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox1.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox1.MaskField = "ICAO24";
-            this.uTextBox1.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox1.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox1.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox1.Name = "uTextBox1";
-            this.uTextBox1.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox1.TabIndex = 0;
-            this.uTextBox1.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox1.TextField = null;
+            this.AirportArrivalTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.AirportArrivalTextBox.BackColoField = System.Drawing.Color.White;
+            this.AirportArrivalTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.AirportArrivalTextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
+            this.AirportArrivalTextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
+            this.AirportArrivalTextBox.Location = new System.Drawing.Point(484, 98);
+            this.AirportArrivalTextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.AirportArrivalTextBox.MaskColoField = System.Drawing.Color.Gray;
+            this.AirportArrivalTextBox.MaskField = "АЭРОПОРТ ПРИБЫТИЯ";
+            this.AirportArrivalTextBox.MaximumSize = new System.Drawing.Size(1000, 20);
+            this.AirportArrivalTextBox.MinimumSize = new System.Drawing.Size(30, 20);
+            this.AirportArrivalTextBox.MouseBackColorField = System.Drawing.Color.Gray;
+            this.AirportArrivalTextBox.Name = "AirportArrivalTextBox";
+            this.AirportArrivalTextBox.Size = new System.Drawing.Size(167, 20);
+            this.AirportArrivalTextBox.TabIndex = 9;
+            this.AirportArrivalTextBox.TextColorField = System.Drawing.Color.Black;
+            this.AirportArrivalTextBox.TextField = null;
+            this.AirportArrivalTextBox.ControlTextChanged += new System.EventHandler(this.AirportArrivalTextBox_TextChanged);
             // 
-            // uTextBox2
+            // AirportDepatureTextBox
             // 
-            this.uTextBox2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox2.BackColoField = System.Drawing.Color.White;
-            this.uTextBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox2.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox2.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox2.Location = new System.Drawing.Point(27, 11);
-            this.uTextBox2.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox2.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox2.MaskField = "ICAO24";
-            this.uTextBox2.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox2.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox2.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox2.Name = "uTextBox2";
-            this.uTextBox2.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox2.TabIndex = 1;
-            this.uTextBox2.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox2.TextField = null;
+            this.AirportDepatureTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.AirportDepatureTextBox.BackColoField = System.Drawing.Color.White;
+            this.AirportDepatureTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.AirportDepatureTextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
+            this.AirportDepatureTextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
+            this.AirportDepatureTextBox.Location = new System.Drawing.Point(484, 54);
+            this.AirportDepatureTextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.AirportDepatureTextBox.MaskColoField = System.Drawing.Color.Gray;
+            this.AirportDepatureTextBox.MaskField = "АЭРОПОРТ ВЫЛЕТА";
+            this.AirportDepatureTextBox.MaximumSize = new System.Drawing.Size(1000, 20);
+            this.AirportDepatureTextBox.MinimumSize = new System.Drawing.Size(30, 20);
+            this.AirportDepatureTextBox.MouseBackColorField = System.Drawing.Color.Gray;
+            this.AirportDepatureTextBox.Name = "AirportDepatureTextBox";
+            this.AirportDepatureTextBox.Size = new System.Drawing.Size(167, 20);
+            this.AirportDepatureTextBox.TabIndex = 8;
+            this.AirportDepatureTextBox.TextColorField = System.Drawing.Color.Black;
+            this.AirportDepatureTextBox.TextField = null;
+            this.AirportDepatureTextBox.ControlTextChanged += new System.EventHandler(this.AirportDepatureTextBox_TextChanged);
             // 
-            // uTextBox3
+            // Mode3ATextBox
             // 
-            this.uTextBox3.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox3.BackColoField = System.Drawing.Color.White;
-            this.uTextBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox3.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox3.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox3.Location = new System.Drawing.Point(244, 11);
-            this.uTextBox3.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox3.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox3.MaskField = "ICAO24";
-            this.uTextBox3.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox3.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox3.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox3.Name = "uTextBox3";
-            this.uTextBox3.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox3.TabIndex = 2;
-            this.uTextBox3.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox3.TextField = null;
+            this.Mode3ATextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.Mode3ATextBox.BackColoField = System.Drawing.Color.White;
+            this.Mode3ATextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Mode3ATextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
+            this.Mode3ATextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
+            this.Mode3ATextBox.Location = new System.Drawing.Point(293, 98);
+            this.Mode3ATextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.Mode3ATextBox.MaskColoField = System.Drawing.Color.Gray;
+            this.Mode3ATextBox.MaskField = "MODE3A";
+            this.Mode3ATextBox.MaximumSize = new System.Drawing.Size(1000, 20);
+            this.Mode3ATextBox.MinimumSize = new System.Drawing.Size(30, 20);
+            this.Mode3ATextBox.MouseBackColorField = System.Drawing.Color.Gray;
+            this.Mode3ATextBox.Name = "Mode3ATextBox";
+            this.Mode3ATextBox.Size = new System.Drawing.Size(167, 20);
+            this.Mode3ATextBox.TabIndex = 6;
+            this.Mode3ATextBox.TextColorField = System.Drawing.Color.Black;
+            this.Mode3ATextBox.TextField = null;
             // 
-            // uTextBox4
+            // TypeAircraftTextBox
             // 
-            this.uTextBox4.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox4.BackColoField = System.Drawing.Color.White;
-            this.uTextBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox4.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox4.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox4.Location = new System.Drawing.Point(461, 11);
-            this.uTextBox4.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox4.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox4.MaskField = "ICAO24";
-            this.uTextBox4.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox4.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox4.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox4.Name = "uTextBox4";
-            this.uTextBox4.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox4.TabIndex = 3;
-            this.uTextBox4.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox4.TextField = null;
+            this.TypeAircraftTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.TypeAircraftTextBox.BackColoField = System.Drawing.Color.White;
+            this.TypeAircraftTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TypeAircraftTextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
+            this.TypeAircraftTextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
+            this.TypeAircraftTextBox.Location = new System.Drawing.Point(293, 54);
+            this.TypeAircraftTextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.TypeAircraftTextBox.MaskColoField = System.Drawing.Color.Gray;
+            this.TypeAircraftTextBox.MaskField = "ТИП";
+            this.TypeAircraftTextBox.MaximumSize = new System.Drawing.Size(1000, 20);
+            this.TypeAircraftTextBox.MinimumSize = new System.Drawing.Size(30, 20);
+            this.TypeAircraftTextBox.MouseBackColorField = System.Drawing.Color.Gray;
+            this.TypeAircraftTextBox.Name = "TypeAircraftTextBox";
+            this.TypeAircraftTextBox.Size = new System.Drawing.Size(167, 20);
+            this.TypeAircraftTextBox.TabIndex = 5;
+            this.TypeAircraftTextBox.TextColorField = System.Drawing.Color.Black;
+            this.TypeAircraftTextBox.TextField = null;
             // 
-            // uTextBox5
+            // RegistrationTextBox
             // 
-            this.uTextBox5.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox5.BackColoField = System.Drawing.Color.White;
-            this.uTextBox5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox5.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox5.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox5.Location = new System.Drawing.Point(678, 11);
-            this.uTextBox5.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox5.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox5.MaskField = "ICAO24";
-            this.uTextBox5.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox5.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox5.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox5.Name = "uTextBox5";
-            this.uTextBox5.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox5.TabIndex = 4;
-            this.uTextBox5.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox5.TextField = null;
+            this.RegistrationTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.RegistrationTextBox.BackColoField = System.Drawing.Color.White;
+            this.RegistrationTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.RegistrationTextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
+            this.RegistrationTextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
+            this.RegistrationTextBox.Location = new System.Drawing.Point(102, 98);
+            this.RegistrationTextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.RegistrationTextBox.MaskColoField = System.Drawing.Color.Gray;
+            this.RegistrationTextBox.MaskField = "БОРТОВОЙ";
+            this.RegistrationTextBox.MaximumSize = new System.Drawing.Size(1000, 20);
+            this.RegistrationTextBox.MinimumSize = new System.Drawing.Size(30, 20);
+            this.RegistrationTextBox.MouseBackColorField = System.Drawing.Color.Gray;
+            this.RegistrationTextBox.Name = "RegistrationTextBox";
+            this.RegistrationTextBox.Size = new System.Drawing.Size(167, 20);
+            this.RegistrationTextBox.TabIndex = 3;
+            this.RegistrationTextBox.TextColorField = System.Drawing.Color.Black;
+            this.RegistrationTextBox.TextField = null;
             // 
-            // uTextBox6
+            // AircraftIdetificationTextBox
             // 
-            this.uTextBox6.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox6.BackColoField = System.Drawing.Color.White;
-            this.uTextBox6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox6.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox6.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox6.Location = new System.Drawing.Point(27, 98);
-            this.uTextBox6.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox6.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox6.MaskField = "ICAO24";
-            this.uTextBox6.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox6.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox6.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox6.Name = "uTextBox6";
-            this.uTextBox6.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox6.TabIndex = 5;
-            this.uTextBox6.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox6.TextField = null;
+            this.AircraftIdetificationTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.AircraftIdetificationTextBox.BackColoField = System.Drawing.Color.White;
+            this.AircraftIdetificationTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.AircraftIdetificationTextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
+            this.AircraftIdetificationTextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
+            this.AircraftIdetificationTextBox.Location = new System.Drawing.Point(102, 54);
+            this.AircraftIdetificationTextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.AircraftIdetificationTextBox.MaskColoField = System.Drawing.Color.Gray;
+            this.AircraftIdetificationTextBox.MaskField = "ПОЗЫВНОЙ";
+            this.AircraftIdetificationTextBox.MaximumSize = new System.Drawing.Size(1000, 20);
+            this.AircraftIdetificationTextBox.MinimumSize = new System.Drawing.Size(30, 20);
+            this.AircraftIdetificationTextBox.MouseBackColorField = System.Drawing.Color.Gray;
+            this.AircraftIdetificationTextBox.Name = "AircraftIdetificationTextBox";
+            this.AircraftIdetificationTextBox.Size = new System.Drawing.Size(167, 20);
+            this.AircraftIdetificationTextBox.TabIndex = 2;
+            this.AircraftIdetificationTextBox.TextColorField = System.Drawing.Color.Black;
+            this.AircraftIdetificationTextBox.TextField = null;
+            this.AircraftIdetificationTextBox.ControlTextChanged += new System.EventHandler(this.AircraftIdetificationTextBox_TextChanged);
             // 
-            // uTextBox7
+            // TargetAddressTextBox
             // 
-            this.uTextBox7.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox7.BackColoField = System.Drawing.Color.White;
-            this.uTextBox7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox7.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox7.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox7.Location = new System.Drawing.Point(244, 54);
-            this.uTextBox7.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox7.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox7.MaskField = "ICAO24";
-            this.uTextBox7.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox7.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox7.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox7.Name = "uTextBox7";
-            this.uTextBox7.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox7.TabIndex = 6;
-            this.uTextBox7.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox7.TextField = null;
+            this.TargetAddressTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.TargetAddressTextBox.BackColoField = System.Drawing.Color.White;
+            this.TargetAddressTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TargetAddressTextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
+            this.TargetAddressTextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
+            this.TargetAddressTextBox.Location = new System.Drawing.Point(102, 11);
+            this.TargetAddressTextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.TargetAddressTextBox.MaskColoField = System.Drawing.Color.Gray;
+            this.TargetAddressTextBox.MaskField = "ICAO24";
+            this.TargetAddressTextBox.MaximumSize = new System.Drawing.Size(1000, 20);
+            this.TargetAddressTextBox.MinimumSize = new System.Drawing.Size(30, 20);
+            this.TargetAddressTextBox.MouseBackColorField = System.Drawing.Color.Gray;
+            this.TargetAddressTextBox.Name = "TargetAddressTextBox";
+            this.TargetAddressTextBox.Size = new System.Drawing.Size(167, 20);
+            this.TargetAddressTextBox.TabIndex = 1;
+            this.TargetAddressTextBox.TextColorField = System.Drawing.Color.Black;
+            this.TargetAddressTextBox.TextField = null;
+            this.TargetAddressTextBox.ControlTextChanged += new System.EventHandler(this.TargetAddressTextBox_TextChanged);
             // 
-            // uTextBox8
+            // EmitterCategoryComboBox
             // 
-            this.uTextBox8.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox8.BackColoField = System.Drawing.Color.White;
-            this.uTextBox8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox8.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox8.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox8.Location = new System.Drawing.Point(244, 98);
-            this.uTextBox8.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox8.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox8.MaskField = "ICAO24";
-            this.uTextBox8.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox8.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox8.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox8.Name = "uTextBox8";
-            this.uTextBox8.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox8.TabIndex = 7;
-            this.uTextBox8.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox8.TextField = null;
+            this.EmitterCategoryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.EmitterCategoryComboBox.FormattingEnabled = true;
+            this.EmitterCategoryComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.EmitterCategoryComboBox.Location = new System.Drawing.Point(293, 11);
+            this.EmitterCategoryComboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.EmitterCategoryComboBox.MaxDropDownItems = 50;
+            this.EmitterCategoryComboBox.Name = "EmitterCategoryComboBox";
+            this.EmitterCategoryComboBox.Size = new System.Drawing.Size(167, 21);
+            this.EmitterCategoryComboBox.TabIndex = 4;
+            this.EmitterCategoryComboBox.SelectedIndexChanged += new System.EventHandler(this.EmitterCategoryComboBox_SelectedIndexChanged);
+            this.EmitterCategoryComboBox.Click += new System.EventHandler(this.EmitterCategoryComboBox_Click);
             // 
-            // uTextBox9
+            // SACtextBox
             // 
-            this.uTextBox9.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox9.BackColoField = System.Drawing.Color.White;
-            this.uTextBox9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox9.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox9.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox9.Location = new System.Drawing.Point(461, 54);
-            this.uTextBox9.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox9.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox9.MaskField = "ICAO24";
-            this.uTextBox9.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox9.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox9.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox9.Name = "uTextBox9";
-            this.uTextBox9.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox9.TabIndex = 8;
-            this.uTextBox9.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox9.TextField = null;
+            this.SACtextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.SACtextBox.BackColoField = System.Drawing.Color.White;
+            this.SACtextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SACtextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
+            this.SACtextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
+            this.SACtextBox.Location = new System.Drawing.Point(866, 54);
+            this.SACtextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.SACtextBox.MaskColoField = System.Drawing.Color.Gray;
+            this.SACtextBox.MaskField = "SAC";
+            this.SACtextBox.MaximumSize = new System.Drawing.Size(1000, 20);
+            this.SACtextBox.MinimumSize = new System.Drawing.Size(30, 20);
+            this.SACtextBox.MouseBackColorField = System.Drawing.Color.Gray;
+            this.SACtextBox.Name = "SACtextBox";
+            this.SACtextBox.Size = new System.Drawing.Size(167, 20);
+            this.SACtextBox.TabIndex = 14;
+            this.SACtextBox.TextColorField = System.Drawing.Color.Black;
+            this.SACtextBox.TextField = null;
             // 
-            // uTextBox10
+            // SICtextBox
             // 
-            this.uTextBox10.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox10.BackColoField = System.Drawing.Color.White;
-            this.uTextBox10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox10.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox10.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox10.Location = new System.Drawing.Point(461, 98);
-            this.uTextBox10.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox10.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox10.MaskField = "ICAO24";
-            this.uTextBox10.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox10.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox10.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox10.Name = "uTextBox10";
-            this.uTextBox10.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox10.TabIndex = 9;
-            this.uTextBox10.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox10.TextField = null;
+            this.SICtextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.SICtextBox.BackColoField = System.Drawing.Color.White;
+            this.SICtextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.SICtextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
+            this.SICtextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
+            this.SICtextBox.Location = new System.Drawing.Point(866, 98);
+            this.SICtextBox.Margin = new System.Windows.Forms.Padding(0);
+            this.SICtextBox.MaskColoField = System.Drawing.Color.Gray;
+            this.SICtextBox.MaskField = "SIC";
+            this.SICtextBox.MaximumSize = new System.Drawing.Size(1000, 20);
+            this.SICtextBox.MinimumSize = new System.Drawing.Size(30, 20);
+            this.SICtextBox.MouseBackColorField = System.Drawing.Color.Gray;
+            this.SICtextBox.Name = "SICtextBox";
+            this.SICtextBox.Size = new System.Drawing.Size(167, 20);
+            this.SICtextBox.TabIndex = 15;
+            this.SICtextBox.TextColorField = System.Drawing.Color.Black;
+            this.SICtextBox.TextField = null;
             // 
-            // uTextBox11
+            // tableLayoutPanel1
             // 
-            this.uTextBox11.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox11.BackColoField = System.Drawing.Color.White;
-            this.uTextBox11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox11.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox11.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox11.Location = new System.Drawing.Point(678, 54);
-            this.uTextBox11.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox11.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox11.MaskField = "ICAO24";
-            this.uTextBox11.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox11.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox11.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox11.Name = "uTextBox11";
-            this.uTextBox11.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox11.TabIndex = 10;
-            this.uTextBox11.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox11.TextField = null;
+            this.tableLayoutPanel1.ColumnCount = 8;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.698304F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.773728F));
+            this.tableLayoutPanel1.Controls.Add(this.ClassComboBox, 6, 0);
+            this.tableLayoutPanel1.Controls.Add(this.SICtextBox, 5, 2);
+            this.tableLayoutPanel1.Controls.Add(this.SACtextBox, 5, 1);
+            this.tableLayoutPanel1.Controls.Add(this.EndTimePicker, 4, 1);
+            this.tableLayoutPanel1.Controls.Add(this.BeginTimePicker, 4, 0);
+            this.tableLayoutPanel1.Controls.Add(this.EmitterCategoryComboBox, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.TargetAddressTextBox, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.AircraftIdetificationTextBox, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.RegistrationTextBox, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.TypeAircraftTextBox, 2, 1);
+            this.tableLayoutPanel1.Controls.Add(this.Mode3ATextBox, 2, 2);
+            this.tableLayoutPanel1.Controls.Add(this.AirportDepatureTextBox, 3, 1);
+            this.tableLayoutPanel1.Controls.Add(this.AirportArrivalTextBox, 3, 2);
+            this.tableLayoutPanel1.Controls.Add(this.CountryComboBox, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.CATcomboBox, 5, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 3;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1331, 131);
+            this.tableLayoutPanel1.TabIndex = 2;
             // 
-            // uTextBox12
+            // CountryComboBox
             // 
-            this.uTextBox12.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox12.BackColoField = System.Drawing.Color.White;
-            this.uTextBox12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox12.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox12.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox12.Location = new System.Drawing.Point(678, 98);
-            this.uTextBox12.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox12.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox12.MaskField = "ICAO24";
-            this.uTextBox12.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox12.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox12.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox12.Name = "uTextBox12";
-            this.uTextBox12.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox12.TabIndex = 11;
-            this.uTextBox12.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox12.TextField = null;
+            this.CountryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.CountryComboBox.FormattingEnabled = true;
+            this.CountryComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.CountryComboBox.Location = new System.Drawing.Point(484, 11);
+            this.CountryComboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.CountryComboBox.MaxDropDownItems = 50;
+            this.CountryComboBox.Name = "CountryComboBox";
+            this.CountryComboBox.Size = new System.Drawing.Size(167, 21);
+            this.CountryComboBox.TabIndex = 17;
             // 
-            // uTextBox13
+            // CATcomboBox
             // 
-            this.uTextBox13.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox13.BackColoField = System.Drawing.Color.White;
-            this.uTextBox13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox13.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox13.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox13.Location = new System.Drawing.Point(895, 11);
-            this.uTextBox13.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox13.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox13.MaskField = "ICAO24";
-            this.uTextBox13.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox13.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox13.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox13.Name = "uTextBox13";
-            this.uTextBox13.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox13.TabIndex = 12;
-            this.uTextBox13.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox13.TextField = null;
-            // 
-            // uTextBox14
-            // 
-            this.uTextBox14.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox14.BackColoField = System.Drawing.Color.White;
-            this.uTextBox14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox14.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox14.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox14.Location = new System.Drawing.Point(1112, 11);
-            this.uTextBox14.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox14.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox14.MaskField = "ICAO24";
-            this.uTextBox14.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox14.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox14.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox14.Name = "uTextBox14";
-            this.uTextBox14.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox14.TabIndex = 13;
-            this.uTextBox14.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox14.TextField = null;
-            // 
-            // uTextBox15
-            // 
-            this.uTextBox15.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox15.BackColoField = System.Drawing.Color.White;
-            this.uTextBox15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox15.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox15.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox15.Location = new System.Drawing.Point(895, 54);
-            this.uTextBox15.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox15.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox15.MaskField = "ICAO24";
-            this.uTextBox15.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox15.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox15.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox15.Name = "uTextBox15";
-            this.uTextBox15.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox15.TabIndex = 14;
-            this.uTextBox15.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox15.TextField = null;
-            // 
-            // uTextBox17
-            // 
-            this.uTextBox17.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.uTextBox17.BackColoField = System.Drawing.Color.White;
-            this.uTextBox17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.uTextBox17.CharacterCasingField = System.Windows.Forms.CharacterCasing.Upper;
-            this.uTextBox17.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.uTextBox17.Location = new System.Drawing.Point(895, 98);
-            this.uTextBox17.Margin = new System.Windows.Forms.Padding(0);
-            this.uTextBox17.MaskColoField = System.Drawing.Color.Gray;
-            this.uTextBox17.MaskField = "ICAO24";
-            this.uTextBox17.MaximumSize = new System.Drawing.Size(1000, 20);
-            this.uTextBox17.MinimumSize = new System.Drawing.Size(30, 20);
-            this.uTextBox17.MouseBackColorField = System.Drawing.Color.Gray;
-            this.uTextBox17.Name = "uTextBox17";
-            this.uTextBox17.Size = new System.Drawing.Size(200, 20);
-            this.uTextBox17.TabIndex = 16;
-            this.uTextBox17.TextColorField = System.Drawing.Color.Black;
-            this.uTextBox17.TextField = null;
+            this.CATcomboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.CATcomboBox.FormattingEnabled = true;
+            this.CATcomboBox.Location = new System.Drawing.Point(866, 11);
+            this.CATcomboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.CATcomboBox.Name = "CATcomboBox";
+            this.CATcomboBox.Size = new System.Drawing.Size(167, 21);
+            this.CATcomboBox.TabIndex = 13;
             // 
             // GUI
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoSize = true;
-            this.BackColor = System.Drawing.Color.White;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(1514, 762);
             this.Controls.Add(this.pagePanel);
             this.Controls.Add(this.ColorPanel);
@@ -1073,14 +833,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.SearchContainer)).EndInit();
             this.SearchContainer.ResumeLayout(false);
             this.SearchPanel.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.LoadGridView1)).EndInit();
-            this.RouteContainer.Panel2.ResumeLayout(false);
-            this.RouteContainer.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RouteContainer)).EndInit();
             this.RouteContainer.ResumeLayout(false);
             this.AircraftPage.ResumeLayout(false);
             this.SettingsPage.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -1115,38 +873,22 @@
         private System.Windows.Forms.Panel SettingsPanel;
         private System.Windows.Forms.Button HideSearchBTN;
         private System.Windows.Forms.Panel SearchPanel;
-        private System.Windows.Forms.TextBox TargetAddressTextBox;
         private System.Windows.Forms.DateTimePicker EndTimePicker;
-        private System.Windows.Forms.TextBox AircraftIdetificationTextBox;
         private System.Windows.Forms.DateTimePicker BeginTimePicker;
-        private System.Windows.Forms.ComboBox EmitterCategoryComboBox;
-        private System.Windows.Forms.TextBox AirportArrivalTextBox;
-        private System.Windows.Forms.TextBox AirportDepatureTextBox;
-        private System.Windows.Forms.TextBox RegistationTextBox;
         private System.Windows.Forms.ComboBox ClassComboBox;
-        private System.Windows.Forms.TextBox SICtextBox;
-        private System.Windows.Forms.TextBox SACtextBox;
-        private System.Windows.Forms.ComboBox CATcomboBox;
-        private System.Windows.Forms.TextBox CountryTextBox;
-        private System.Windows.Forms.TextBox Mode3ATextBox;
-        private System.Windows.Forms.TextBox TypeAircraftTextBox;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private UTextBox uTextBox1;
-        private UTextBox uTextBox5;
-        private UTextBox uTextBox4;
-        private UTextBox uTextBox3;
-        private UTextBox uTextBox2;
-        private UTextBox uTextBox17;
-        private UTextBox uTextBox15;
-        private UTextBox uTextBox14;
-        private UTextBox uTextBox13;
-        private UTextBox uTextBox6;
-        private UTextBox uTextBox7;
-        private UTextBox uTextBox8;
-        private UTextBox uTextBox9;
-        private UTextBox uTextBox10;
-        private UTextBox uTextBox11;
-        private UTextBox uTextBox12;
+        private UTextBox SICtextBox;
+        private UTextBox SACtextBox;
+        private System.Windows.Forms.ComboBox EmitterCategoryComboBox;
+        private UTextBox TargetAddressTextBox;
+        private UTextBox AircraftIdetificationTextBox;
+        private UTextBox RegistrationTextBox;
+        private UTextBox TypeAircraftTextBox;
+        private UTextBox Mode3ATextBox;
+        private UTextBox AirportDepatureTextBox;
+        private UTextBox AirportArrivalTextBox;
+        private System.Windows.Forms.ComboBox CountryComboBox;
+        private System.Windows.Forms.ComboBox CATcomboBox;
     }
 }
 
