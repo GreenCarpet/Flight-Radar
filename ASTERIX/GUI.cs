@@ -11,6 +11,8 @@ using System.IO;
 using System.Collections;
 using System.Xml;
 using System.Threading;
+using GMap.NET;
+using GMap.NET.WindowsForms;
 
 namespace ASTERIX
 {
@@ -29,6 +31,9 @@ namespace ASTERIX
         int UPDATEGRIDMILLISECONDS = 5000;
 
         int SearchSplitterPosition = 100;
+        bool SearchSplitterLock = false;
+        int RouteSplitterPosition = 100;
+        bool RouteSplitterLock = false;
 
         /// <summary>
         /// Формирует текущий фильтр.
@@ -639,8 +644,8 @@ namespace ASTERIX
                 InitializeComponent();
 
                 MapBTN_Click(null, null);
-                SearchContainer.Panel1MinSize = HideSearchBTN.Size.Height;
-                SearchContainer.SplitterDistance = SearchContainer.Panel1MinSize;
+                HideSearchBTN_MouseUp(null, null);
+                HideRouteBTN_MouseUp(null, null);
 
                 Protocol.Init(this);
                 chcksum = checksum("Load");
@@ -748,19 +753,81 @@ namespace ASTERIX
         }
         private void HideSearchBTN_MouseUp(object sender, MouseEventArgs e)
         {
-            if (SearchContainer.SplitterDistance == HideSearchBTN.Size.Height)
+            if (SearchSplitterLock)
             {
                 HideSearchBTN.Text = "Фильтр";
+                SearchSplitterLock = false;
+                SearchContainer.IsSplitterFixed = false;
                 SearchContainer.Panel1MinSize = 100;
                 SearchContainer.SplitterDistance = SearchSplitterPosition;
             }
             else
             {
                 HideSearchBTN.Text = "Нажмите для настройки фильтра";
-                SearchContainer.Panel1MinSize = 0;
+                SearchSplitterLock = true;
+                SearchContainer.IsSplitterFixed = true;
+                SearchContainer.Panel1MinSize = HideSearchBTN.Size.Height;
                 SearchSplitterPosition = SearchContainer.SplitterDistance;
                 SearchContainer.SplitterDistance = HideSearchBTN.Size.Height;
             }
         }
+
+        private void HideRouteBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            RouteControl.Focus();
+        }
+        private void HideRouteBTN_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (RouteSplitterLock)
+            {
+                RouteSplitterLock = false;
+                RouteContainer.IsSplitterFixed = false;
+                RouteContainer.Panel1MinSize = 100;
+                RouteContainer.SplitterDistance = RouteSplitterPosition;
+            }
+            else
+            {
+                RouteSplitterLock = true;
+                RouteContainer.IsSplitterFixed = true;
+                RouteContainer.Panel1MinSize = HideRouteBTN.Size.Width;
+                RouteSplitterPosition = RouteContainer.SplitterDistance;
+                RouteContainer.SplitterDistance = HideRouteBTN.Size.Width;
+            }
+        }
+
+
+        private void gMapControl_Load(object sender, EventArgs e)
+        {
+            #region Настройка
+            gMapControl.Bearing = 0;
+
+            gMapControl.CanDragMap = true;
+            gMapControl.DragButton = MouseButtons.Left;
+
+            gMapControl.GrayScaleMode = true;
+
+            gMapControl.MarkersEnabled = true;
+
+            gMapControl.MaxZoom = 18;
+            gMapControl.MinZoom = 2;
+
+            gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
+
+            gMapControl.NegativeMode = false;
+
+            gMapControl.RoutesEnabled = true;
+
+            gMapControl.ShowTileGridLines = false;
+
+            gMapControl.Zoom = 5;
+
+            gMapControl.Dock = DockStyle.Fill;
+
+            gMapControl.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleMap;
+            GMaps.Instance.Mode = AccessMode.CacheOnly;
+            GMaps.Instance.ImportFromGMDB(@"C:\Users\АРМ\Desktop\RADAR_TCP_WORK_VER_SUPER\TileDBv5\en\Data.gmdb");
+            #endregion
+        }
+
     }
 }
