@@ -44,11 +44,18 @@ namespace ASTERIX
             string filter = "";
             string TargetAddress = GetBoxValue("TargetAddress");
             string AircraftIdentification = GetBoxValue("AircraftIdentification");
+            string Registration = GetBoxValue("Registration");
+            string TypeAircraft = GetBoxValue("TypeAircraft");
+            string Mode3A = GetBoxValue("Mode3A");
             string EmitterCategory = GetBoxValue("EmitterCategory");
+            string Country = GetBoxValue("Country");
             string AirportDepature = GetBoxValue("AirportDepature");
             string AirportArrival = GetBoxValue("AirportArrival");
             string BeginTime = GetBoxValue("BeginTime");
             string EndTime = GetBoxValue("EndTime");
+            string CAT = GetBoxValue("CAT");
+            string SAC = GetBoxValue("SAC");
+            string SIC = GetBoxValue("SIC");
 
             if (TargetAddress != "")
             {
@@ -65,6 +72,39 @@ namespace ASTERIX
                     filter += " AND AircraftIdentification LIKE '" + AircraftIdentification + "%'";
                 }
             }
+            if (Registration != "")
+            {
+                if (filter == "")
+                {
+                    filter = "WHERE Registration LIKE '" + Registration + "%'";
+                }
+                else
+                {
+                    filter += " AND Registration LIKE '" + Registration + "%'";
+                }
+            }
+            if (TypeAircraft != "")
+            {
+                if (filter == "")
+                {
+                    filter = "WHERE TypeAircraft LIKE '" + TypeAircraft + "%'";
+                }
+                else
+                {
+                    filter += " AND TypeAircraft LIKE '" + TypeAircraft + "%'";
+                }
+            }
+            if (Mode3A != "")
+            {
+                if (filter == "")
+                {
+                    filter = "WHERE Mode3A LIKE '" + Mode3A + "%'";
+                }
+                else
+                {
+                    filter += " AND Mode3A LIKE '" + Mode3A + "%'";
+                }
+            }
             if (EmitterCategory != "")
             {
                 if (filter == "")
@@ -74,6 +114,17 @@ namespace ASTERIX
                 else
                 {
                     filter += " AND EmitterCategory = '" + EmitterCategory + "'";
+                }
+            }
+            if (Country != "")
+            {
+                if (filter == "")
+                {
+                    filter = "WHERE Country LIKE '" + Country + "%'";
+                }
+                else
+                {
+                    filter += " AND Country LIKE '" + Country + "%'";
                 }
             }
             if (AirportDepature != "")
@@ -120,6 +171,40 @@ namespace ASTERIX
                     filter += " AND EndTime < '" + EndTime + "'";
                 }
             }
+            if (CAT != "")
+            {
+                if (filter == "")
+                {
+                    filter = "WHERE CAT LIKE '" + CAT + "%'";
+                }
+                else
+                {
+                    filter += " AND CAT LIKE '" + CAT + "%'";
+                }
+            }
+            if (SAC != "")
+            {
+                if (filter == "")
+                {
+                    filter = "WHERE SAC LIKE '" + SAC + "%'";
+                }
+                else
+                {
+                    filter += " AND SAC LIKE '" + SAC + "%'";
+                }
+            }
+            if (SIC != "")
+            {
+                if (filter == "")
+                {
+                    filter = "WHERE SIC LIKE '" + SIC + "%'";
+                }
+                else
+                {
+                    filter += " AND SIC LIKE '" + SIC + "%'";
+                }
+            }
+
             return filter;
         }
         /// <summary>
@@ -381,9 +466,29 @@ namespace ASTERIX
                         result = AircraftIdetificationTextBox.TextField;
                         break;
                     }
+                case "Registration":
+                    {
+                        result = RegistrationTextBox.TextField;
+                        break;
+                    }
+                case "TypeAircraft":
+                    {
+                        result = TypeAircraftTextBox.TextField;
+                        break;
+                    }
+                case "Mode3A":
+                    {
+                        result = Mode3ATextBox.TextField;
+                        break;
+                    }
                 case "EmitterCategory":
                     {
                         result = EmitterCategoryComboBox.Text;
+                        break;
+                    }
+                case "Country":
+                    {
+                        result = CountryComboBox.Text;
                         break;
                     }
                 case "AirportDepature":
@@ -404,6 +509,21 @@ namespace ASTERIX
                 case "EndTime":
                     {
                         result = EndTimePicker.Value.ToShortDateString();
+                        break;
+                    }
+                case "CAT":
+                    {
+                        result = CATcomboBox.Text;
+                        break;
+                    }
+                case "SAC":
+                    {
+                        result = SACtextBox.TextField;
+                        break;
+                    }
+                case "SIC":
+                    {
+                        result = SICtextBox.TextField;
                         break;
                     }
             }
@@ -487,6 +607,51 @@ namespace ASTERIX
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void AirportArrivalTextBox_TextChanged(object sender, EventArgs e)
+        {
+            ShowDataGridView(false);
+        }
+        /// <summary>
+        /// Обновляет LoadGridView при изменении текста в RegistrationTextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RegistrationTextBox_ControlTextChanged(object sender, EventArgs e)
+        {
+            ShowDataGridView(false);
+        }
+        /// <summary>
+        /// Обновляет LoadGridView при изменении текста в TypeAircraftTextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TypeAircraftTextBox_ControlTextChanged(object sender, EventArgs e)
+        {
+            ShowDataGridView(false);
+        }
+        /// <summary>
+        /// Обновляет LoadGridView при изменении текста в Mode3ATextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Mode3ATextBox_ControlTextChanged(object sender, EventArgs e)
+        {
+            ShowDataGridView(false);
+        }
+        /// <summary>
+        /// Обновляет LoadGridView при изменении текста в SACtextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SACtextBox_ControlTextChanged(object sender, EventArgs e)
+        {
+            ShowDataGridView(false);
+        }
+        /// <summary>
+        /// Обновляет LoadGridView при изменении текста в SICtextBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SICtextBox_ControlTextChanged(object sender, EventArgs e)
         {
             ShowDataGridView(false);
         }
@@ -746,11 +911,20 @@ namespace ASTERIX
             pagePanel.Controls.Add(SettingsPanel);
         }
 
-
+        /// <summary>
+        /// Убирает фокус с кнопки фильтра.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HideSearchBTN_MouseDown(object sender, MouseEventArgs e)
         {
             SearchPanel.Focus();
         }
+        /// <summary>
+        /// Открывает/Закрывает панель фильтра.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HideSearchBTN_MouseUp(object sender, MouseEventArgs e)
         {
             if (SearchSplitterLock)
@@ -772,10 +946,20 @@ namespace ASTERIX
             }
         }
 
+        /// <summary>
+        /// Убирает фокус с кнопки маршрутов.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HideRouteBTN_MouseDown(object sender, MouseEventArgs e)
         {
             RouteControl.Focus();
         }
+        /// <summary>
+        /// Открывает/Закрывает панель маршрутов.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void HideRouteBTN_MouseUp(object sender, MouseEventArgs e)
         {
             if (RouteSplitterLock)
@@ -795,10 +979,13 @@ namespace ASTERIX
             }
         }
 
-
+        /// <summary>
+        /// Инициализирует карту.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gMapControl_Load(object sender, EventArgs e)
         {
-            #region Настройка
             gMapControl.Bearing = 0;
 
             gMapControl.CanDragMap = true;
@@ -826,7 +1013,6 @@ namespace ASTERIX
             gMapControl.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleMap;
             GMaps.Instance.Mode = AccessMode.CacheOnly;
             GMaps.Instance.ImportFromGMDB(@"C:\Users\АРМ\Desktop\RADAR_TCP_WORK_VER_SUPER\TileDBv5\en\Data.gmdb");
-            #endregion
         }
 
     }
