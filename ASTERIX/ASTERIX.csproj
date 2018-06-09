@@ -71,6 +71,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Code\Protocol.cs" />
     <Compile Include="Code\SQL.cs" />
+    <Compile Include="UComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UComboBox.Designer.cs">
+      <DependentUpon>UComboBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="UTextBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -89,10 +95,12 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UComboBox.resx">
+      <DependentUpon>UComboBox.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UTextBox.resx">
       <DependentUpon>UTextBox.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

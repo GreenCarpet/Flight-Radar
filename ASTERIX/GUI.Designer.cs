@@ -30,10 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GUI));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle43 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle44 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle45 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle46 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle47 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle48 = new System.Windows.Forms.DataGridViewCellStyle();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -56,13 +58,12 @@
             this.MapContainer = new System.Windows.Forms.SplitContainer();
             this.SearchContainer = new System.Windows.Forms.SplitContainer();
             this.SearchPanel = new System.Windows.Forms.Panel();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.SearchTableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.ClassComboBox = new System.Windows.Forms.ComboBox();
             this.SICtextBox = new ASTERIX.UTextBox();
             this.SACtextBox = new ASTERIX.UTextBox();
             this.EndTimePicker = new System.Windows.Forms.DateTimePicker();
             this.BeginTimePicker = new System.Windows.Forms.DateTimePicker();
-            this.EmitterCategoryComboBox = new System.Windows.Forms.ComboBox();
             this.TargetAddressTextBox = new ASTERIX.UTextBox();
             this.AircraftIdetificationTextBox = new ASTERIX.UTextBox();
             this.RegistrationTextBox = new ASTERIX.UTextBox();
@@ -70,8 +71,9 @@
             this.Mode3ATextBox = new ASTERIX.UTextBox();
             this.AirportDepatureTextBox = new ASTERIX.UTextBox();
             this.AirportArrivalTextBox = new ASTERIX.UTextBox();
-            this.CountryComboBox = new System.Windows.Forms.ComboBox();
-            this.CATcomboBox = new System.Windows.Forms.ComboBox();
+            this.EmitterCategoryComboBox = new ASTERIX.UComboBox();
+            this.CountryComboBox = new ASTERIX.UComboBox();
+            this.CATcomboBox = new ASTERIX.UComboBox();
             this.HideSearchBTN = new System.Windows.Forms.Button();
             this.LoadGridView1 = new System.Windows.Forms.DataGridView();
             this.RouteContainer = new System.Windows.Forms.SplitContainer();
@@ -82,6 +84,8 @@
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.AircraftPage = new System.Windows.Forms.TabPage();
             this.AircraftPanel = new System.Windows.Forms.Panel();
+            this.AircraftContainer = new System.Windows.Forms.SplitContainer();
+            this.AircraftGridView = new System.Windows.Forms.DataGridView();
             this.SettingsPage = new System.Windows.Forms.TabPage();
             this.SettingsPanel = new System.Windows.Forms.Panel();
             this.tabPanel.SuspendLayout();
@@ -103,7 +107,7 @@
             this.SearchContainer.Panel2.SuspendLayout();
             this.SearchContainer.SuspendLayout();
             this.SearchPanel.SuspendLayout();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.SearchTableLayoutPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.LoadGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RouteContainer)).BeginInit();
             this.RouteContainer.Panel1.SuspendLayout();
@@ -111,6 +115,11 @@
             this.RouteContainer.SuspendLayout();
             this.RouteControl.SuspendLayout();
             this.AircraftPage.SuspendLayout();
+            this.AircraftPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.AircraftContainer)).BeginInit();
+            this.AircraftContainer.Panel1.SuspendLayout();
+            this.AircraftContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.AircraftGridView)).BeginInit();
             this.SettingsPage.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -143,12 +152,13 @@
             this.tabPanel.Name = "tabPanel";
             this.tabPanel.Size = new System.Drawing.Size(167, 762);
             this.tabPanel.TabIndex = 2;
+            this.tabPanel.Click += new System.EventHandler(this.tabPanel_Click);
             // 
             // tabTable
             // 
             this.tabTable.ColumnCount = 2;
-            this.tabTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tabTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 80F));
+            this.tabTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24F));
+            this.tabTable.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76F));
             this.tabTable.Controls.Add(this.AircraftBTN, 1, 3);
             this.tabTable.Controls.Add(this.AircraftPicture, 0, 3);
             this.tabTable.Controls.Add(this.progressBar1, 0, 1);
@@ -171,6 +181,7 @@
             this.tabTable.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tabTable.Size = new System.Drawing.Size(167, 193);
             this.tabTable.TabIndex = 0;
+            this.tabTable.Click += new System.EventHandler(this.tabTable_Click);
             // 
             // AircraftBTN
             // 
@@ -178,10 +189,10 @@
             this.AircraftBTN.BackColor = System.Drawing.Color.Transparent;
             this.AircraftBTN.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AircraftBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AircraftBTN.Location = new System.Drawing.Point(33, 80);
+            this.AircraftBTN.Location = new System.Drawing.Point(40, 80);
             this.AircraftBTN.Margin = new System.Windows.Forms.Padding(0);
             this.AircraftBTN.Name = "AircraftBTN";
-            this.AircraftBTN.Size = new System.Drawing.Size(134, 40);
+            this.AircraftBTN.Size = new System.Drawing.Size(127, 40);
             this.AircraftBTN.TabIndex = 6;
             this.AircraftBTN.Text = "Привязки";
             this.AircraftBTN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -195,8 +206,8 @@
             this.AircraftPicture.Location = new System.Drawing.Point(0, 80);
             this.AircraftPicture.Margin = new System.Windows.Forms.Padding(0);
             this.AircraftPicture.Name = "AircraftPicture";
-            this.AircraftPicture.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.AircraftPicture.Size = new System.Drawing.Size(33, 40);
+            this.AircraftPicture.Padding = new System.Windows.Forms.Padding(1, 3, 1, 3);
+            this.AircraftPicture.Size = new System.Drawing.Size(40, 40);
             this.AircraftPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.AircraftPicture.TabIndex = 5;
             this.AircraftPicture.TabStop = false;
@@ -210,7 +221,8 @@
             this.ScanPicture.Location = new System.Drawing.Point(0, 0);
             this.ScanPicture.Margin = new System.Windows.Forms.Padding(0);
             this.ScanPicture.Name = "ScanPicture";
-            this.ScanPicture.Size = new System.Drawing.Size(33, 40);
+            this.ScanPicture.Padding = new System.Windows.Forms.Padding(1);
+            this.ScanPicture.Size = new System.Drawing.Size(40, 40);
             this.ScanPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.ScanPicture.TabIndex = 0;
             this.ScanPicture.TabStop = false;
@@ -222,10 +234,10 @@
             this.StartStopBTN.BackColor = System.Drawing.Color.Transparent;
             this.StartStopBTN.Dock = System.Windows.Forms.DockStyle.Fill;
             this.StartStopBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.StartStopBTN.Location = new System.Drawing.Point(33, 0);
+            this.StartStopBTN.Location = new System.Drawing.Point(40, 0);
             this.StartStopBTN.Margin = new System.Windows.Forms.Padding(0);
             this.StartStopBTN.Name = "StartStopBTN";
-            this.StartStopBTN.Size = new System.Drawing.Size(134, 40);
+            this.StartStopBTN.Size = new System.Drawing.Size(127, 40);
             this.StartStopBTN.TabIndex = 1;
             this.StartStopBTN.Text = "Сканирование";
             this.StartStopBTN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -240,7 +252,7 @@
             this.MapPicture.Margin = new System.Windows.Forms.Padding(0);
             this.MapPicture.Name = "MapPicture";
             this.MapPicture.Padding = new System.Windows.Forms.Padding(0, 5, 0, 5);
-            this.MapPicture.Size = new System.Drawing.Size(33, 40);
+            this.MapPicture.Size = new System.Drawing.Size(40, 40);
             this.MapPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.MapPicture.TabIndex = 2;
             this.MapPicture.TabStop = false;
@@ -252,10 +264,10 @@
             this.MapBTN.BackColor = System.Drawing.Color.Transparent;
             this.MapBTN.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MapBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.MapBTN.Location = new System.Drawing.Point(33, 40);
+            this.MapBTN.Location = new System.Drawing.Point(40, 40);
             this.MapBTN.Margin = new System.Windows.Forms.Padding(0);
             this.MapBTN.Name = "MapBTN";
-            this.MapBTN.Size = new System.Drawing.Size(134, 40);
+            this.MapBTN.Size = new System.Drawing.Size(127, 40);
             this.MapBTN.TabIndex = 3;
             this.MapBTN.Text = "Карта";
             this.MapBTN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -269,7 +281,8 @@
             this.SettingsPicture.Location = new System.Drawing.Point(0, 120);
             this.SettingsPicture.Margin = new System.Windows.Forms.Padding(0);
             this.SettingsPicture.Name = "SettingsPicture";
-            this.SettingsPicture.Size = new System.Drawing.Size(33, 40);
+            this.SettingsPicture.Padding = new System.Windows.Forms.Padding(2);
+            this.SettingsPicture.Size = new System.Drawing.Size(40, 40);
             this.SettingsPicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.SettingsPicture.TabIndex = 4;
             this.SettingsPicture.TabStop = false;
@@ -281,10 +294,10 @@
             this.SettingsBTN.BackColor = System.Drawing.Color.Transparent;
             this.SettingsBTN.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SettingsBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SettingsBTN.Location = new System.Drawing.Point(33, 120);
+            this.SettingsBTN.Location = new System.Drawing.Point(40, 120);
             this.SettingsBTN.Margin = new System.Windows.Forms.Padding(0);
             this.SettingsBTN.Name = "SettingsBTN";
-            this.SettingsBTN.Size = new System.Drawing.Size(134, 40);
+            this.SettingsBTN.Size = new System.Drawing.Size(127, 40);
             this.SettingsBTN.TabIndex = 5;
             this.SettingsBTN.Text = "Настройки";
             this.SettingsBTN.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -389,7 +402,7 @@
             // SearchPanel
             // 
             this.SearchPanel.BackColor = System.Drawing.Color.LightGray;
-            this.SearchPanel.Controls.Add(this.tableLayoutPanel1);
+            this.SearchPanel.Controls.Add(this.SearchTableLayoutPanel);
             this.SearchPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.SearchPanel.Location = new System.Drawing.Point(0, 0);
             this.SearchPanel.Margin = new System.Windows.Forms.Padding(0);
@@ -397,42 +410,43 @@
             this.SearchPanel.Size = new System.Drawing.Size(1331, 129);
             this.SearchPanel.TabIndex = 8;
             // 
-            // tableLayoutPanel1
+            // SearchTableLayoutPanel
             // 
-            this.tableLayoutPanel1.ColumnCount = 8;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.698304F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.773728F));
-            this.tableLayoutPanel1.Controls.Add(this.ClassComboBox, 6, 0);
-            this.tableLayoutPanel1.Controls.Add(this.SICtextBox, 5, 2);
-            this.tableLayoutPanel1.Controls.Add(this.SACtextBox, 5, 1);
-            this.tableLayoutPanel1.Controls.Add(this.EndTimePicker, 4, 1);
-            this.tableLayoutPanel1.Controls.Add(this.BeginTimePicker, 4, 0);
-            this.tableLayoutPanel1.Controls.Add(this.EmitterCategoryComboBox, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.TargetAddressTextBox, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.AircraftIdetificationTextBox, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.RegistrationTextBox, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.TypeAircraftTextBox, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.Mode3ATextBox, 2, 2);
-            this.tableLayoutPanel1.Controls.Add(this.AirportDepatureTextBox, 3, 1);
-            this.tableLayoutPanel1.Controls.Add(this.AirportArrivalTextBox, 3, 2);
-            this.tableLayoutPanel1.Controls.Add(this.CountryComboBox, 3, 0);
-            this.tableLayoutPanel1.Controls.Add(this.CATcomboBox, 5, 0);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1331, 129);
-            this.tableLayoutPanel1.TabIndex = 2;
+            this.SearchTableLayoutPanel.ColumnCount = 8;
+            this.SearchTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 7.698304F));
+            this.SearchTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.SearchTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.SearchTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.SearchTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.SearchTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.SearchTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.42133F));
+            this.SearchTableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.773728F));
+            this.SearchTableLayoutPanel.Controls.Add(this.ClassComboBox, 6, 0);
+            this.SearchTableLayoutPanel.Controls.Add(this.SICtextBox, 5, 2);
+            this.SearchTableLayoutPanel.Controls.Add(this.SACtextBox, 5, 1);
+            this.SearchTableLayoutPanel.Controls.Add(this.EndTimePicker, 4, 1);
+            this.SearchTableLayoutPanel.Controls.Add(this.BeginTimePicker, 4, 0);
+            this.SearchTableLayoutPanel.Controls.Add(this.TargetAddressTextBox, 1, 0);
+            this.SearchTableLayoutPanel.Controls.Add(this.AircraftIdetificationTextBox, 1, 1);
+            this.SearchTableLayoutPanel.Controls.Add(this.RegistrationTextBox, 1, 2);
+            this.SearchTableLayoutPanel.Controls.Add(this.TypeAircraftTextBox, 2, 1);
+            this.SearchTableLayoutPanel.Controls.Add(this.Mode3ATextBox, 2, 2);
+            this.SearchTableLayoutPanel.Controls.Add(this.AirportDepatureTextBox, 3, 1);
+            this.SearchTableLayoutPanel.Controls.Add(this.AirportArrivalTextBox, 3, 2);
+            this.SearchTableLayoutPanel.Controls.Add(this.EmitterCategoryComboBox, 2, 0);
+            this.SearchTableLayoutPanel.Controls.Add(this.CountryComboBox, 3, 0);
+            this.SearchTableLayoutPanel.Controls.Add(this.CATcomboBox, 5, 0);
+            this.SearchTableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SearchTableLayoutPanel.Location = new System.Drawing.Point(0, 0);
+            this.SearchTableLayoutPanel.Margin = new System.Windows.Forms.Padding(0);
+            this.SearchTableLayoutPanel.Name = "SearchTableLayoutPanel";
+            this.SearchTableLayoutPanel.RowCount = 3;
+            this.SearchTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.SearchTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.SearchTableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.SearchTableLayoutPanel.Size = new System.Drawing.Size(1331, 129);
+            this.SearchTableLayoutPanel.TabIndex = 2;
+            this.SearchTableLayoutPanel.Click += new System.EventHandler(this.SearchTableLayoutPanel_Click);
             // 
             // ClassComboBox
             // 
@@ -442,6 +456,8 @@
             this.ClassComboBox.Name = "ClassComboBox";
             this.ClassComboBox.Size = new System.Drawing.Size(167, 21);
             this.ClassComboBox.TabIndex = 16;
+            this.ClassComboBox.SelectedIndexChanged += new System.EventHandler(this.ClassComboBox_SelectedIndexChanged);
+            this.ClassComboBox.Click += new System.EventHandler(this.ClassComboBox_Click);
             // 
             // SICtextBox
             // 
@@ -511,20 +527,6 @@
             this.BeginTimePicker.ValueChanged += new System.EventHandler(this.BeginTimePicker_ValueChanged);
             this.BeginTimePicker.DropDown += new System.EventHandler(this.BeginTimePicker_DropDown);
             this.BeginTimePicker.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BeginTimePicker_MouseDown);
-            // 
-            // EmitterCategoryComboBox
-            // 
-            this.EmitterCategoryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.EmitterCategoryComboBox.FormattingEnabled = true;
-            this.EmitterCategoryComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.EmitterCategoryComboBox.Location = new System.Drawing.Point(293, 11);
-            this.EmitterCategoryComboBox.Margin = new System.Windows.Forms.Padding(0);
-            this.EmitterCategoryComboBox.MaxDropDownItems = 50;
-            this.EmitterCategoryComboBox.Name = "EmitterCategoryComboBox";
-            this.EmitterCategoryComboBox.Size = new System.Drawing.Size(167, 21);
-            this.EmitterCategoryComboBox.TabIndex = 4;
-            this.EmitterCategoryComboBox.SelectedIndexChanged += new System.EventHandler(this.EmitterCategoryComboBox_SelectedIndexChanged);
-            this.EmitterCategoryComboBox.Click += new System.EventHandler(this.EmitterCategoryComboBox_Click);
             // 
             // TargetAddressTextBox
             // 
@@ -673,27 +675,54 @@
             this.AirportArrivalTextBox.TextField = null;
             this.AirportArrivalTextBox.ControlTextChanged += new System.EventHandler(this.AirportArrivalTextBox_TextChanged);
             // 
+            // EmitterCategoryComboBox
+            // 
+            this.EmitterCategoryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.EmitterCategoryComboBox.BackColor = System.Drawing.Color.LightGray;
+            this.EmitterCategoryComboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.EmitterCategoryComboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("EmitterCategoryComboBox.DataSource")));
+            this.EmitterCategoryComboBox.DisplayItems = 15;
+            this.EmitterCategoryComboBox.DroppedDown = false;
+            this.EmitterCategoryComboBox.Location = new System.Drawing.Point(293, 11);
+            this.EmitterCategoryComboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.EmitterCategoryComboBox.MaskText = "КАТЕГОРИЯ";
+            this.EmitterCategoryComboBox.Name = "EmitterCategoryComboBox";
+            this.EmitterCategoryComboBox.Size = new System.Drawing.Size(167, 20);
+            this.EmitterCategoryComboBox.TabIndex = 18;
+            this.EmitterCategoryComboBox.TextField = null;
+            this.EmitterCategoryComboBox.Enter += new System.EventHandler(this.EmitterCategoryComboBox_Enter);
+            // 
             // CountryComboBox
             // 
             this.CountryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.CountryComboBox.FormattingEnabled = true;
-            this.CountryComboBox.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.CountryComboBox.BackColor = System.Drawing.Color.LightGray;
+            this.CountryComboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CountryComboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("CountryComboBox.DataSource")));
+            this.CountryComboBox.DisplayItems = 15;
+            this.CountryComboBox.DroppedDown = false;
             this.CountryComboBox.Location = new System.Drawing.Point(484, 11);
             this.CountryComboBox.Margin = new System.Windows.Forms.Padding(0);
-            this.CountryComboBox.MaxDropDownItems = 50;
+            this.CountryComboBox.MaskText = "ГОСУДАРСТВО";
             this.CountryComboBox.Name = "CountryComboBox";
-            this.CountryComboBox.Size = new System.Drawing.Size(167, 21);
-            this.CountryComboBox.TabIndex = 17;
+            this.CountryComboBox.Size = new System.Drawing.Size(167, 20);
+            this.CountryComboBox.TabIndex = 19;
+            this.CountryComboBox.TextField = null;
             // 
             // CATcomboBox
             // 
             this.CATcomboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.CATcomboBox.FormattingEnabled = true;
+            this.CATcomboBox.BackColor = System.Drawing.Color.LightGray;
+            this.CATcomboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CATcomboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("CATcomboBox.DataSource")));
+            this.CATcomboBox.DisplayItems = 15;
+            this.CATcomboBox.DroppedDown = false;
             this.CATcomboBox.Location = new System.Drawing.Point(866, 11);
             this.CATcomboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.CATcomboBox.MaskText = "CAT";
             this.CATcomboBox.Name = "CATcomboBox";
-            this.CATcomboBox.Size = new System.Drawing.Size(167, 21);
-            this.CATcomboBox.TabIndex = 13;
+            this.CATcomboBox.Size = new System.Drawing.Size(167, 20);
+            this.CATcomboBox.TabIndex = 19;
+            this.CATcomboBox.TextField = null;
             // 
             // HideSearchBTN
             // 
@@ -707,6 +736,7 @@
             this.HideSearchBTN.Name = "HideSearchBTN";
             this.HideSearchBTN.Size = new System.Drawing.Size(1331, 22);
             this.HideSearchBTN.TabIndex = 7;
+            this.HideSearchBTN.TabStop = false;
             this.HideSearchBTN.Text = "Нажмите для настройки фильтра";
             this.HideSearchBTN.UseVisualStyleBackColor = false;
             this.HideSearchBTN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HideSearchBTN_MouseDown);
@@ -717,43 +747,43 @@
             this.LoadGridView1.AllowUserToAddRows = false;
             this.LoadGridView1.AllowUserToResizeColumns = false;
             this.LoadGridView1.AllowUserToResizeRows = false;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.MediumSeaGreen;
-            this.LoadGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle43.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.LoadGridView1.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle43;
             this.LoadGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
             this.LoadGridView1.BackgroundColor = System.Drawing.SystemColors.Control;
             this.LoadGridView1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LoadGridView1.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle44.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle44.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle44.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle44.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle44.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle44.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle44.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle44;
             this.LoadGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.DarkSeaGreen;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.LoadGridView1.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle45.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle45.BackColor = System.Drawing.Color.DarkSeaGreen;
+            dataGridViewCellStyle45.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle45.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle45.SelectionBackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle45.SelectionForeColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle45.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.LoadGridView1.DefaultCellStyle = dataGridViewCellStyle45;
             this.LoadGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LoadGridView1.GridColor = System.Drawing.Color.SeaGreen;
             this.LoadGridView1.Location = new System.Drawing.Point(0, 0);
             this.LoadGridView1.Margin = new System.Windows.Forms.Padding(0);
             this.LoadGridView1.Name = "LoadGridView1";
             this.LoadGridView1.ReadOnly = true;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle46.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle46.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle46.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle46.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle46.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle46.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle46.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle46;
             this.LoadGridView1.RowHeadersWidth = 40;
             this.LoadGridView1.RowTemplate.Height = 25;
             this.LoadGridView1.RowTemplate.ReadOnly = true;
@@ -813,7 +843,7 @@
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(251, 410);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Полигоны";
+            this.tabPage2.Text = "Шаблоны";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // HideRouteBTN
@@ -876,12 +906,60 @@
             // 
             // AircraftPanel
             // 
+            this.AircraftPanel.Controls.Add(this.AircraftContainer);
             this.AircraftPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.AircraftPanel.Location = new System.Drawing.Point(3, 3);
             this.AircraftPanel.Margin = new System.Windows.Forms.Padding(0);
             this.AircraftPanel.Name = "AircraftPanel";
             this.AircraftPanel.Size = new System.Drawing.Size(1331, 730);
             this.AircraftPanel.TabIndex = 0;
+            // 
+            // AircraftContainer
+            // 
+            this.AircraftContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.AircraftContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.AircraftContainer.Location = new System.Drawing.Point(0, 0);
+            this.AircraftContainer.Name = "AircraftContainer";
+            this.AircraftContainer.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // AircraftContainer.Panel1
+            // 
+            this.AircraftContainer.Panel1.Controls.Add(this.AircraftGridView);
+            this.AircraftContainer.Size = new System.Drawing.Size(1331, 730);
+            this.AircraftContainer.SplitterDistance = 471;
+            this.AircraftContainer.TabIndex = 0;
+            // 
+            // AircraftGridView
+            // 
+            this.AircraftGridView.AllowUserToAddRows = false;
+            this.AircraftGridView.AllowUserToOrderColumns = true;
+            this.AircraftGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.AircraftGridView.BackgroundColor = System.Drawing.Color.White;
+            this.AircraftGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            dataGridViewCellStyle47.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle47.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle47.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle47.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle47.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle47.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle47.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.AircraftGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle47;
+            this.AircraftGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle48.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle48.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle48.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle48.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle48.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle48.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle48.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.AircraftGridView.DefaultCellStyle = dataGridViewCellStyle48;
+            this.AircraftGridView.Location = new System.Drawing.Point(464, 199);
+            this.AircraftGridView.Name = "AircraftGridView";
+            this.AircraftGridView.ReadOnly = true;
+            this.AircraftGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.AircraftGridView.Size = new System.Drawing.Size(260, 144);
+            this.AircraftGridView.TabIndex = 0;
             // 
             // SettingsPage
             // 
@@ -918,7 +996,9 @@
             this.Name = "GUI";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Flight Radar";
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GUI_FormClosed);
+            this.LocationChanged += new System.EventHandler(this.GUI_LocationChanged);
+            this.SizeChanged += new System.EventHandler(this.GUI_SizeChanged);
             this.tabPanel.ResumeLayout(false);
             this.tabTable.ResumeLayout(false);
             this.tabTable.PerformLayout();
@@ -939,7 +1019,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.SearchContainer)).EndInit();
             this.SearchContainer.ResumeLayout(false);
             this.SearchPanel.ResumeLayout(false);
-            this.tableLayoutPanel1.ResumeLayout(false);
+            this.SearchTableLayoutPanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.LoadGridView1)).EndInit();
             this.RouteContainer.Panel1.ResumeLayout(false);
             this.RouteContainer.Panel2.ResumeLayout(false);
@@ -947,6 +1027,11 @@
             this.RouteContainer.ResumeLayout(false);
             this.RouteControl.ResumeLayout(false);
             this.AircraftPage.ResumeLayout(false);
+            this.AircraftPanel.ResumeLayout(false);
+            this.AircraftContainer.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.AircraftContainer)).EndInit();
+            this.AircraftContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.AircraftGridView)).EndInit();
             this.SettingsPage.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -985,10 +1070,9 @@
         private System.Windows.Forms.DateTimePicker EndTimePicker;
         private System.Windows.Forms.DateTimePicker BeginTimePicker;
         private System.Windows.Forms.ComboBox ClassComboBox;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel SearchTableLayoutPanel;
         private UTextBox SICtextBox;
         private UTextBox SACtextBox;
-        private System.Windows.Forms.ComboBox EmitterCategoryComboBox;
         private UTextBox TargetAddressTextBox;
         private UTextBox AircraftIdetificationTextBox;
         private UTextBox RegistrationTextBox;
@@ -996,13 +1080,16 @@
         private UTextBox Mode3ATextBox;
         private UTextBox AirportDepatureTextBox;
         private UTextBox AirportArrivalTextBox;
-        private System.Windows.Forms.ComboBox CountryComboBox;
-        private System.Windows.Forms.ComboBox CATcomboBox;
         private GMap.NET.WindowsForms.GMapControl gMapControl;
         private System.Windows.Forms.TabControl RouteControl;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button HideRouteBTN;
+        private System.Windows.Forms.SplitContainer AircraftContainer;
+        private System.Windows.Forms.DataGridView AircraftGridView;
+        private UComboBox EmitterCategoryComboBox;
+        private UComboBox CountryComboBox;
+        private UComboBox CATcomboBox;
     }
 }
 

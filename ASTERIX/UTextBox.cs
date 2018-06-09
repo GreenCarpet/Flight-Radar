@@ -20,6 +20,8 @@ namespace ASTERIX
         private Color mouseBackColor = Color.Gray;
         private Color textBoxBackColor = Color.White;
         public event EventHandler ControlTextChanged;
+        public event EventHandler ControlKeyDown;
+        public event EventHandler ControlMouseDown;
 
         public CharacterCasing CharacterCasingField
         {
@@ -57,8 +59,8 @@ namespace ASTERIX
                                 break;
                             }
                     }
-                    textBox.Text = Masktext;
                     textBox.ForeColor = maskColor;
+                    textBox.Text = Masktext;
                 }
                 else
                 {
@@ -198,7 +200,10 @@ namespace ASTERIX
             }
             if ((textBox.Text != MaskField) && (textBox.ForeColor == maskColor) && (textBox.Text != ""))
             {
-                textBox.Text = textBox.Text[0].ToString();
+                if (MaskField != "")
+                {
+                    textBox.Text = textBox.Text.Replace(MaskField, "");
+                }
                 textBox.SelectionStart = textBox.TextLength;
                 textBox.ForeColor = textColor;
             }
@@ -216,6 +221,7 @@ namespace ASTERIX
                 textBox.SelectionStart = 0;
                 textBox.SelectionLength = 0;
             }
+            this.ControlMouseDown?.Invoke(this, e);
         }
         private void textBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -227,6 +233,7 @@ namespace ASTERIX
                     e.SuppressKeyPress = true;
                 }
             }
+            this.ControlKeyDown?.Invoke(this, e);
         }
 
         private void ClearBTN_MouseDown(object sender, MouseEventArgs e)

@@ -20,7 +20,7 @@ namespace ASTERIX
     {
         Thread updateThread;
 
-        int chcksum;
+        int Loadchcksum, Aircraftchcksum = 0;
     
         bool FirstSetting = false;
         bool EnableBeginTimePicker = true;
@@ -56,6 +56,7 @@ namespace ASTERIX
             string CAT = GetBoxValue("CAT");
             string SAC = GetBoxValue("SAC");
             string SIC = GetBoxValue("SIC");
+            string Class = GetBoxValue("Class");
 
             if (TargetAddress != "")
             {
@@ -204,6 +205,17 @@ namespace ASTERIX
                     filter += " AND SIC LIKE '" + SIC + "%'";
                 }
             }
+            if (Class != "")
+            {
+                if (filter == "")
+                {
+                    filter = "WHERE Class LIKE '" + Class + "%'";
+                }
+                else
+                {
+                    filter += " AND Class LIKE '" + Class + "%'";
+                }
+            }
 
             return filter;
         }
@@ -229,9 +241,9 @@ namespace ASTERIX
         {
             SQL.query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(Protocol.UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
             int newchcksum = checksum("Load");
-            if (chcksum != newchcksum)
+            if (Loadchcksum != newchcksum)
             {
-                chcksum = newchcksum;
+                Loadchcksum = newchcksum;
                 ShowDataGridView(true);
             }
             updateThread.Abort();
@@ -526,24 +538,86 @@ namespace ASTERIX
                         result = SICtextBox.TextField;
                         break;
                     }
+                case "Class":
+                    {
+                        result = ClassComboBox.Text;
+                        break;
+                    }
             }
             return result;
         }
         /// <summary>
         /// Заполняет ComboBox данными EmitterCategory.
         /// </summary>
-        public void ComboBoxFill()
+        public void EmitterCategoryComboBoxFill()
         {
             if (InvokeRequired)
             {
-                Invoke(new Action(ComboBoxFill));
+                Invoke(new Action(EmitterCategoryComboBoxFill));
                 return;
             }
-            EmitterCategoryComboBox.Items.Clear();
-            DataTable Category = SQL.query("SELECT DISTINCT(EmitterCategory) FROM dbo.[Load]");
+            EmitterCategoryComboBox.DataSource = new List<string>();
+            DataTable Category;
+            Category = SQL.query("SELECT DISTINCT(EmitterCategory) FROM dbo.[Load] WHERE EmitterCategory <> '' ORDER BY(EmitterCategory)");
+
+            EmitterCategoryComboBox.Add("");
             for (int row = 0; row < Category.Rows.Count; row++)
             {
-                EmitterCategoryComboBox.Items.Add(Convert.ToString(Category.Rows[row][0]));
+                EmitterCategoryComboBox.Add(Convert.ToString(Category.Rows[row][0]));
+            }
+        }
+        /// <summary>
+        /// Заполняет ComboBox данными Country.
+        /// </summary>
+        public void CountryComboBoxFill()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(CountryComboBoxFill));
+                return;
+            }
+            CountryComboBox.Items.Clear();
+            DataTable Country = SQL.query("SELECT DISTINCT(Country) FROM dbo.[Load] WHERE Country <> '' ORDER BY(Country)");
+            CountryComboBox.Items.Add("");
+            for (int row = 0; row < Country.Rows.Count; row++)
+            {
+                CountryComboBox.Items.Add(Convert.ToString(Country.Rows[row][0]));
+            }
+        }
+        /// <summary>
+        /// Заполняет ComboBox данными CAT.
+        /// </summary>
+        public void CATcomboBoxFill()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(CATcomboBoxFill));
+                return;
+            }
+            CATcomboBox.Items.Clear();
+            DataTable CAT = SQL.query("SELECT DISTINCT(CAT) FROM dbo.[Load] WHERE CAT <> '' ORDER BY(CAT)");
+            CATcomboBox.Items.Add("");
+            for (int row = 0; row < CAT.Rows.Count; row++)
+            {
+                CATcomboBox.Items.Add(Convert.ToString(CAT.Rows[row][0]));
+            }
+        }
+        /// <summary>
+        /// Заполняет ComboBox данными Class.
+        /// </summary>
+        public void ClassComboBoxFill()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(ClassComboBoxFill));
+                return;
+            }
+            ClassComboBox.Items.Clear();
+            DataTable Class = SQL.query("SELECT DISTINCT(Class) FROM dbo.[Load] WHERE Class <> '' ORDER BY(Class)");
+            ClassComboBox.Items.Add("");
+            for (int row = 0; row < Class.Rows.Count; row++)
+            {
+                ClassComboBox.Items.Add(Convert.ToString(Class.Rows[row][0]));
             }
         }
 
@@ -656,6 +730,16 @@ namespace ASTERIX
             ShowDataGridView(false);
         }
         /// <summary>
+        /// Обновляет содержимое ComboBox по установке фокуса.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EmitterCategoryComboBox_Enter(object sender, EventArgs e)
+        {
+            EmitterCategoryComboBoxFill();
+            EmitterCategoryComboBox.DroppedDown = true;
+        }
+        /// <summary>
         /// Обновляет LoadGridView при выборе EmitterCategory в EmitterCategoryComboBox. 
         /// </summary>
         /// <param name="sender"></param>
@@ -665,15 +749,59 @@ namespace ASTERIX
             ShowDataGridView(false);
         }
         /// <summary>
+        /// LoadGridView при выборе Country в CountryComboBox. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CountryComboBox_Click(object sender, EventArgs e)
+        {
+            CountryComboBoxFill();
+        }
+        /// <summary>
         /// Обновляет содержимое ComboBox по клику.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EmitterCategoryComboBox_Click(object sender, EventArgs e)
+        private void CountryComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBoxFill();
+            ShowDataGridView(false);
         }
-
+        /// <summary>
+        /// LoadGridView при выборе CAT в CATcomboBox. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CATcomboBox_Click(object sender, EventArgs e)
+        {
+            CATcomboBoxFill();
+        }
+        /// <summary>
+        /// Обновляет содержимое ComboBox по клику.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CATcomboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ShowDataGridView(false);
+        }
+        /// <summary>
+        /// LoadGridView при выборе Class в ClassComboBox. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClassComboBox_Click(object sender, EventArgs e)
+        {
+            ClassComboBoxFill();
+        }
+        /// <summary>
+        /// Обновляет содержимое ComboBox по клику.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClassComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ShowDataGridView(false);
+        }
 
         /// <summary>
         /// Выбор меню "Сканирование"
@@ -716,7 +844,6 @@ namespace ASTERIX
                 Protocol.STOP();                
             }
         }
-
 
         /// <summary>
         /// Обновляет LoadGridView при развертывании календаря.
@@ -789,7 +916,7 @@ namespace ASTERIX
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        private void GUI_FormClosed(object sender, FormClosedEventArgs e)
         {
             Protocol.STOP();
 
@@ -813,8 +940,9 @@ namespace ASTERIX
                 HideRouteBTN_MouseUp(null, null);
 
                 Protocol.Init(this);
-                chcksum = checksum("Load");
+                Loadchcksum = checksum("Load");
                 ShowDataGridView(false);
+
                 UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
                 UpdateTimer.Enabled = true;
             }
@@ -823,7 +951,7 @@ namespace ASTERIX
         /// <summary>
         /// Сбрасывает BackColor для контролов меню.
         /// </summary>
-        void ResetBackColor()
+        void ClearBackColor()
         {
             ScanPicture.BackColor = Color.Transparent;
             StartStopBTN.BackColor = Color.Transparent;
@@ -851,7 +979,7 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void MapBTN_Click(object sender, EventArgs e)
         {
-            ResetBackColor();
+            ClearBackColor();
 
             MapPicture.BackColor = Color.CornflowerBlue;
             MapBTN.BackColor = Color.CornflowerBlue;
@@ -876,7 +1004,7 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void AircraftBTN_Click(object sender, EventArgs e)
         {
-            ResetBackColor();
+            ClearBackColor();
 
             AircraftPicture.BackColor = Color.LightSeaGreen;
             AircraftBTN.BackColor = Color.LightSeaGreen;
@@ -884,6 +1012,13 @@ namespace ASTERIX
 
             pagePanel.Controls.Clear();
             pagePanel.Controls.Add(AircraftPanel);
+
+            int chcksum = checksum("Aircraft");
+            if (Aircraftchcksum != chcksum)
+            {
+                Aircraftchcksum = chcksum;
+                ShowAircraftGridView();
+            }
         }
         /// <summary>
         /// Выбор меню "Настройки".
@@ -901,7 +1036,7 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void SettingsBTN_Click(object sender, EventArgs e)
         {
-            ResetBackColor();
+            ClearBackColor();
 
             SettingsPicture.BackColor = Color.DarkGray;
             SettingsBTN.BackColor = Color.DarkGray;
@@ -986,7 +1121,7 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void gMapControl_Load(object sender, EventArgs e)
         {
-            gMapControl.Bearing = 0;
+          /*  gMapControl.Bearing = 0;
 
             gMapControl.CanDragMap = true;
             gMapControl.DragButton = MouseButtons.Left;
@@ -1012,8 +1147,50 @@ namespace ASTERIX
 
             gMapControl.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleMap;
             GMaps.Instance.Mode = AccessMode.CacheOnly;
-            GMaps.Instance.ImportFromGMDB(@"C:\Users\АРМ\Desktop\RADAR_TCP_WORK_VER_SUPER\TileDBv5\en\Data.gmdb");
+            GMaps.Instance.ImportFromGMDB(@"C:\Users\АРМ\Desktop\RADAR_TCP_WORK_VER_SUPER\TileDBv5\en\Data.gmdb");*/
         }
 
+        private void ShowAircraftGridView()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(ShowAircraftGridView));
+                return;
+            }
+            AircraftGridView.DataSource = SQL.query("SELECT TOP 100 [Id], [TargetAddress] AS 'ICAO24',[Country] AS 'Государство', [Registration] AS 'Бортовой', [ICAOTypeCode] AS 'ICAOType', [TypeAircraft] AS 'Тип', [EmitterCategory] AS 'Категория', [Class] AS 'Класс', [UserText] AS 'Примечение' FROM [Aircraft]");
+            AircraftGridView.Columns["Id"].Visible = false;
+        }
+
+
+        /// <summary>
+        /// Закрывает все comboBox.
+        /// </summary>
+        void closeAllCombobox()
+        {
+            EmitterCategoryComboBox.DroppedDown = false;
+            CountryComboBox.DroppedDown = false;
+            CATcomboBox.DroppedDown = false;
+            ClassComboBox.DroppedDown = false;
+        }
+        private void GUI_LocationChanged(object sender, EventArgs e)
+        {
+            closeAllCombobox();
+        }
+        private void GUI_SizeChanged(object sender, EventArgs e)
+        {
+            closeAllCombobox();
+        }
+        private void SearchTableLayoutPanel_Click(object sender, EventArgs e)
+        {
+            closeAllCombobox();
+        }
+        private void tabTable_Click(object sender, EventArgs e)
+        {
+            closeAllCombobox();
+        }
+        private void tabPanel_Click(object sender, EventArgs e)
+        {
+            closeAllCombobox();
+        }
     }
 }
