@@ -15,9 +15,10 @@ namespace ASTERIX
         private int displayItems = 15;
         private string masktext;
         private string text;
+        public event EventHandler ControlSelectedIndexChanged;
         public List<string> Items = new List<string>();
         private listForm lstForm = new listForm();
-
+        
         public int DisplayItems
         {
             get
@@ -71,7 +72,7 @@ namespace ASTERIX
 
                     foreach (object item in Items)
                     {
-                        if ((uTextBox.TextField != null) && (Convert.ToString(item).StartsWith(uTextBox.TextField)))
+                        if ((uTextBox.TextField != null) && (Convert.ToString(item).ToUpper().StartsWith(uTextBox.TextField)))
                         {
                             lstForm.listBox.SelectedItem = item;
                             break;
@@ -83,11 +84,12 @@ namespace ASTERIX
                 }
                 else
                 {
-                    if (uTextBox.TextField != Convert.ToString(lstForm.listBox.SelectedItem))
+                    if (uTextBox.TextField != Convert.ToString(lstForm.listBox.SelectedItem).ToUpper())
                     {
                         uTextBox.TextField = "";
                         uTextBox.TextField = null;
                     }
+                    this.ControlSelectedIndexChanged?.Invoke(this, null);
                     lstForm.Hide();
                 }
             }
@@ -138,16 +140,49 @@ namespace ASTERIX
                     }
                 case Keys.Down:
                     {
-                        lstForm.Focus();
+                        if (DroppedDown)
+                        {
+                            lstForm.Focus();
+                        }
+                        else
+                        {
+                            if (lstForm.listBox.SelectedIndex == lstForm.listBox.Items.Count - 1)
+                            {
+                                lstForm.listBox.SelectedIndex = 0;
+                            }
+                            else
+                            {
+                                lstForm.listBox.SelectedIndex += 1;
+                            }
+                            TextField = (string)lstForm.listBox.SelectedItem;
+                            DroppedDown = false;
+                        }
                         break;
                     }
                 case Keys.Up:
                     {
-                        lstForm.Focus();
+                        if (DroppedDown)
+                        {
+                            lstForm.Focus();
+                        }
+                        else
+                        {
+                            if (lstForm.listBox.SelectedIndex == 0)
+                            {
+                                lstForm.listBox.SelectedIndex = lstForm.listBox.Items.Count - 1;
+                            }
+                            else
+                            {
+                                lstForm.listBox.SelectedIndex -= 1;
+                            }
+                            TextField = (string)lstForm.listBox.SelectedItem;
+                            DroppedDown = false;
+                        }
                         break;
                     }
             }
         }
+
 
         public UComboBox()
         {
@@ -230,7 +265,7 @@ namespace ASTERIX
 
         private void listBox__Click(object sender, EventArgs e)
         {
-            utextbox.TextField = Convert.ToString(listBox.SelectedItem);
+            utextbox.TextField = Convert.ToString(listBox.SelectedItem).ToUpper();
             ucombobox.DroppedDown = false;
         }
 

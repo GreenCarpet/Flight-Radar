@@ -29,11 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle15 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle16 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Map));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.MapPanel = new System.Windows.Forms.Panel();
             this.MapContainer = new System.Windows.Forms.SplitContainer();
             this.SearchContainer = new System.Windows.Forms.SplitContainer();
@@ -50,10 +50,6 @@
             this.Mode3ATextBox = new ASTERIX.UTextBox();
             this.AirportDepatureTextBox = new ASTERIX.UTextBox();
             this.AirportArrivalTextBox = new ASTERIX.UTextBox();
-            this.EmitterCategoryComboBox = new ASTERIX.UComboBox();
-            this.CountryComboBox = new ASTERIX.UComboBox();
-            this.CATcomboBox = new ASTERIX.UComboBox();
-            this.ClassComboBox = new ASTERIX.UComboBox();
             this.HideSearchBTN = new System.Windows.Forms.Button();
             this.LoadGridView = new System.Windows.Forms.DataGridView();
             this.RouteContainer = new System.Windows.Forms.SplitContainer();
@@ -63,6 +59,10 @@
             this.HideRouteBTN = new System.Windows.Forms.Button();
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
+            this.EmitterCategoryComboBox = new ASTERIX.UComboBox();
+            this.CountryComboBox = new ASTERIX.UComboBox();
+            this.CATcomboBox = new ASTERIX.UComboBox();
+            this.ClassComboBox = new ASTERIX.UComboBox();
             this.MapPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MapContainer)).BeginInit();
             this.MapContainer.Panel1.SuspendLayout();
@@ -398,74 +398,6 @@
             this.AirportArrivalTextBox.TextField = null;
             this.AirportArrivalTextBox.ControlTextChanged += new System.EventHandler(this.AirportArrivalTextBox_TextChanged);
             // 
-            // EmitterCategoryComboBox
-            // 
-            this.EmitterCategoryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.EmitterCategoryComboBox.BackColor = System.Drawing.Color.LightGray;
-            this.EmitterCategoryComboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.EmitterCategoryComboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("EmitterCategoryComboBox.DataSource")));
-            this.EmitterCategoryComboBox.DisplayItems = 15;
-            this.EmitterCategoryComboBox.DroppedDown = false;
-            this.EmitterCategoryComboBox.Location = new System.Drawing.Point(265, 11);
-            this.EmitterCategoryComboBox.Margin = new System.Windows.Forms.Padding(0);
-            this.EmitterCategoryComboBox.MaskText = "КАТЕГОРИЯ";
-            this.EmitterCategoryComboBox.Name = "EmitterCategoryComboBox";
-            this.EmitterCategoryComboBox.Size = new System.Drawing.Size(148, 20);
-            this.EmitterCategoryComboBox.TabIndex = 4;
-            this.EmitterCategoryComboBox.TextField = null;
-            this.EmitterCategoryComboBox.Enter += new System.EventHandler(this.EmitterCategoryComboBox_Enter);
-            // 
-            // CountryComboBox
-            // 
-            this.CountryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.CountryComboBox.BackColor = System.Drawing.Color.LightGray;
-            this.CountryComboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.CountryComboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("CountryComboBox.DataSource")));
-            this.CountryComboBox.DisplayItems = 15;
-            this.CountryComboBox.DroppedDown = false;
-            this.CountryComboBox.Location = new System.Drawing.Point(438, 11);
-            this.CountryComboBox.Margin = new System.Windows.Forms.Padding(0);
-            this.CountryComboBox.MaskText = "ГОСУДАРСТВО";
-            this.CountryComboBox.Name = "CountryComboBox";
-            this.CountryComboBox.Size = new System.Drawing.Size(148, 20);
-            this.CountryComboBox.TabIndex = 7;
-            this.CountryComboBox.TextField = null;
-            this.CountryComboBox.Enter += new System.EventHandler(this.CountryComboBox_Enter);
-            // 
-            // CATcomboBox
-            // 
-            this.CATcomboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.CATcomboBox.BackColor = System.Drawing.Color.LightGray;
-            this.CATcomboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.CATcomboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("CATcomboBox.DataSource")));
-            this.CATcomboBox.DisplayItems = 15;
-            this.CATcomboBox.DroppedDown = false;
-            this.CATcomboBox.Location = new System.Drawing.Point(784, 11);
-            this.CATcomboBox.Margin = new System.Windows.Forms.Padding(0);
-            this.CATcomboBox.MaskText = "CAT";
-            this.CATcomboBox.Name = "CATcomboBox";
-            this.CATcomboBox.Size = new System.Drawing.Size(148, 20);
-            this.CATcomboBox.TabIndex = 13;
-            this.CATcomboBox.TextField = null;
-            this.CATcomboBox.Enter += new System.EventHandler(this.CATcomboBox_Enter);
-            // 
-            // ClassComboBox
-            // 
-            this.ClassComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.ClassComboBox.BackColor = System.Drawing.Color.LightGray;
-            this.ClassComboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.ClassComboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("ClassComboBox.DataSource")));
-            this.ClassComboBox.DisplayItems = 15;
-            this.ClassComboBox.DroppedDown = false;
-            this.ClassComboBox.Location = new System.Drawing.Point(957, 11);
-            this.ClassComboBox.Margin = new System.Windows.Forms.Padding(0);
-            this.ClassComboBox.MaskText = "КЛАСС";
-            this.ClassComboBox.Name = "ClassComboBox";
-            this.ClassComboBox.Size = new System.Drawing.Size(148, 20);
-            this.ClassComboBox.TabIndex = 16;
-            this.ClassComboBox.TextField = null;
-            this.ClassComboBox.Enter += new System.EventHandler(this.ClassComboBox_Enter);
-            // 
             // HideSearchBTN
             // 
             this.HideSearchBTN.BackColor = System.Drawing.Color.CornflowerBlue;
@@ -489,43 +421,43 @@
             this.LoadGridView.AllowUserToAddRows = false;
             this.LoadGridView.AllowUserToResizeColumns = false;
             this.LoadGridView.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.MediumSeaGreen;
-            this.LoadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle13.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.LoadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle13;
             this.LoadGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
             this.LoadGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             this.LoadGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.LoadGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle14;
             this.LoadGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.DarkSeaGreen;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.LoadGridView.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle15.BackColor = System.Drawing.Color.DarkSeaGreen;
+            dataGridViewCellStyle15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle15.SelectionBackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.LoadGridView.DefaultCellStyle = dataGridViewCellStyle15;
             this.LoadGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LoadGridView.GridColor = System.Drawing.Color.SeaGreen;
             this.LoadGridView.Location = new System.Drawing.Point(0, 0);
             this.LoadGridView.Margin = new System.Windows.Forms.Padding(0);
             this.LoadGridView.Name = "LoadGridView";
             this.LoadGridView.ReadOnly = true;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.LoadGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.LoadGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle16;
             this.LoadGridView.RowHeadersWidth = 40;
             this.LoadGridView.RowTemplate.Height = 25;
             this.LoadGridView.RowTemplate.ReadOnly = true;
@@ -635,10 +567,83 @@
             this.gMapControl.Size = new System.Drawing.Size(915, 360);
             this.gMapControl.TabIndex = 0;
             this.gMapControl.Zoom = 0D;
+            this.gMapControl.Load += new System.EventHandler(this.gMapControl_Load);
             // 
             // UpdateTimer
             // 
             this.UpdateTimer.Tick += new System.EventHandler(this.UpdateTimer_Tick);
+            // 
+            // EmitterCategoryComboBox
+            // 
+            this.EmitterCategoryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.EmitterCategoryComboBox.BackColor = System.Drawing.SystemColors.Window;
+            this.EmitterCategoryComboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.EmitterCategoryComboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("EmitterCategoryComboBox.DataSource")));
+            this.EmitterCategoryComboBox.DisplayItems = 15;
+            this.EmitterCategoryComboBox.DroppedDown = false;
+            this.EmitterCategoryComboBox.Location = new System.Drawing.Point(265, 11);
+            this.EmitterCategoryComboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.EmitterCategoryComboBox.MaskText = "КАТЕГОРИЯ";
+            this.EmitterCategoryComboBox.Name = "EmitterCategoryComboBox";
+            this.EmitterCategoryComboBox.Size = new System.Drawing.Size(148, 20);
+            this.EmitterCategoryComboBox.TabIndex = 4;
+            this.EmitterCategoryComboBox.TextField = null;
+            this.EmitterCategoryComboBox.ControlSelectedIndexChanged += new System.EventHandler(this.EmitterCategoryComboBox_SelectedIndexChanged);
+            this.EmitterCategoryComboBox.Enter += new System.EventHandler(this.EmitterCategoryComboBox_Enter);
+            // 
+            // CountryComboBox
+            // 
+            this.CountryComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.CountryComboBox.BackColor = System.Drawing.SystemColors.Window;
+            this.CountryComboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CountryComboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("CountryComboBox.DataSource")));
+            this.CountryComboBox.DisplayItems = 15;
+            this.CountryComboBox.DroppedDown = false;
+            this.CountryComboBox.Location = new System.Drawing.Point(438, 11);
+            this.CountryComboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.CountryComboBox.MaskText = "ГОСУДАРСТВО";
+            this.CountryComboBox.Name = "CountryComboBox";
+            this.CountryComboBox.Size = new System.Drawing.Size(148, 20);
+            this.CountryComboBox.TabIndex = 7;
+            this.CountryComboBox.TextField = null;
+            this.CountryComboBox.ControlSelectedIndexChanged += new System.EventHandler(this.CountryComboBox_SelectedIndexChanged);
+            this.CountryComboBox.Enter += new System.EventHandler(this.CountryComboBox_Enter);
+            // 
+            // CATcomboBox
+            // 
+            this.CATcomboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.CATcomboBox.BackColor = System.Drawing.SystemColors.Window;
+            this.CATcomboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.CATcomboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("CATcomboBox.DataSource")));
+            this.CATcomboBox.DisplayItems = 15;
+            this.CATcomboBox.DroppedDown = false;
+            this.CATcomboBox.Location = new System.Drawing.Point(784, 11);
+            this.CATcomboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.CATcomboBox.MaskText = "CAT";
+            this.CATcomboBox.Name = "CATcomboBox";
+            this.CATcomboBox.Size = new System.Drawing.Size(148, 20);
+            this.CATcomboBox.TabIndex = 13;
+            this.CATcomboBox.TextField = null;
+            this.CATcomboBox.ControlSelectedIndexChanged += new System.EventHandler(this.CATcomboBox_SelectedIndexChanged);
+            this.CATcomboBox.Enter += new System.EventHandler(this.CATcomboBox_Enter);
+            // 
+            // ClassComboBox
+            // 
+            this.ClassComboBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.ClassComboBox.BackColor = System.Drawing.SystemColors.Window;
+            this.ClassComboBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.ClassComboBox.DataSource = ((System.Collections.Generic.List<string>)(resources.GetObject("ClassComboBox.DataSource")));
+            this.ClassComboBox.DisplayItems = 15;
+            this.ClassComboBox.DroppedDown = false;
+            this.ClassComboBox.Location = new System.Drawing.Point(957, 11);
+            this.ClassComboBox.Margin = new System.Windows.Forms.Padding(0);
+            this.ClassComboBox.MaskText = "КЛАСС";
+            this.ClassComboBox.Name = "ClassComboBox";
+            this.ClassComboBox.Size = new System.Drawing.Size(148, 20);
+            this.ClassComboBox.TabIndex = 16;
+            this.ClassComboBox.TextField = null;
+            this.ClassComboBox.ControlSelectedIndexChanged += new System.EventHandler(this.CATcomboBox_SelectedIndexChanged);
+            this.ClassComboBox.Enter += new System.EventHandler(this.ClassComboBox_Enter);
             // 
             // Map
             // 
@@ -693,9 +698,6 @@
         private UTextBox Mode3ATextBox;
         private UTextBox AirportDepatureTextBox;
         private UTextBox AirportArrivalTextBox;
-        private UComboBox EmitterCategoryComboBox;
-        private UComboBox CountryComboBox;
-        private UComboBox CATcomboBox;
         private System.Windows.Forms.Button HideSearchBTN;
         private System.Windows.Forms.DataGridView LoadGridView;
         private System.Windows.Forms.SplitContainer RouteContainer;
@@ -705,6 +707,9 @@
         private System.Windows.Forms.Button HideRouteBTN;
         private GMap.NET.WindowsForms.GMapControl gMapControl;
         private System.Windows.Forms.Timer UpdateTimer;
+        private UComboBox EmitterCategoryComboBox;
+        private UComboBox CountryComboBox;
+        private UComboBox CATcomboBox;
         private UComboBox ClassComboBox;
     }
 }

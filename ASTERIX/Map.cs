@@ -928,10 +928,22 @@ namespace ASTERIX
         /// </summary>
         public void closeAllCombobox()
         {
-              EmitterCategoryComboBox.DroppedDown = false;
-              CountryComboBox.DroppedDown = false;
-              CATcomboBox.DroppedDown = false;
-              ClassComboBox.DroppedDown = false;
+            if (EmitterCategoryComboBox.DroppedDown)
+            {
+                EmitterCategoryComboBox.DroppedDown = false;
+            }
+            if (CountryComboBox.DroppedDown)
+            {
+                CountryComboBox.DroppedDown = false;
+            }
+            if (CATcomboBox.DroppedDown)
+            {
+                CATcomboBox.DroppedDown = false;
+            }
+            if (ClassComboBox.DroppedDown)
+            {
+                ClassComboBox.DroppedDown = false;
+            }
         }
         /// <summary>
         /// Закрывает открытые comboBox по клику на панель поиска.
@@ -950,7 +962,7 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void gMapControl_Load(object sender, EventArgs e)
         {
-              gMapControl.Bearing = 0;
+        /*      gMapControl.Bearing = 0;
 
               gMapControl.CanDragMap = true;
               gMapControl.DragButton = MouseButtons.Left;
@@ -976,7 +988,7 @@ namespace ASTERIX
 
               gMapControl.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleMap;
               GMaps.Instance.Mode = AccessMode.CacheOnly;
-              GMaps.Instance.ImportFromGMDB(@"C:\Users\АРМ\Desktop\RADAR_TCP_WORK_VER_SUPER\TileDBv5\en\Data.gmdb");
+              GMaps.Instance.ImportFromGMDB(@"C:\Users\АРМ\Desktop\RADAR_TCP_WORK_VER_SUPER\TileDBv5\en\Data.gmdb");*/
         }
 
         public Map()
