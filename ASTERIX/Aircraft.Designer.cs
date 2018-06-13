@@ -28,11 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.AircraftPanel = new System.Windows.Forms.Panel();
             this.AircraftContainer = new System.Windows.Forms.SplitContainer();
             this.AircraftGridView = new System.Windows.Forms.DataGridView();
+            this.ResetBTN = new System.Windows.Forms.Button();
+            this.UpdateBTN = new System.Windows.Forms.Button();
             this.AddPanel = new System.Windows.Forms.Panel();
             this.AddTable = new System.Windows.Forms.TableLayoutPanel();
             this.TargetAddressTextBox = new ASTERIX.UTextBox();
@@ -80,6 +82,8 @@
             // 
             // AircraftContainer.Panel2
             // 
+            this.AircraftContainer.Panel2.Controls.Add(this.ResetBTN);
+            this.AircraftContainer.Panel2.Controls.Add(this.UpdateBTN);
             this.AircraftContainer.Panel2.Controls.Add(this.AddPanel);
             this.AircraftContainer.Panel2.Controls.Add(this.SearchBTN);
             this.AircraftContainer.Panel2.Controls.Add(this.AddBTN);
@@ -92,6 +96,7 @@
             // AircraftGridView
             // 
             this.AircraftGridView.AllowUserToAddRows = false;
+            this.AircraftGridView.AllowUserToDeleteRows = false;
             this.AircraftGridView.AllowUserToOrderColumns = true;
             this.AircraftGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
@@ -99,30 +104,53 @@
             this.AircraftGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.AircraftGridView.BackgroundColor = System.Drawing.Color.White;
             this.AircraftGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.AircraftGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.AircraftGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.AircraftGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.AircraftGridView.DefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.AircraftGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this.AircraftGridView.Location = new System.Drawing.Point(212, 12);
+            this.AircraftGridView.MultiSelect = false;
             this.AircraftGridView.Name = "AircraftGridView";
             this.AircraftGridView.ReadOnly = true;
             this.AircraftGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.AircraftGridView.Size = new System.Drawing.Size(766, 387);
             this.AircraftGridView.TabIndex = 0;
             this.AircraftGridView.TabStop = false;
+            // 
+            // ResetBTN
+            // 
+            this.ResetBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.ResetBTN.Location = new System.Drawing.Point(969, 65);
+            this.ResetBTN.Name = "ResetBTN";
+            this.ResetBTN.Size = new System.Drawing.Size(65, 45);
+            this.ResetBTN.TabIndex = 11;
+            this.ResetBTN.Text = "СБРОС";
+            this.ResetBTN.UseVisualStyleBackColor = true;
+            this.ResetBTN.Click += new System.EventHandler(this.ResetBTN_Click);
+            // 
+            // UpdateBTN
+            // 
+            this.UpdateBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
+            this.UpdateBTN.Location = new System.Drawing.Point(898, 65);
+            this.UpdateBTN.Name = "UpdateBTN";
+            this.UpdateBTN.Size = new System.Drawing.Size(65, 45);
+            this.UpdateBTN.TabIndex = 10;
+            this.UpdateBTN.Text = "ИЗМЕНИТЬ";
+            this.UpdateBTN.UseVisualStyleBackColor = true;
+            this.UpdateBTN.Click += new System.EventHandler(this.UpdateBTN_Click);
             // 
             // AddPanel
             // 
@@ -177,6 +205,7 @@
             this.TargetAddressTextBox.TabIndex = 0;
             this.TargetAddressTextBox.TextColorField = System.Drawing.Color.Black;
             this.TargetAddressTextBox.TextField = null;
+            this.TargetAddressTextBox.ControlTextChanged += new System.EventHandler(this.TargetAddressTextBox_ControlTextChanged);
             // 
             // RegistrationTextBox
             // 
@@ -197,6 +226,7 @@
             this.RegistrationTextBox.TabIndex = 2;
             this.RegistrationTextBox.TextColorField = System.Drawing.Color.Black;
             this.RegistrationTextBox.TextField = null;
+            this.RegistrationTextBox.ControlTextChanged += new System.EventHandler(this.RegistrationTextBox_ControlTextChanged);
             // 
             // ICAOTypeCodeTextBox
             // 
@@ -217,6 +247,7 @@
             this.ICAOTypeCodeTextBox.TabIndex = 1;
             this.ICAOTypeCodeTextBox.TextColorField = System.Drawing.Color.Black;
             this.ICAOTypeCodeTextBox.TextField = null;
+            this.ICAOTypeCodeTextBox.ControlTextChanged += new System.EventHandler(this.ICAOTypeCodeTextBox_ControlTextChanged);
             // 
             // TypeAircraftTextBox
             // 
@@ -237,6 +268,7 @@
             this.TypeAircraftTextBox.TabIndex = 3;
             this.TypeAircraftTextBox.TextColorField = System.Drawing.Color.Black;
             this.TypeAircraftTextBox.TextField = null;
+            this.TypeAircraftTextBox.ControlTextChanged += new System.EventHandler(this.TypeAircraftTextBox_ControlTextChanged);
             // 
             // CountryTextBox
             // 
@@ -257,6 +289,7 @@
             this.CountryTextBox.TabIndex = 4;
             this.CountryTextBox.TextColorField = System.Drawing.Color.Black;
             this.CountryTextBox.TextField = null;
+            this.CountryTextBox.ControlTextChanged += new System.EventHandler(this.CountryTextBox_ControlTextChanged);
             // 
             // ClassTextBox
             // 
@@ -277,6 +310,7 @@
             this.ClassTextBox.TabIndex = 5;
             this.ClassTextBox.TextColorField = System.Drawing.Color.Black;
             this.ClassTextBox.TextField = null;
+            this.ClassTextBox.ControlTextChanged += new System.EventHandler(this.ClassTextBox_ControlTextChanged);
             // 
             // UserTextBox
             // 
@@ -298,28 +332,31 @@
             this.UserTextBox.TabIndex = 6;
             this.UserTextBox.TextColorField = System.Drawing.Color.Black;
             this.UserTextBox.TextField = null;
+            this.UserTextBox.ControlTextChanged += new System.EventHandler(this.UserTextBox_ControlTextChanged);
             // 
             // SearchBTN
             // 
             this.SearchBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.SearchBTN.Location = new System.Drawing.Point(898, 14);
+            this.SearchBTN.Location = new System.Drawing.Point(969, 14);
             this.SearchBTN.Name = "SearchBTN";
             this.SearchBTN.Size = new System.Drawing.Size(65, 45);
             this.SearchBTN.TabIndex = 7;
             this.SearchBTN.TabStop = false;
             this.SearchBTN.Text = "ПОИСК";
             this.SearchBTN.UseVisualStyleBackColor = true;
+            this.SearchBTN.Click += new System.EventHandler(this.SearchBTN_Click);
             // 
             // AddBTN
             // 
             this.AddBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.AddBTN.Location = new System.Drawing.Point(898, 65);
+            this.AddBTN.Location = new System.Drawing.Point(898, 14);
             this.AddBTN.Name = "AddBTN";
             this.AddBTN.Size = new System.Drawing.Size(65, 45);
             this.AddBTN.TabIndex = 8;
             this.AddBTN.TabStop = false;
             this.AddBTN.Text = "ДОБАВИТЬ";
             this.AddBTN.UseVisualStyleBackColor = true;
+            this.AddBTN.Click += new System.EventHandler(this.AddBTN_Click);
             // 
             // DeleteBTN
             // 
@@ -331,6 +368,7 @@
             this.DeleteBTN.TabStop = false;
             this.DeleteBTN.Text = "УДАЛИТЬ";
             this.DeleteBTN.UseVisualStyleBackColor = true;
+            this.DeleteBTN.Click += new System.EventHandler(this.DeleteBTN_Click);
             // 
             // Aircraft
             // 
@@ -371,5 +409,7 @@
         private System.Windows.Forms.Panel AddPanel;
         private UTextBox CountryTextBox;
         private UTextBox ClassTextBox;
+        private System.Windows.Forms.Button UpdateBTN;
+        private System.Windows.Forms.Button ResetBTN;
     }
 }

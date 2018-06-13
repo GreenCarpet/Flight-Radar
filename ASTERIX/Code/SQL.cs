@@ -54,7 +54,7 @@ namespace ASTERIX
                     adapt.Fill(table);
                     return table;
                 }
-                catch (InvalidOperationException ex)
+                catch (SqlException ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
