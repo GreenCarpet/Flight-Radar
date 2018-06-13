@@ -34,6 +34,7 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             this.MapPanel = new System.Windows.Forms.Panel();
             this.MapContainer = new System.Windows.Forms.SplitContainer();
             this.SearchContainer = new System.Windows.Forms.SplitContainer();
@@ -59,6 +60,7 @@
             this.RouteContainer = new System.Windows.Forms.SplitContainer();
             this.RouteControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.RouteGridView = new System.Windows.Forms.DataGridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.HideRouteBTN = new System.Windows.Forms.Button();
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
@@ -80,6 +82,8 @@
             this.RouteContainer.Panel2.SuspendLayout();
             this.RouteContainer.SuspendLayout();
             this.RouteControl.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.RouteGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // MapPanel
@@ -491,18 +495,17 @@
             // LoadGridView
             // 
             this.LoadGridView.AllowUserToAddRows = false;
-            this.LoadGridView.AllowUserToResizeColumns = false;
+            this.LoadGridView.AllowUserToOrderColumns = true;
             this.LoadGridView.AllowUserToResizeRows = false;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.MediumSeaGreen;
             this.LoadGridView.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.LoadGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.ColumnHeader;
-            this.LoadGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllHeaders;
+            this.LoadGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.LoadGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.LoadGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             this.LoadGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.LoadGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -511,7 +514,7 @@
             this.LoadGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.DarkSeaGreen;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.DimGray;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.Control;
@@ -531,8 +534,8 @@
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.LoadGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.LoadGridView.RowHeadersVisible = false;
             this.LoadGridView.RowHeadersWidth = 40;
-            this.LoadGridView.RowTemplate.Height = 25;
             this.LoadGridView.RowTemplate.ReadOnly = true;
             this.LoadGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.LoadGridView.Size = new System.Drawing.Size(1200, 81);
@@ -577,6 +580,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.RouteGridView);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Margin = new System.Windows.Forms.Padding(0);
             this.tabPage1.Name = "tabPage1";
@@ -585,6 +589,34 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Маршруты";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // RouteGridView
+            // 
+            this.RouteGridView.AllowUserToAddRows = false;
+            this.RouteGridView.AllowUserToResizeRows = false;
+            this.RouteGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.RouteGridView.BackgroundColor = System.Drawing.Color.White;
+            this.RouteGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.RouteGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.RouteGridView.ColumnHeadersVisible = false;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.RouteGridView.DefaultCellStyle = dataGridViewCellStyle5;
+            this.RouteGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.RouteGridView.Location = new System.Drawing.Point(3, 3);
+            this.RouteGridView.Margin = new System.Windows.Forms.Padding(0);
+            this.RouteGridView.Name = "RouteGridView";
+            this.RouteGridView.RowHeadersVisible = false;
+            this.RouteGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.RouteGridView.Size = new System.Drawing.Size(245, 328);
+            this.RouteGridView.TabIndex = 0;
+            this.RouteGridView.SelectionChanged += new System.EventHandler(this.RouteGridView_SelectionChanged);
+            this.RouteGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RouteGridView_UserDeletingRow);
             // 
             // tabPage2
             // 
@@ -677,6 +709,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.RouteContainer)).EndInit();
             this.RouteContainer.ResumeLayout(false);
             this.RouteControl.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.RouteGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -712,5 +746,6 @@
         private UComboBox CountryComboBox;
         private UComboBox CATcomboBox;
         private UComboBox ClassComboBox;
+        private System.Windows.Forms.DataGridView RouteGridView;
     }
 }

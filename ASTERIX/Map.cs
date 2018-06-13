@@ -18,6 +18,8 @@ namespace ASTERIX
 {
     public partial class Map : Form
     {
+        #region База
+
         public Thread updateThread;
 
         int Loadchcksum;
@@ -31,9 +33,6 @@ namespace ASTERIX
 
         int SearchSplitterPosition = 100;
         bool SearchSplitterLock = false;
-        int RouteSplitterPosition = 300;
-        bool RouteSplitterLock = false;
-
 
         /// <summary>
         /// Формирует текущий фильтр.
@@ -218,7 +217,7 @@ namespace ASTERIX
             }
 
             return filter;
-        }      
+        }
         /// <summary>
         /// Возвращает контрольную сумму таблицы.
         /// </summary>
@@ -260,7 +259,7 @@ namespace ASTERIX
             updateThread = new Thread(timerThread);
             updateThread.Start();
         }
-        
+
         /// <summary>
         /// Начальная установка LoadGridView.
         /// </summary>
@@ -416,37 +415,6 @@ namespace ASTERIX
                     LoadGridView.FirstDisplayedScrollingRowIndex = firstRow;
                 }
             }
-        }
-        /// <summary>
-        /// Отображает выбранный маршрут.
-        /// </summary>
-        /// <param name="RowIndex">Индекс выбранной строки в LoadGridView.</param>
-        void openGPXThread(object RowIndex)
-        {
-            string TargetAddress = Convert.ToString(LoadGridView[1, Convert.ToInt32(RowIndex)].Value);
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.InnerXml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Convert.ToString(LoadGridView[0, Convert.ToInt32(RowIndex)].Value) + "'").Rows[0][0]);
-                if (File.Exists(TargetAddress + ".gpx"))
-                {
-                    File.Delete(TargetAddress + ".gpx");
-                }
-                doc.Save(TargetAddress + ".gpx");
-                File.SetAttributes(TargetAddress + ".gpx", FileAttributes.Hidden);
-                Process.Start(TargetAddress + ".gpx");
-                Thread.Sleep(10000);
-                File.Delete(TargetAddress + ".gpx");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                if (File.Exists(TargetAddress + ".gpx"))
-                {
-                    File.Delete(TargetAddress + ".gpx");
-                }
-            }
-            Thread.CurrentThread.Abort();
         }
 
         /// <summary>
@@ -882,6 +850,46 @@ namespace ASTERIX
         }
 
         /// <summary>
+        /// Закрывает все открытые comboBox.
+        /// </summary>
+        public void closeAllCombobox()
+        {
+            if (EmitterCategoryComboBox.DroppedDown)
+            {
+                EmitterCategoryComboBox.DroppedDown = false;
+            }
+            if (CountryComboBox.DroppedDown)
+            {
+                CountryComboBox.DroppedDown = false;
+            }
+            if (CATcomboBox.DroppedDown)
+            {
+                CATcomboBox.DroppedDown = false;
+            }
+            if (ClassComboBox.DroppedDown)
+            {
+                ClassComboBox.DroppedDown = false;
+            }
+        }
+        /// <summary>
+        /// Закрывает открытые comboBox по клику на панель поиска.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchTableLayoutPanel_Click(object sender, EventArgs e)
+        {
+            closeAllCombobox();
+        }
+
+        #endregion
+
+        #region Карта
+
+        int RouteSplitterPosition = 300;
+        bool RouteSplitterLock = false;
+        GMapOverlay routeOverlay = new GMapOverlay("route");
+
+        /// <summary>
         /// Убирает фокус с кнопки маршрутов.
         /// </summary>
         /// <param name="sender"></param>
@@ -920,72 +928,134 @@ namespace ASTERIX
         }
 
         /// <summary>
-        /// Закрывает все открытые comboBox.
-        /// </summary>
-        public void closeAllCombobox()
-        {
-            if (EmitterCategoryComboBox.DroppedDown)
-            {
-                EmitterCategoryComboBox.DroppedDown = false;
-            }
-            if (CountryComboBox.DroppedDown)
-            {
-                CountryComboBox.DroppedDown = false;
-            }
-            if (CATcomboBox.DroppedDown)
-            {
-                CATcomboBox.DroppedDown = false;
-            }
-            if (ClassComboBox.DroppedDown)
-            {
-                ClassComboBox.DroppedDown = false;
-            }
-        }
-        /// <summary>
-        /// Закрывает открытые comboBox по клику на панель поиска.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SearchTableLayoutPanel_Click(object sender, EventArgs e)
-        {
-            closeAllCombobox();
-        }
-
-        /// <summary>
         /// Инициализирует карту.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void gMapControl_Load(object sender, EventArgs e)
         {
-        /*      gMapControl.Bearing = 0;
+                  gMapControl.Bearing = 0;
 
-              gMapControl.CanDragMap = true;
-              gMapControl.DragButton = MouseButtons.Left;
+                  gMapControl.CanDragMap = true;
+                  gMapControl.DragButton = MouseButtons.Left;
 
-              gMapControl.GrayScaleMode = true;
+                  gMapControl.GrayScaleMode = true;
 
-              gMapControl.MarkersEnabled = true;
+                  gMapControl.MarkersEnabled = true;
 
-              gMapControl.MaxZoom = 18;
-              gMapControl.MinZoom = 2;
+                  gMapControl.MaxZoom = 18;
+                  gMapControl.MinZoom = 2;
 
-              gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
+                  gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
 
-              gMapControl.NegativeMode = false;
+                  gMapControl.NegativeMode = false;
 
-              gMapControl.RoutesEnabled = true;
+                  gMapControl.RoutesEnabled = true;
 
-              gMapControl.ShowTileGridLines = false;
+                  gMapControl.ShowTileGridLines = false;
 
-              gMapControl.Zoom = 5;
+                  gMapControl.Zoom = 5;
 
-              gMapControl.Dock = DockStyle.Fill;
+                  gMapControl.Dock = DockStyle.Fill;
 
-              gMapControl.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleMap;
-              GMaps.Instance.Mode = AccessMode.CacheOnly;
-              GMaps.Instance.ImportFromGMDB(@"C:\Users\АРМ\Desktop\RADAR_TCP_WORK_VER_SUPER\TileDBv5\en\Data.gmdb");*/
+                  gMapControl.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleMap;
+                  GMaps.Instance.Mode = AccessMode.CacheOnly;
+                  GMaps.Instance.ImportFromGMDB("Data.gmdb");
         }
+
+        void AddRoute(GMapOverlay routeOverlay, string xml)
+        {
+            gpxType gpx = GMaps.Instance.DeserializeGPX(xml);
+            rteType[] rte = gpx.rte;
+            for (int route = 0; route < rte.Length; route++)
+            {
+                List<PointLatLng> PoinList = new List<PointLatLng>();
+                for (int i = 0; i < rte[route].rtept.Length; i++)
+                {
+                    PointLatLng point = new PointLatLng(Convert.ToDouble(rte[route].rtept[i].lat), Convert.ToDouble(rte[route].rtept[i].lon));
+                    PoinList.Add(point);
+                }
+
+                GMapRoute r = new GMapRoute(PoinList, rte[route].name);
+                r.Stroke.Width = 2;
+                r.Stroke.Color = Color.Orange;
+
+                routeOverlay.Routes.Add(r);
+            }
+        }
+
+        /// <summary>
+        /// Отображает выбранный маршрут.
+        /// </summary>
+        /// <param name="RowIndex">Индекс выбранной строки в LoadGridView.</param>
+        void openGPXThread(object RowIndex)
+        {
+            string TargetAddress = Convert.ToString(LoadGridView["ICAO24", Convert.ToInt32(RowIndex)].Value);
+            try
+            {
+                string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Convert.ToString(LoadGridView["Id", Convert.ToInt32(RowIndex)].Value) + "'").Rows[0][0]);
+                AddRoute(routeOverlay, xml);
+
+                DataTable Routes = new DataTable();
+                Routes.Columns.Add("TargetAddress", typeof(System.String));
+                Routes.Columns.Add("Color", typeof(Color));
+                Routes.Columns.Add("Fix", typeof(System.Boolean));
+
+                Action action = () =>
+                {
+                    gMapControl.Overlays.Add(routeOverlay);
+                    gMapControl.Position = routeOverlay.Routes.Last().Points.Last();
+
+                    for (int route = 0; route < routeOverlay.Routes.Count; route++)
+                    {
+                        Routes.Rows.Add(new object[] {routeOverlay.Routes[route].Name, Color.Orange, false });
+                    }
+
+                    RouteGridView.DataSource = Routes;
+                };
+                gMapControl.BeginInvoke(action);
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            Thread.CurrentThread.Abort();
+        }
+
+        private void RouteGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
+        {
+            GMapRoute deleting = null;
+            for (int route = 0; route < routeOverlay.Routes.Count; route++) {
+
+                if (routeOverlay.Routes[route].Name == Convert.ToString(e.Row.Cells["TargetAddress"].Value))
+                {
+                    deleting = routeOverlay.Routes[route];
+                    break;
+                }
+            }
+            routeOverlay.Routes.Remove(deleting);
+        }
+
+        private void RouteGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            RouteGridView.Columns["TargetAddress"].ReadOnly = true;
+
+            if (RouteGridView.SelectedRows.Count > 0)
+            {
+                for (int route = 0; route < routeOverlay.Routes.Count; route++)
+                {
+                    if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.SelectedRows[0].Cells["TargetAddress"].Value))
+                    {
+                        gMapControl.Position = routeOverlay.Routes[route].Points.Last();
+                        break;
+                    }
+                }
+            }
+        }
+
+
+        #endregion
 
         public Map()
         {
@@ -1000,5 +1070,7 @@ namespace ASTERIX
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
         }
+
+
     }
 }

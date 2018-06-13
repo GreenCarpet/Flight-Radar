@@ -108,18 +108,6 @@ namespace ASTERIX
                     ele.InnerText = Convert.ToString(Aircraftmessage.Rows[point]["Height"]);
                     rtept.AppendChild(ele);
                 }
-
-                XmlElement sym = doc.CreateElement("sym");
-                if (point == 0)
-                {
-                    sym.InnerText = "Airport";
-                }
-                else
-                {
-                    sym.InnerText = "Waypoint";
-                }
-                rtept.AppendChild(sym);
-
                 rte.AppendChild(rtept);
             }
 
@@ -173,17 +161,6 @@ namespace ASTERIX
                         ele.InnerText = Convert.ToString(Aircraftmessage.Rows[point]["Height"]);
                         rtept.AppendChild(ele);
                     }
-
-                    XmlElement sym = doc.CreateElement("sym");
-                    if (point == 0)
-                    {
-                        sym.InnerText = "Airport";
-                    }
-                    else
-                    {
-                        sym.InnerText = "Waypoint";
-                    }
-                    rtept.AppendChild(sym);
 
                     newNode.AppendChild(rtept);
                 }

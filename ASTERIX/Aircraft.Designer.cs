@@ -98,6 +98,7 @@
             this.AircraftGridView.AllowUserToAddRows = false;
             this.AircraftGridView.AllowUserToDeleteRows = false;
             this.AircraftGridView.AllowUserToOrderColumns = true;
+            this.AircraftGridView.AllowUserToResizeRows = false;
             this.AircraftGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -125,6 +126,7 @@
             this.AircraftGridView.MultiSelect = false;
             this.AircraftGridView.Name = "AircraftGridView";
             this.AircraftGridView.ReadOnly = true;
+            this.AircraftGridView.RowHeadersVisible = false;
             this.AircraftGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.AircraftGridView.Size = new System.Drawing.Size(766, 387);
             this.AircraftGridView.TabIndex = 0;
