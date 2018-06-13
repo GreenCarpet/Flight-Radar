@@ -202,7 +202,7 @@ namespace ASTERIX
             {
             f = filter();
             }
-            UpdateDataGridView(SQL.query("SELECT TOP 100 [Id], [TargetAddress] AS 'ICAO24',[Country] AS 'Государство', [Registration] AS 'Бортовой', [ICAOTypeCode] AS 'ICAOType', [TypeAircraft] AS 'Тип', [EmitterCategory] AS 'Категория', [Class] AS 'Класс', [UserText] AS 'Примечение' FROM [Aircraft] " + f), autoPosition);
+            UpdateDataGridView(SQL.query("SELECT TOP 500 [Id], [TargetAddress] AS 'ICAO24',[Country] AS 'Государство', [Registration] AS 'Бортовой', [ICAOTypeCode] AS 'ICAOType', [TypeAircraft] AS 'Тип', [EmitterCategory] AS 'Категория', [Class] AS 'Класс', [UserText] AS 'Примечение' FROM [Aircraft] " + f), autoPosition);
         }
         /// <summary>
         /// Обновляет данные в AircraftGridView.

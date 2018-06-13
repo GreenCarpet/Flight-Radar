@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using System.Threading;
+
 
 namespace ASTERIX
 {
@@ -59,16 +61,14 @@ namespace ASTERIX
         {
             if (start == false)
             {
-                tabTable.RowStyles[1].Height = 15;
-                progressBar1.Visible = true;
-                start = true;
-
-                /*  if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                  if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
                   {
-                      start = true;
+                    tabTable.RowStyles[1].Height = 15;
+                    progressBar1.Visible = true;
+                    start = true;
 
-                      Protocol.START(folderBrowserDialog1.SelectedPath, "*.sig");
-                  }    */
+                    Protocol.START(folderBrowserDialog1.SelectedPath, "*.sig");
+                  }    
             }
 
             else

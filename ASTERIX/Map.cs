@@ -244,7 +244,9 @@ namespace ASTERIX
             if (Loadchcksum != newchcksum)
             {
                 Loadchcksum = newchcksum;
-                ShowDataGridView(true);
+
+                Action action = () => ShowDataGridView(true);
+                LoadGridView.BeginInvoke(action);
             }
             updateThread.Abort();
         }
@@ -357,12 +359,6 @@ namespace ASTERIX
         /// <param name="autoPosition">Фиксация положения в таблице. Использовать только при добавлении данных в таблицу (когда предыдущие строки не изменяются).</param>
         public void UpdateDataGridView(DataTable table, bool autoPosition)
         {
-            if (InvokeRequired)
-            {
-                Invoke(new Action<DataTable, bool>(UpdateDataGridView), new object[] { table, autoPosition });
-                return;
-            }
-
             int selectedId = 0;
             int firstRow = 0;
             int sortedColumn = 0;
