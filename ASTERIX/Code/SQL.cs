@@ -102,12 +102,11 @@ namespace ASTERIX
                 rtept.IsEmpty = true;
                 rtept.SetAttribute("lon", Convert.ToString(Aircraftmessage.Rows[point]["Longitude"]).Replace(",", "."));
                 rtept.SetAttribute("lat", Convert.ToString(Aircraftmessage.Rows[point]["Latitude"]).Replace(",", "."));
-                if (Convert.ToString(Aircraftmessage.Rows[point]["Height"]) != "")
-                {
-                    XmlElement ele = doc.CreateElement("ele");
-                    ele.InnerText = Convert.ToString(Aircraftmessage.Rows[point]["Height"]);
-                    rtept.AppendChild(ele);
-                }
+
+                XmlElement ele = doc.CreateElement("ele");
+                ele.InnerText = Convert.ToString(Aircraftmessage.Rows[point]["Height"]);
+                rtept.AppendChild(ele);
+
                 rte.AppendChild(rtept);
             }
 

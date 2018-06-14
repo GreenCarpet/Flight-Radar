@@ -615,6 +615,7 @@
             this.RouteGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.RouteGridView.Size = new System.Drawing.Size(245, 328);
             this.RouteGridView.TabIndex = 0;
+            this.RouteGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RouteGridView_CellDoubleClick);
             this.RouteGridView.SelectionChanged += new System.EventHandler(this.RouteGridView_SelectionChanged);
             this.RouteGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RouteGridView_UserDeletingRow);
             // 

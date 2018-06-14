@@ -963,10 +963,33 @@ namespace ASTERIX
                   GMaps.Instance.ImportFromGMDB("Data.gmdb");
         }
 
+        void RoteGridViewInit()
+        {
+            RouteGridView.Columns.Add("Id", "Id");          
+            RouteGridView.Columns.Add("TargetAddress", "TargetAddress");
+            RouteGridView.Columns.Add("Color", "Color");
+            RouteGridView.Columns.Add("Fix", "Fix");
+
+            RouteGridView.Columns["Id"].ValueType = typeof(string);
+            RouteGridView.Columns["TargetAddress"].ValueType = typeof(string);
+            RouteGridView.Columns["Color"].ValueType = typeof(Color);
+            RouteGridView.Columns["Fix"].ValueType = typeof(bool);
+
+            RouteGridView.Columns["Id"].Visible = false;
+            RouteGridView.Columns["Color"].Visible = false;
+            RouteGridView.Columns["Fix"].Visible = false;
+        }
+
+        /// <summary>
+        /// Добавляет маршрут к overlay
+        /// </summary>
+        /// <param name="routeOverlay">overlay</param>
+        /// <param name="xml">gpx</param>
         void AddRoute(GMapOverlay routeOverlay, string xml)
         {
             gpxType gpx = GMaps.Instance.DeserializeGPX(xml);
             rteType[] rte = gpx.rte;
+
             for (int route = 0; route < rte.Length; route++)
             {
                 List<PointLatLng> PoinList = new List<PointLatLng>();
@@ -983,7 +1006,6 @@ namespace ASTERIX
                 routeOverlay.Routes.Add(r);
             }
         }
-
         /// <summary>
         /// Отображает выбранный маршрут.
         /// </summary>
@@ -993,25 +1015,18 @@ namespace ASTERIX
             string TargetAddress = Convert.ToString(LoadGridView["ICAO24", Convert.ToInt32(RowIndex)].Value);
             try
             {
-                string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Convert.ToString(LoadGridView["Id", Convert.ToInt32(RowIndex)].Value) + "'").Rows[0][0]);
+                string Id = Convert.ToString(LoadGridView["Id", Convert.ToInt32(RowIndex)].Value);
+                string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
                 AddRoute(routeOverlay, xml);
-
-                DataTable Routes = new DataTable();
-                Routes.Columns.Add("TargetAddress", typeof(System.String));
-                Routes.Columns.Add("Color", typeof(Color));
-                Routes.Columns.Add("Fix", typeof(System.Boolean));
-
+                
                 Action action = () =>
                 {
                     gMapControl.Overlays.Add(routeOverlay);
                     gMapControl.Position = routeOverlay.Routes.Last().Points.Last();
 
-                    for (int route = 0; route < routeOverlay.Routes.Count; route++)
-                    {
-                        Routes.Rows.Add(new object[] {routeOverlay.Routes[route].Name, Color.Orange, false });
-                    }
-
-                    RouteGridView.DataSource = Routes;
+                    RouteGridView.Rows.Add(new object[] { Id, routeOverlay.Routes.Last().Name, Color.Orange, false });
+                  
+                    RouteGridView.CurrentCell = RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["TargetAddress"];
                 };
                 gMapControl.BeginInvoke(action);
 
@@ -1022,7 +1037,11 @@ namespace ASTERIX
             }
             Thread.CurrentThread.Abort();
         }
-
+        /// <summary>
+        /// Удаляет маршрут из overlay.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RouteGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             GMapRoute deleting = null;
@@ -1036,7 +1055,11 @@ namespace ASTERIX
             }
             routeOverlay.Routes.Remove(deleting);
         }
-
+        /// <summary>
+        /// Устанавливает фокус на выбранный маршрут.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RouteGridView_SelectionChanged(object sender, EventArgs e)
         {
             RouteGridView.Columns["TargetAddress"].ReadOnly = true;
@@ -1054,6 +1077,16 @@ namespace ASTERIX
             }
         }
 
+        /// <summary>
+        /// Строит график высот.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RouteGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            Graphics g = new Graphics(Convert.ToString(RouteGridView.Rows[e.RowIndex].Cells["Id"].Value));
+            g.Show();
+        }
 
         #endregion
 
@@ -1064,13 +1097,14 @@ namespace ASTERIX
             HideSearchBTNInit();
             HideRouteBTNInit();
 
+            RoteGridViewInit();
+
             Loadchcksum = checksum("Load");
             ShowDataGridView(false);
 
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
         }
-
 
     }
 }
