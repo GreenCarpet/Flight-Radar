@@ -101,11 +101,11 @@ namespace ASTERIX
             string Class = GetBoxValue("Class");
             string User = GetBoxValue("User");
 
-            if (TargetAddress != "")
+            if ((TargetAddress != "") && (TargetAddress != null))
             {
                 filter = "WHERE TargetAddress LIKE '" + TargetAddress + "%'";
             }
-            if (ICAOTypeCode != "")
+            if ((ICAOTypeCode != "") && (ICAOTypeCode != null))
             {
                 if (filter == "")
                 {
@@ -116,7 +116,7 @@ namespace ASTERIX
                     filter += " AND ICAOTypeCode LIKE '" + ICAOTypeCode + "%'";
                 }
             }
-            if (Registration != "")
+            if ((Registration != "") && (Registration != null))
             {
                 if (filter == "")
                 {
@@ -127,7 +127,7 @@ namespace ASTERIX
                     filter += " AND Registration LIKE '" + Registration + "%'";
                 }
             }
-            if (TypeAircraft != "")
+            if ((TypeAircraft != "") && (TypeAircraft != null))
             {
                 if (filter == "")
                 {
@@ -138,7 +138,7 @@ namespace ASTERIX
                     filter += " AND TypeAircraft LIKE '" + TypeAircraft + "%'";
                 }
             }
-            if (Country != "")
+            if ((Country != "") && (Country != null))
             {
                 if (filter == "")
                 {
@@ -149,7 +149,7 @@ namespace ASTERIX
                     filter += " AND Country LIKE '" + Country + "%'";
                 }
             }
-            if (Class != "")
+            if ((Class != "") && (Class != null))
             {
                 if (filter == "")
                 {
@@ -160,7 +160,7 @@ namespace ASTERIX
                     filter += " AND Class LIKE '" + Class + "%'";
                 }
             }
-            if (User != "")
+            if ((User != "") && (User != null))
             {
                 if (filter == "")
                 {

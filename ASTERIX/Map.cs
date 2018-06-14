@@ -57,11 +57,11 @@ namespace ASTERIX
             string SIC = GetBoxValue("SIC");
             string Class = GetBoxValue("Class");
 
-            if (TargetAddress != "")
+            if ((TargetAddress != "") && (TargetAddress != null))
             {
                 filter = "WHERE TargetAddress LIKE '" + TargetAddress + "%'";
             }
-            if (AircraftIdentification != "")
+            if ((AircraftIdentification != "")&& (AircraftIdentification != null))
             {
                 if (filter == "")
                 {
@@ -72,7 +72,7 @@ namespace ASTERIX
                     filter += " AND AircraftIdentification LIKE '" + AircraftIdentification + "%'";
                 }
             }
-            if (Registration != "")
+            if ((Registration != "") && (Registration != null))
             {
                 if (filter == "")
                 {
@@ -83,7 +83,7 @@ namespace ASTERIX
                     filter += " AND Registration LIKE '" + Registration + "%'";
                 }
             }
-            if (TypeAircraft != "")
+            if ((TypeAircraft != "") && (TypeAircraft != null))
             {
                 if (filter == "")
                 {
@@ -94,7 +94,7 @@ namespace ASTERIX
                     filter += " AND TypeAircraft LIKE '" + TypeAircraft + "%'";
                 }
             }
-            if (Mode3A != "")
+            if ((Mode3A != "") && (Mode3A != null))
             {
                 if (filter == "")
                 {
@@ -105,7 +105,7 @@ namespace ASTERIX
                     filter += " AND Mode3A LIKE '" + Mode3A + "%'";
                 }
             }
-            if (EmitterCategory != "")
+            if ((EmitterCategory != "") && (EmitterCategory != null))
             {
                 if (filter == "")
                 {
@@ -116,7 +116,7 @@ namespace ASTERIX
                     filter += " AND EmitterCategory = '" + EmitterCategory + "'";
                 }
             }
-            if (Country != "")
+            if ((Country != "") && (Country != null))
             {
                 if (filter == "")
                 {
@@ -127,7 +127,7 @@ namespace ASTERIX
                     filter += " AND Country LIKE '" + Country + "%'";
                 }
             }
-            if (AirportDepature != "")
+            if ((AirportDepature != "") && (AirportDepature != null))
             {
                 if (filter == "")
                 {
@@ -138,7 +138,7 @@ namespace ASTERIX
                     filter += " AND AirportDepature LIKE '" + AirportDepature + "%'";
                 }
             }
-            if (AirportArrival != "")
+            if ((AirportArrival != "") && (AirportArrival != null))
             {
                 if (filter == "")
                 {
@@ -149,7 +149,7 @@ namespace ASTERIX
                     filter += " AND AirportArrival LIKE '" + AirportArrival + "%'";
                 }
             }
-            if ((BeginTime != "") && (EnableBeginTimePicker))
+            if ((BeginTime != "") && (EnableBeginTimePicker) && (BeginTime != null))
             {
                 if (filter == "")
                 {
@@ -160,7 +160,7 @@ namespace ASTERIX
                     filter += " AND BeginTime > '" + BeginTime + "'";
                 }
             }
-            if ((EndTime != "") && (EnableEndTimePicker))
+            if ((EndTime != "") && (EnableEndTimePicker) && (EndTime != null))
             {
                 if (filter == "")
                 {
@@ -171,7 +171,7 @@ namespace ASTERIX
                     filter += " AND EndTime < '" + EndTime + "'";
                 }
             }
-            if (CAT != "")
+            if ((CAT != "") && (CAT != null))
             {
                 if (filter == "")
                 {
@@ -182,7 +182,7 @@ namespace ASTERIX
                     filter += " AND CAT LIKE '" + CAT + "%'";
                 }
             }
-            if (SAC != "")
+            if ((SAC != "") && (SAC != null))
             {
                 if (filter == "")
                 {
@@ -193,7 +193,7 @@ namespace ASTERIX
                     filter += " AND SAC LIKE '" + SAC + "%'";
                 }
             }
-            if (SIC != "")
+            if ((SIC != "") && (SIC != null))
             {
                 if (filter == "")
                 {
@@ -204,7 +204,7 @@ namespace ASTERIX
                     filter += " AND SIC LIKE '" + SIC + "%'";
                 }
             }
-            if (Class != "")
+            if ((Class != "") && (Class != null))
             {
                 if (filter == "")
                 {
