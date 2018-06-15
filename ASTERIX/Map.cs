@@ -22,7 +22,7 @@ namespace ASTERIX
 
         int Loadchcksum;
 
-        static object locker = new object();
+        bool clearBox = false;
 
         bool FirstSetting = false;
         bool EnableBeginTimePicker = true;
@@ -599,7 +599,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void TargetAddressTextBox_TextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// Обновляет LoadGridView при изменении текста в AircraftIdetificationTextBox.
@@ -608,7 +611,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void AircraftIdetificationTextBox_TextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// Обновляет LoadGridView при изменении текста в AirportDepatureTextBox.
@@ -617,7 +623,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void AirportDepatureTextBox_TextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// Обновляет LoadGridView при изменении текста в AirportArrivalTextBox.
@@ -626,7 +635,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void AirportArrivalTextBox_TextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// Обновляет LoadGridView при изменении текста в RegistrationTextBox.
@@ -635,7 +647,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void RegistrationTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// Обновляет LoadGridView при изменении текста в TypeAircraftTextBox.
@@ -644,7 +659,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void TypeAircraftTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// Обновляет LoadGridView при изменении текста в Mode3ATextBox.
@@ -653,7 +671,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void Mode3ATextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// Обновляет LoadGridView при изменении текста в SACtextBox.
@@ -662,7 +683,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void SACtextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// Обновляет LoadGridView при изменении текста в SICtextBox.
@@ -671,7 +695,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void SICtextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// Обновляет содержимое ComboBox по установке фокуса.
@@ -680,8 +707,11 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void EmitterCategoryComboBox_Enter(object sender, EventArgs e)
         {
-            EmitterCategoryComboBoxFill();
-            EmitterCategoryComboBox.DroppedDown = true;
+            if (!clearBox)
+            {
+                EmitterCategoryComboBoxFill();
+                EmitterCategoryComboBox.DroppedDown = true;
+            }
         }
         /// <summary>
         /// Обновляет LoadGridView при выборе EmitterCategory в EmitterCategoryComboBox. 
@@ -690,7 +720,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void EmitterCategoryComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// LoadGridView при выборе Country в CountryComboBox. 
@@ -699,8 +732,11 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void CountryComboBox_Enter(object sender, EventArgs e)
         {
-            CountryComboBoxFill();
-            CountryComboBox.DroppedDown = true;
+            if (!clearBox)
+            {
+                CountryComboBoxFill();
+                CountryComboBox.DroppedDown = true;
+            }
         }
         /// <summary>
         /// Обновляет содержимое ComboBox по клику.
@@ -709,7 +745,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void CountryComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// LoadGridView при выборе CAT в CATcomboBox. 
@@ -718,8 +757,11 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void CATcomboBox_Enter(object sender, EventArgs e)
         {
-            CATcomboBoxFill();
-            CATcomboBox.DroppedDown = true;
+            if (!clearBox)
+            {
+                CATcomboBoxFill();
+                CATcomboBox.DroppedDown = true;
+            }
         }
         /// <summary>
         /// Обновляет содержимое ComboBox по клику.
@@ -728,7 +770,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void CATcomboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
         /// <summary>
         /// LoadGridView при выборе Class в ClassComboBox. 
@@ -737,8 +782,11 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void ClassComboBox_Enter(object sender, EventArgs e)
         {
-            ClassComboBoxFill();
-            ClassComboBox.DroppedDown = true;
+            if (!clearBox)
+            {
+                ClassComboBoxFill();
+                ClassComboBox.DroppedDown = true;
+            }
         }
         /// <summary>
         /// Обновляет содержимое ComboBox по клику.
@@ -747,7 +795,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void ClassComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
 
         /// <summary>
@@ -780,7 +831,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void EndTimePicker_ValueChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
 
         /// <summary>
@@ -813,7 +867,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void BeginTimePicker_ValueChanged(object sender, EventArgs e)
         {
-            ShowDataGridView(false);
+            if (!clearBox)
+            {
+                ShowDataGridView(false);
+            }
         }
 
         /// <summary>
@@ -886,6 +943,42 @@ namespace ASTERIX
         private void SearchTableLayoutPanel_Click(object sender, EventArgs e)
         {
             closeAllCombobox();
+        }
+
+        /// <summary>
+        /// Убирает фокус с кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClearFilterBTN_MouseUp(object sender, MouseEventArgs e)
+        {
+            TargetAddressTextBox.Focus();
+        }
+        /// <summary>
+        /// Очищает фильтр.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClearFilterBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            clearBox = true;
+            TargetAddressTextBox.Clear();
+            AircraftIdetificationTextBox.Clear();
+            RegistrationTextBox.Clear();
+            EmitterCategoryComboBox.TextField = null;
+            TypeAircraftTextBox.Clear();
+            Mode3ATextBox.Clear();
+            CountryComboBox.TextField = null;
+            AirportDepatureTextBox.Clear();
+            AirportArrivalTextBox.Clear();
+            BeginTimePicker.Value = DateTime.Now;
+            EndTimePicker.Checked = false;
+            CATcomboBox.TextField = null;
+            SACtextBox.Clear();
+            SICtextBox.Clear();
+            ClassComboBox.TextField = null;
+            clearBox = false;
+            ShowDataGridView(false);
         }
 
         #endregion
@@ -1165,5 +1258,6 @@ namespace ASTERIX
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
         }
+
     }
 }
