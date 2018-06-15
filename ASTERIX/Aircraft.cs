@@ -13,6 +13,7 @@ namespace ASTERIX
     {
         int Aircraftchcksum = 0;
         bool search = false;
+        bool update = false;
 
         public Aircraft()
         {
@@ -202,7 +203,7 @@ namespace ASTERIX
             {
             f = filter();
             }
-            UpdateDataGridView(SQL.query("SELECT TOP 500 [Id], [TargetAddress] AS 'ICAO24',[Country] AS 'Государство', [Registration] AS 'Бортовой', [ICAOTypeCode] AS 'ICAOType', [TypeAircraft] AS 'Тип', [EmitterCategory] AS 'Категория', [Class] AS 'Класс', [UserText] AS 'Примечение' FROM [Aircraft] " + f), autoPosition);
+            UpdateDataGridView(SQL.query("SELECT TOP 500 [Id], [TargetAddress] AS 'ICAO24',[Country] AS 'Государство', [Registration] AS 'Бортовой', [ICAOTypeCode] AS 'ICAOType', [TypeAircraft] AS 'Тип', [EmitterCategory] AS 'Категория', [Class] AS 'Класс', [UserText] AS 'Примечание' FROM [Aircraft] " + f), autoPosition);
         }
         /// <summary>
         /// Обновляет данные в AircraftGridView.
@@ -323,39 +324,53 @@ namespace ASTERIX
                 ShowAircraftGridView(false);
             }
         }
-
+        
         /// <summary>
-        /// Кнопка "Поиск"
+        /// Очищает все TextBox.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void SearchBTN_Click(object sender, EventArgs e)
+        void ClearTextBox()
         {
-            if (search)
-            {
-                search = false;
-                AddBTN.Enabled = true;
-                DeleteBTN.Enabled = true;
-                UpdateBTN.Enabled = true;
-                SearchBTN.BackColor = Color.Transparent;
-            }
-            else
-            {
-                search = true;
-                AddBTN.Enabled = false;
-                DeleteBTN.Enabled = false;
-                UpdateBTN.Enabled = false;
-                SearchBTN.BackColor = Color.Green;
-
-                ShowAircraftGridView(true);
-            }
+            TargetAddressTextBox.Clear();
+            ICAOTypeCodeTextBox.Clear();
+            RegistrationTextBox.Clear();
+            TypeAircraftTextBox.Clear();
+            CountryTextBox.Clear();
+            ClassTextBox.Clear();
+            UserTextBox.Clear();
         }
+
         /// <summary>
-        /// Кнопка "Добавить"
+        /// Убирает фокус.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void AddBTN_Click(object sender, EventArgs e)
+        private void AddBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            TargetAddressTextBox.Focus();
+        }
+        private void UpdateBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            TargetAddressTextBox.Focus();
+        }
+        private void DeleteBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            TargetAddressTextBox.Focus();
+        }
+        private void SearchBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            TargetAddressTextBox.Focus();
+        }
+        private void ResetBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            TargetAddressTextBox.Focus();
+        }
+
+        /// <summary>
+        /// Добавить.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddBTN_MouseUp(object sender, MouseEventArgs e)
         {
             string TargetAddress = GetBoxValue("TargetAddress");
             string ICAOTypeCode = GetBoxValue("ICAOTypeCode");
@@ -373,42 +388,107 @@ namespace ASTERIX
                 MessageBox.Show("Заполните поле ICAO24");
             }
             UpdateGrid();
+            ClearTextBox();
         }
         /// <summary>
-        /// Кнопка "Изменить"
+        /// Изменить.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void UpdateBTN_Click(object sender, EventArgs e)
+        private void UpdateBTN_MouseUp(object sender, MouseEventArgs e)
         {
-            string TargetAddress = GetBoxValue("TargetAddress");
-            string ICAOTypeCode = GetBoxValue("ICAOTypeCode");
-            string Registration = GetBoxValue("Registration");
-            string TypeAircraft = GetBoxValue("TypeAircraft");
-            string Country = GetBoxValue("Country");
-            string Class = GetBoxValue("Class");
-            string User = GetBoxValue("User");
+            string TargetAddress;
+            string ICAOTypeCode;
+            string Registration;
+            string TypeAircraft;
+            string Country;
+            string Class;
+            string User;
 
-            if (AircraftGridView.SelectedRows.Count > 0)
+            if (update)
             {
-                string Id = Convert.ToString(AircraftGridView.SelectedRows[0].Cells["Id"].Value);
-                if ((TargetAddress != "") && (TargetAddress != null))
+                TargetAddress = GetBoxValue("TargetAddress");
+                ICAOTypeCode = GetBoxValue("ICAOTypeCode");
+                Registration = GetBoxValue("Registration");
+                TypeAircraft = GetBoxValue("TypeAircraft");
+                Country = GetBoxValue("Country");
+                Class = GetBoxValue("Class");
+                User = GetBoxValue("User");
+
+                if (AircraftGridView.SelectedRows.Count > 0)
                 {
-                    SQL.query("UPDATE dbo.[Aircraft] SET TargetAddress = '" + TargetAddress + "', ICAOTypeCode = '" + ICAOTypeCode + "', Registration = '" + Registration + "', TypeAircraft = '" + TypeAircraft + "', Country = '" + Country + "', Class = '" + Class + "', UserText = '" + User + "'  WHERE Id = " + Id);
+                    string Id = Convert.ToString(AircraftGridView.SelectedRows[0].Cells["Id"].Value);
+                    if ((TargetAddress != "") && (TargetAddress != null))
+                    {
+                        SQL.query("UPDATE dbo.[Aircraft] SET TargetAddress = '" + TargetAddress + "', ICAOTypeCode = '" + ICAOTypeCode + "', Registration = '" + Registration + "', TypeAircraft = '" + TypeAircraft + "', Country = '" + Country + "', Class = '" + Class + "', UserText = '" + User + "'  WHERE Id = " + Id);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Заполните поле ICAO24");
+                    }
+                    UpdateGrid();
+                    ClearTextBox();
+                }
+
+                update = false;
+                UpdateBTN.Text = "ИЗМЕНИТЬ";
+            }
+            else
+            {
+                if (AircraftGridView.SelectedRows.Count > 0)
+                {
+                    TargetAddress = Convert.ToString(AircraftGridView.SelectedRows[0].Cells["ICAO24"].Value);
+                    ICAOTypeCode = Convert.ToString(AircraftGridView.SelectedRows[0].Cells["ICAOType"].Value);
+                    Registration = Convert.ToString(AircraftGridView.SelectedRows[0].Cells["Бортовой"].Value);
+                    TypeAircraft = Convert.ToString(AircraftGridView.SelectedRows[0].Cells["Тип"].Value);
+                    Country = Convert.ToString(AircraftGridView.SelectedRows[0].Cells["Государство"].Value);
+                    Class = Convert.ToString(AircraftGridView.SelectedRows[0].Cells["Класс"].Value);
+                    User = Convert.ToString(AircraftGridView.SelectedRows[0].Cells["Примечание"].Value);
+
+                    if (TargetAddress != "")
+                    {
+                        TargetAddressTextBox.TextField = TargetAddress;
+                    }
+                    if (ICAOTypeCode != "")
+                    {
+                        ICAOTypeCodeTextBox.TextField = ICAOTypeCode;
+                    }
+                    if (Registration != "")
+                    {
+                        RegistrationTextBox.TextField = Registration;
+                    }
+                    if (TypeAircraft != "")
+                    {
+                        TypeAircraftTextBox.TextField = TypeAircraft;
+                    }
+                    if (Country != "")
+                    {
+                        CountryTextBox.TextField = Country;
+                    }
+                    if (Class != "")
+                    {
+                        ClassTextBox.TextField = Class;
+                    }
+                    if (User != "")
+                    {
+                        UserTextBox.TextField = User;
+                    }
+
+                    update = true;
+                    UpdateBTN.Text = "СОХРАНИТЬ";
                 }
                 else
                 {
-                    MessageBox.Show("Заполните поле ICAO24");
+                    MessageBox.Show("Выберите строку");
                 }
-            UpdateGrid();
             }
         }
         /// <summary>
-        /// Кнопка "Удалить"
+        /// Удалить.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DeleteBTN_Click(object sender, EventArgs e)
+        private void DeleteBTN_MouseUp(object sender, MouseEventArgs e)
         {
             if (AircraftGridView.SelectedRows.Count > 0)
             {
@@ -417,16 +497,47 @@ namespace ASTERIX
                 SQL.query("DELETE FROM dbo.[Aircraft] WHERE Id = " + Id);
 
                 UpdateGrid();
+                ClearTextBox();
             }
         }
         /// <summary>
-        /// Кнопка "Сброс"
+        /// Поиск.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ResetBTN_Click(object sender, EventArgs e)
+        private void SearchBTN_MouseUp(object sender, MouseEventArgs e)
         {
+            if (search)
+            {
+                search = false;
+                AddBTN.Enabled = true;
+                DeleteBTN.Enabled = true;
+                UpdateBTN.Enabled = true;
+                SearchBTN.BackColor = Color.LightSlateGray;
+                TargetAddressTextBox.Focus();
+            }
+            else
+            {
+                search = true;
+                AddBTN.Enabled = false;
+                DeleteBTN.Enabled = false;
+                UpdateBTN.Enabled = false;
+                SearchBTN.BackColor = Color.LightSeaGreen;
+                TargetAddressTextBox.Focus();
+
+                ShowAircraftGridView(true);
+            }
+        }
+        /// <summary>
+        /// Сброс.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ResetBTN_MouseUp(object sender, MouseEventArgs e)
+        {
+            ClearTextBox();
             ShowAircraftGridView(true);
         }
+
+      }
     }
-}

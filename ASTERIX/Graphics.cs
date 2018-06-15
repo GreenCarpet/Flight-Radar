@@ -17,7 +17,11 @@ namespace ASTERIX
         {
             InitializeComponent();
 
-            string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
+            DataTable trek = SQL.query("SELECT TargetAddress, GPX FROM [LOAD] WHERE ID = '" + Id + "'");
+            string TargetAddress = Convert.ToString(trek.Rows[0]["TargetAddress"]);
+            string xml = Convert.ToString(trek.Rows[0]["GPX"]);
+
+            Text = TargetAddress;
 
             gpxType gpx = GMaps.Instance.DeserializeGPX(xml);
             rteType[] rte = gpx.rte;
@@ -32,7 +36,6 @@ namespace ASTERIX
                     decimal ele = rte[route].rtept[i].ele;
                     if (ele != -1)
                     {
-
                         // X.Add(new PointLatLng(Convert.ToDouble(rte[route].rtept[i].lat), Convert.ToDouble(rte[route].rtept[i].lon)).ToString());
                         X.Add(i);
                         Y.Add(rte[route].rtept[i].ele);

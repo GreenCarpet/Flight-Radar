@@ -1106,5 +1106,14 @@ namespace ASTERIX
             UpdateTimer.Enabled = true;
         }
 
+        private void toMapBTN_MouseUp(object sender, MouseEventArgs e)
+        {
+            TargetAddressTextBox.Focus();
+        }
+
+        private void toMapBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            
+        }
     }
 }

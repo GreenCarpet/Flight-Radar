@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
             this.AircraftPanel = new System.Windows.Forms.Panel();
             this.AircraftContainer = new System.Windows.Forms.SplitContainer();
             this.AircraftGridView = new System.Windows.Forms.DataGridView();
@@ -105,23 +105,23 @@
             this.AircraftGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.AircraftGridView.BackgroundColor = System.Drawing.Color.White;
             this.AircraftGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.AircraftGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.AircraftGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
             this.AircraftGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.AircraftGridView.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.AircraftGridView.DefaultCellStyle = dataGridViewCellStyle20;
             this.AircraftGridView.Location = new System.Drawing.Point(212, 12);
             this.AircraftGridView.MultiSelect = false;
             this.AircraftGridView.Name = "AircraftGridView";
@@ -135,24 +135,32 @@
             // ResetBTN
             // 
             this.ResetBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.ResetBTN.Location = new System.Drawing.Point(969, 65);
+            this.ResetBTN.BackColor = System.Drawing.Color.LightSlateGray;
+            this.ResetBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ResetBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ResetBTN.Location = new System.Drawing.Point(992, 91);
             this.ResetBTN.Name = "ResetBTN";
-            this.ResetBTN.Size = new System.Drawing.Size(65, 45);
+            this.ResetBTN.Size = new System.Drawing.Size(61, 44);
             this.ResetBTN.TabIndex = 11;
             this.ResetBTN.Text = "СБРОС";
-            this.ResetBTN.UseVisualStyleBackColor = true;
-            this.ResetBTN.Click += new System.EventHandler(this.ResetBTN_Click);
+            this.ResetBTN.UseVisualStyleBackColor = false;
+            this.ResetBTN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ResetBTN_MouseDown);
+            this.ResetBTN.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ResetBTN_MouseUp);
             // 
             // UpdateBTN
             // 
             this.UpdateBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.UpdateBTN.Location = new System.Drawing.Point(898, 65);
+            this.UpdateBTN.BackColor = System.Drawing.Color.LightSlateGray;
+            this.UpdateBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.UpdateBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.UpdateBTN.Location = new System.Drawing.Point(900, 68);
             this.UpdateBTN.Name = "UpdateBTN";
-            this.UpdateBTN.Size = new System.Drawing.Size(65, 45);
+            this.UpdateBTN.Size = new System.Drawing.Size(76, 44);
             this.UpdateBTN.TabIndex = 10;
             this.UpdateBTN.Text = "ИЗМЕНИТЬ";
-            this.UpdateBTN.UseVisualStyleBackColor = true;
-            this.UpdateBTN.Click += new System.EventHandler(this.UpdateBTN_Click);
+            this.UpdateBTN.UseVisualStyleBackColor = false;
+            this.UpdateBTN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.UpdateBTN_MouseDown);
+            this.UpdateBTN.MouseUp += new System.Windows.Forms.MouseEventHandler(this.UpdateBTN_MouseUp);
             // 
             // AddPanel
             // 
@@ -339,38 +347,50 @@
             // SearchBTN
             // 
             this.SearchBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.SearchBTN.Location = new System.Drawing.Point(969, 14);
+            this.SearchBTN.BackColor = System.Drawing.Color.LightSlateGray;
+            this.SearchBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.SearchBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.SearchBTN.Location = new System.Drawing.Point(992, 40);
             this.SearchBTN.Name = "SearchBTN";
-            this.SearchBTN.Size = new System.Drawing.Size(65, 45);
+            this.SearchBTN.Size = new System.Drawing.Size(61, 44);
             this.SearchBTN.TabIndex = 7;
             this.SearchBTN.TabStop = false;
             this.SearchBTN.Text = "ПОИСК";
-            this.SearchBTN.UseVisualStyleBackColor = true;
-            this.SearchBTN.Click += new System.EventHandler(this.SearchBTN_Click);
+            this.SearchBTN.UseVisualStyleBackColor = false;
+            this.SearchBTN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SearchBTN_MouseDown);
+            this.SearchBTN.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SearchBTN_MouseUp);
             // 
             // AddBTN
             // 
             this.AddBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.AddBTN.Location = new System.Drawing.Point(898, 14);
+            this.AddBTN.BackColor = System.Drawing.Color.LightSlateGray;
+            this.AddBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.AddBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.AddBTN.Location = new System.Drawing.Point(900, 17);
             this.AddBTN.Name = "AddBTN";
-            this.AddBTN.Size = new System.Drawing.Size(65, 45);
+            this.AddBTN.Size = new System.Drawing.Size(76, 44);
             this.AddBTN.TabIndex = 8;
             this.AddBTN.TabStop = false;
             this.AddBTN.Text = "ДОБАВИТЬ";
-            this.AddBTN.UseVisualStyleBackColor = true;
-            this.AddBTN.Click += new System.EventHandler(this.AddBTN_Click);
+            this.AddBTN.UseVisualStyleBackColor = false;
+            this.AddBTN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.AddBTN_MouseDown);
+            this.AddBTN.MouseUp += new System.Windows.Forms.MouseEventHandler(this.AddBTN_MouseUp);
             // 
             // DeleteBTN
             // 
             this.DeleteBTN.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)));
-            this.DeleteBTN.Location = new System.Drawing.Point(898, 116);
+            this.DeleteBTN.BackColor = System.Drawing.Color.LightSlateGray;
+            this.DeleteBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DeleteBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.DeleteBTN.Location = new System.Drawing.Point(900, 119);
             this.DeleteBTN.Name = "DeleteBTN";
-            this.DeleteBTN.Size = new System.Drawing.Size(65, 46);
+            this.DeleteBTN.Size = new System.Drawing.Size(76, 45);
             this.DeleteBTN.TabIndex = 9;
             this.DeleteBTN.TabStop = false;
             this.DeleteBTN.Text = "УДАЛИТЬ";
-            this.DeleteBTN.UseVisualStyleBackColor = true;
-            this.DeleteBTN.Click += new System.EventHandler(this.DeleteBTN_Click);
+            this.DeleteBTN.UseVisualStyleBackColor = false;
+            this.DeleteBTN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.DeleteBTN_MouseDown);
+            this.DeleteBTN.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DeleteBTN_MouseUp);
             // 
             // Aircraft
             // 

@@ -183,6 +183,11 @@ namespace ASTERIX
             }
         }
 
+        public void Clear()
+        {
+            ClearBTN_MouseUp(null, null);
+        }
+
         public UTextBox()
         {
             InitializeComponent();
