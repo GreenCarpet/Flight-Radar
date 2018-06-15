@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
@@ -37,16 +36,15 @@
             // 
             // chart
             // 
+            this.chart.BackColor = System.Drawing.Color.LightGray;
             chartArea1.Name = "EleAreas";
             this.chart.ChartAreas.Add(chartArea1);
             this.chart.Dock = System.Windows.Forms.DockStyle.Fill;
-            legend1.Name = "Legend1";
-            this.chart.Legends.Add(legend1);
             this.chart.Location = new System.Drawing.Point(0, 0);
             this.chart.Name = "chart";
             series1.ChartArea = "EleAreas";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
-            series1.Legend = "Legend1";
+            series1.IsVisibleInLegend = false;
             series1.Name = "Ele";
             this.chart.Series.Add(series1);
             this.chart.Size = new System.Drawing.Size(984, 362);

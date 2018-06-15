@@ -46,6 +46,12 @@ namespace ASTERIX
                 {
                     chart.ChartAreas["EleAreas"].AxisY.Minimum = Convert.ToDouble(Y.Min()) - 1000;
                     chart.ChartAreas["EleAreas"].AxisY.Maximum = Convert.ToDouble(Y.Max()) + 1000;
+
+                    this.Show();
+                }
+                else
+                {
+                    MessageBox.Show("Данные остсутствуют");
                 }
             }
         }

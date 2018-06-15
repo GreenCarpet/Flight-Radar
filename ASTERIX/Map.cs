@@ -20,9 +20,9 @@ namespace ASTERIX
     {
         #region База
 
-        public Thread updateThread;
-
         int Loadchcksum;
+
+        static object locker = new object();
 
         bool FirstSetting = false;
         bool EnableBeginTimePicker = true;
@@ -61,7 +61,7 @@ namespace ASTERIX
             {
                 filter = "WHERE TargetAddress LIKE '" + TargetAddress + "%'";
             }
-            if ((AircraftIdentification != "")&& (AircraftIdentification != null))
+            if ((AircraftIdentification != "") && (AircraftIdentification != null))
             {
                 if (filter == "")
                 {
@@ -247,7 +247,6 @@ namespace ASTERIX
                 Action action = () => ShowDataGridView(true);
                 LoadGridView.BeginInvoke(action);
             }
-            updateThread.Abort();
         }
         /// <summary>
         /// Запускает таймер контроля состояний маршрутов.
@@ -256,8 +255,10 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void UpdateTimer_Tick(object sender, System.EventArgs e)
         {
-            updateThread = new Thread(timerThread);
-            updateThread.Start();
+            new Thread(() =>
+            {
+                timerThread();
+            }).Start();
         }
 
         /// <summary>
@@ -321,8 +322,11 @@ namespace ASTERIX
         {
             if ((e.Button == MouseButtons.Left) && (e.RowIndex >= 0))
             {
-                Thread DeleteThread = new Thread(() => openGPXThread(e.RowIndex));
-                DeleteThread.Start();
+                new Thread(() =>
+                {
+                    openGPXThread(e.RowIndex, true);
+                }
+                ).Start();
             }
         }
         /// <summary>
@@ -337,8 +341,11 @@ namespace ASTERIX
                 e.Handled = true;
                 if (LoadGridView.CurrentRow != null)
                 {
-                    Thread DeleteThread = new Thread(() => openGPXThread(LoadGridView.CurrentRow.Index));
-                    DeleteThread.Start();
+                    new Thread(() =>
+                    {
+                        openGPXThread(LoadGridView.CurrentRow.Index, true);
+                    }
+                    ).Start();
                 }
             }
         }
@@ -921,51 +928,21 @@ namespace ASTERIX
                 RouteContainer.SplitterDistance = HideRouteBTN.Size.Width;
             }
         }
+
+        /// <summary>
+        /// Инициализирует открывающуюся панель.
+        /// </summary>
         void HideRouteBTNInit()
         {
             RouteContainer.SplitterDistance = RouteSplitterPosition;
             HideRouteBTN_MouseUp(null, null);
         }
-
         /// <summary>
-        /// Инициализирует карту.
+        /// Инициализирует RouteGridView.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void gMapControl_Load(object sender, EventArgs e)
-        {
-                  gMapControl.Bearing = 0;
-
-                  gMapControl.CanDragMap = true;
-                  gMapControl.DragButton = MouseButtons.Left;
-
-                  gMapControl.GrayScaleMode = true;
-
-                  gMapControl.MarkersEnabled = true;
-
-                  gMapControl.MaxZoom = 18;
-                  gMapControl.MinZoom = 2;
-
-                  gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
-
-                  gMapControl.NegativeMode = false;
-
-                  gMapControl.RoutesEnabled = true;
-
-                  gMapControl.ShowTileGridLines = false;
-
-                  gMapControl.Zoom = 5;
-
-                  gMapControl.Dock = DockStyle.Fill;
-
-                  gMapControl.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleMap;
-                  GMaps.Instance.Mode = AccessMode.CacheOnly;
-                  GMaps.Instance.ImportFromGMDB("Data.gmdb");
-        }
-
         void RoteGridViewInit()
         {
-            RouteGridView.Columns.Add("Id", "Id");          
+            RouteGridView.Columns.Add("Id", "Id");
             RouteGridView.Columns.Add("TargetAddress", "TargetAddress");
             RouteGridView.Columns.Add("Color", "Color");
             RouteGridView.Columns.Add("Fix", "Fix");
@@ -978,6 +955,45 @@ namespace ASTERIX
             RouteGridView.Columns["Id"].Visible = false;
             RouteGridView.Columns["Color"].Visible = false;
             RouteGridView.Columns["Fix"].Visible = false;
+
+            RouteGridView.Columns["TargetAddress"].ReadOnly = true;
+        }
+        /// <summary>
+        /// Инициализирует карту.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void gMapControl_Load(object sender, EventArgs e)
+        {
+            gMapControl.Bearing = 0;
+
+            gMapControl.CanDragMap = true;
+            gMapControl.DragButton = MouseButtons.Left;
+
+            gMapControl.GrayScaleMode = true;
+
+            gMapControl.MarkersEnabled = true;
+
+            gMapControl.MaxZoom = 18;
+            gMapControl.MinZoom = 2;
+
+            gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
+
+            gMapControl.NegativeMode = false;
+
+            gMapControl.RoutesEnabled = true;
+
+            gMapControl.ShowTileGridLines = false;
+
+            gMapControl.Zoom = 5;
+
+            gMapControl.Dock = DockStyle.Fill;
+
+            gMapControl.MapProvider = GMap.NET.MapProviders.GMapProviders.GoogleMap;
+            GMaps.Instance.Mode = AccessMode.CacheOnly;
+            GMaps.Instance.ImportFromGMDB("Data.gmdb");
+
+            gMapControl.Overlays.Add(routeOverlay);
         }
 
         /// <summary>
@@ -1010,23 +1026,24 @@ namespace ASTERIX
         /// Отображает выбранный маршрут.
         /// </summary>
         /// <param name="RowIndex">Индекс выбранной строки в LoadGridView.</param>
-        void openGPXThread(object RowIndex)
+        void openGPXThread(object RowIndex, bool autoFocus)
         {
             string TargetAddress = Convert.ToString(LoadGridView["ICAO24", Convert.ToInt32(RowIndex)].Value);
             try
             {
                 string Id = Convert.ToString(LoadGridView["Id", Convert.ToInt32(RowIndex)].Value);
                 string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
-                AddRoute(routeOverlay, xml);
-                
+
                 Action action = () =>
                 {
-                    gMapControl.Overlays.Add(routeOverlay);
-                    gMapControl.Position = routeOverlay.Routes.Last().Points.Last();
+                    AddRoute(routeOverlay, xml);
+                    RouteGridView.Rows.Add(new object[] { Id, TargetAddress, Color.Orange, false });
 
-                    RouteGridView.Rows.Add(new object[] { Id, routeOverlay.Routes.Last().Name, Color.Orange, false });
-                  
-                    RouteGridView.CurrentCell = RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["TargetAddress"];
+                    if (autoFocus)
+                    {
+                        gMapControl.Position = routeOverlay.Routes.Last().Points.Last();
+                        RouteGridView.CurrentCell = RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["TargetAddress"];
+                    }
                 };
                 gMapControl.BeginInvoke(action);
 
@@ -1035,7 +1052,6 @@ namespace ASTERIX
             {
                 MessageBox.Show(ex.Message);
             }
-            Thread.CurrentThread.Abort();
         }
         /// <summary>
         /// Удаляет маршрут из overlay.
@@ -1055,26 +1071,47 @@ namespace ASTERIX
             }
             routeOverlay.Routes.Remove(deleting);
         }
+
         /// <summary>
         /// Устанавливает фокус на выбранный маршрут.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RouteGridView_SelectionChanged(object sender, EventArgs e)
+        void setFocusRoute()
         {
-            RouteGridView.Columns["TargetAddress"].ReadOnly = true;
-
-            if (RouteGridView.SelectedRows.Count > 0)
+            Action action = () =>
             {
-                for (int route = 0; route < routeOverlay.Routes.Count; route++)
+                if (RouteGridView.SelectedRows.Count > 0)
                 {
-                    if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.SelectedRows[0].Cells["TargetAddress"].Value))
+                    for (int route = 0; route < routeOverlay.Routes.Count; route++)
                     {
-                        gMapControl.Position = routeOverlay.Routes[route].Points.Last();
-                        break;
+                        if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.SelectedRows[0].Cells["TargetAddress"].Value))
+                        {
+                            gMapControl.Position = routeOverlay.Routes[route].Points.Last();
+                            break;
+                        }
                     }
                 }
-            }
+            };
+            gMapControl.BeginInvoke(action);
+        }
+        private void RouteGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            new Thread(() =>
+            {
+                setFocusRoute();
+                Thread.CurrentThread.Abort();
+            }).Start();
+        }
+        private void RouteGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            new Thread(() =>
+            {
+                setFocusRoute();
+                Thread.CurrentThread.Abort();
+            }).Start();
+        }
+        private void RouteGridView_MouseEnter(object sender, EventArgs e)
+        {
+            RouteGridView.Focus();
         }
 
         /// <summary>
@@ -1084,8 +1121,31 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void RouteGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            Graphics g = new Graphics(Convert.ToString(RouteGridView.Rows[e.RowIndex].Cells["Id"].Value));
-            g.Show();
+            new Graphics(Convert.ToString(RouteGridView.Rows[e.RowIndex].Cells["Id"].Value));
+        }
+
+        /// <summary>
+        /// Убирает фокус с кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toMapBTN_MouseUp(object sender, MouseEventArgs e)
+        {
+            TargetAddressTextBox.Focus();
+        }
+        /// <summary>
+        /// Выводит содержимое LoadGridView на карту.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toMapBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            new Thread(() => {
+                for (int RowIndex = 0; RowIndex < LoadGridView.Rows.Count; RowIndex++)
+                {
+                    openGPXThread(RowIndex, false);
+                }
+            }).Start();
         }
 
         #endregion
@@ -1104,16 +1164,6 @@ namespace ASTERIX
 
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
-        }
-
-        private void toMapBTN_MouseUp(object sender, MouseEventArgs e)
-        {
-            TargetAddressTextBox.Focus();
-        }
-
-        private void toMapBTN_MouseDown(object sender, MouseEventArgs e)
-        {
-            
         }
     }
 }

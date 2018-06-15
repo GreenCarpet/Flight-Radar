@@ -184,11 +184,6 @@ namespace ASTERIX
         private void GUI_FormClosed(object sender, FormClosedEventArgs e)
         {
             Protocol.STOP();
-
-            if (Map.updateThread != null)
-            {
-                Map.updateThread.Abort();
-            }
         }
 
         /// <summary>
