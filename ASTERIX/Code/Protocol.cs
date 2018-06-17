@@ -319,6 +319,7 @@ namespace ASTERIX
             }
 
             int file = 0;
+
             while (gui.start)
             {
                 if (pathList.Count != 0)
@@ -331,9 +332,11 @@ namespace ASTERIX
 
                         for (int TAddress = 0; TAddress < CoordinateTable.Rows.Count; TAddress++)
                         {
-                            TargetAddress.Add(Convert.ToString(CoordinateTable.Rows[TAddress]["TargetAddress"]));
+                            string Address = Convert.ToString(CoordinateTable.Rows[TAddress]["TargetAddress"]);
+                            if (!TargetAddress.Contains(Address)) {
+                                TargetAddress.Add(Address);
+                            }
                         }
-                        TargetAddress = TargetAddress.Distinct().ToList();
 
                         gui.ProgressBarMax(TargetAddress.Count);
                         for (int Address = 0; Address < TargetAddress.Count; Address++)
@@ -359,6 +362,8 @@ namespace ASTERIX
                         }
                         File.Delete(pathList[file]);
                         gui.ProgressBarValue(0);
+
+                        GC.Collect();
                     }
                     catch (Exception)
                     {
@@ -373,7 +378,6 @@ namespace ASTERIX
                     }
                 }
             }
-            mythread.Abort();
         }
     }
 }

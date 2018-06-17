@@ -243,9 +243,7 @@ namespace ASTERIX
             if (Loadchcksum != newchcksum)
             {
                 Loadchcksum = newchcksum;
-
-                Action action = () => ShowDataGridView(true);
-                LoadGridView.BeginInvoke(action);
+                ShowDataGridView(true);
             }
         }
         /// <summary>
@@ -365,63 +363,68 @@ namespace ASTERIX
         /// <param name="autoPosition">Фиксация положения в таблице. Использовать только при добавлении данных в таблицу (когда предыдущие строки не изменяются).</param>
         public void UpdateDataGridView(DataTable table, bool autoPosition)
         {
+            if (LoadGridView.InvokeRequired)
+            {
+                LoadGridView.BeginInvoke(new Action<DataTable, bool>(UpdateDataGridView), new object[] { table, autoPosition });
+                return;
+            }
             int selectedId = 0;
-            int firstRow = 0;
-            int sortedColumn = 0;
-            ListSortDirection sortDirection = ListSortDirection.Ascending;
+                int firstRow = 0;
+                int sortedColumn = 0;
+                ListSortDirection sortDirection = ListSortDirection.Ascending;
 
-            if (LoadGridView.Rows.Count > 0)
-            {
-                if (LoadGridView.CurrentCell != null)
+                if (LoadGridView.Rows.Count > 0)
                 {
-                    selectedId = Convert.ToInt32(LoadGridView[0, LoadGridView.CurrentCell.RowIndex].Value);
-                }
-                firstRow = LoadGridView.FirstDisplayedScrollingRowIndex;
-            }
-
-            if (LoadGridView.SortedColumn != null)
-            {
-                sortedColumn = LoadGridView.SortedColumn.Index;
-                if (LoadGridView.SortOrder == System.Windows.Forms.SortOrder.Ascending)
-                {
-                    sortDirection = ListSortDirection.Ascending;
-                }
-                else
-                {
-                    sortDirection = ListSortDirection.Descending;
-                }
-            }
-
-            LoadGridView.DataSource = table;
-
-            if (FirstSetting == false)
-            {
-                for (int column = 0; column < LoadGridView.ColumnCount; column++)
-                {
-                    LoadGridView.Columns[column].Visible = false;
-                }
-
-                LoadGridViewSetting();
-                FirstSetting = true;
-            }
-
-            LoadGridView.Sort(LoadGridView.Columns[sortedColumn], sortDirection);
-
-            if (LoadGridView.Rows.Count > 0)
-            {
-                if (autoPosition)
-                {
-                    for (int row = 0; row < LoadGridView.Rows.Count; row++)
+                    if (LoadGridView.CurrentCell != null)
                     {
-                        if (Convert.ToInt32(LoadGridView[0, row].Value) == selectedId)
-                        {
-                            LoadGridView.CurrentCell = LoadGridView[1, row];
-                            break;
-                        }
+                        selectedId = Convert.ToInt32(LoadGridView["Id", LoadGridView.CurrentCell.RowIndex].Value);
                     }
-                    LoadGridView.FirstDisplayedScrollingRowIndex = firstRow;
+                    firstRow = LoadGridView.FirstDisplayedScrollingRowIndex;
                 }
-            }
+
+                if (LoadGridView.SortedColumn != null)
+                {
+                    sortedColumn = LoadGridView.SortedColumn.Index;
+                    if (LoadGridView.SortOrder == System.Windows.Forms.SortOrder.Ascending)
+                    {
+                        sortDirection = ListSortDirection.Ascending;
+                    }
+                    else
+                    {
+                        sortDirection = ListSortDirection.Descending;
+                    }
+                }
+
+                LoadGridView.DataSource = table;
+
+                if (FirstSetting == false)
+                {
+                    for (int column = 0; column < LoadGridView.ColumnCount; column++)
+                    {
+                        LoadGridView.Columns[column].Visible = false;
+                    }
+
+                    LoadGridViewSetting();
+                    FirstSetting = true;
+                }
+
+                LoadGridView.Sort(LoadGridView.Columns[sortedColumn], sortDirection);
+
+                if (LoadGridView.Rows.Count > 0)
+                {
+                    if (autoPosition)
+                    {
+                        for (int row = 0; row < LoadGridView.Rows.Count; row++)
+                        {
+                            if (Convert.ToInt32(LoadGridView["Id", row].Value) == selectedId)
+                            {
+                                LoadGridView.CurrentCell = LoadGridView[1, row];
+                                break;
+                            }
+                        }
+                        LoadGridView.FirstDisplayedScrollingRowIndex = firstRow;
+                    }
+                }
         }
 
         /// <summary>
@@ -522,9 +525,9 @@ namespace ASTERIX
         /// </summary>
         public void EmitterCategoryComboBoxFill()
         {
-            if (InvokeRequired)
+            if (EmitterCategoryComboBox.InvokeRequired)
             {
-                Invoke(new Action(EmitterCategoryComboBoxFill));
+                EmitterCategoryComboBox.BeginInvoke(new Action(EmitterCategoryComboBoxFill));
                 return;
             }
             EmitterCategoryComboBox.DataSource = new List<string>();
@@ -542,9 +545,9 @@ namespace ASTERIX
         /// </summary>
         public void CountryComboBoxFill()
         {
-            if (InvokeRequired)
+            if (CountryComboBox.InvokeRequired)
             {
-                Invoke(new Action(CountryComboBoxFill));
+                CountryComboBox.BeginInvoke(new Action(CountryComboBoxFill));
                 return;
             }
             CountryComboBox.DataSource = new List<string>();
@@ -560,9 +563,9 @@ namespace ASTERIX
         /// </summary>
         public void CATcomboBoxFill()
         {
-            if (InvokeRequired)
+            if (CATcomboBox.InvokeRequired)
             {
-                Invoke(new Action(CATcomboBoxFill));
+                CATcomboBox.BeginInvoke(new Action(CATcomboBoxFill));
                 return;
             }
             CATcomboBox.DataSource = new List<string>();
@@ -578,9 +581,9 @@ namespace ASTERIX
         /// </summary>
         public void ClassComboBoxFill()
         {
-            if (InvokeRequired)
+            if (ClassComboBox.InvokeRequired)
             {
-                Invoke(new Action(ClassComboBoxFill));
+                ClassComboBox.BeginInvoke(new Action(ClassComboBoxFill));
                 return;
             }
             ClassComboBox.DataSource = new List<string>();
@@ -1035,15 +1038,23 @@ namespace ASTERIX
         /// </summary>
         void RoteGridViewInit()
         {
+            DataGridViewComboBoxColumn colorColumn = new DataGridViewComboBoxColumn();
+            colorColumn.Name = "Color";
+            colorColumn.FlatStyle = FlatStyle.Flat;
+
+            colorColumn.Items.Add(Color.Orange);
+            colorColumn.Items.Add(Color.Blue);
+
+            DataGridViewCheckBoxColumn fixColumn = new DataGridViewCheckBoxColumn();
+            fixColumn.Name = "Fix";
+
             RouteGridView.Columns.Add("Id", "Id");
             RouteGridView.Columns.Add("TargetAddress", "TargetAddress");
-            RouteGridView.Columns.Add("Color", "Color");
-            RouteGridView.Columns.Add("Fix", "Fix");
+            RouteGridView.Columns.Add(colorColumn);
+            RouteGridView.Columns.Add(fixColumn);
 
             RouteGridView.Columns["Id"].ValueType = typeof(string);
             RouteGridView.Columns["TargetAddress"].ValueType = typeof(string);
-            RouteGridView.Columns["Color"].ValueType = typeof(Color);
-            RouteGridView.Columns["Fix"].ValueType = typeof(bool);
 
             RouteGridView.Columns["Id"].Visible = false;
             RouteGridView.Columns["Color"].Visible = false;
@@ -1094,7 +1105,7 @@ namespace ASTERIX
         /// </summary>
         /// <param name="routeOverlay">overlay</param>
         /// <param name="xml">gpx</param>
-        void AddRoute(GMapOverlay routeOverlay, string xml)
+        void AddRoute(GMapOverlay routeOverlay, string xml, string id)
         {
             gpxType gpx = GMaps.Instance.DeserializeGPX(xml);
             rteType[] rte = gpx.rte;
@@ -1108,7 +1119,7 @@ namespace ASTERIX
                     PoinList.Add(point);
                 }
 
-                GMapRoute r = new GMapRoute(PoinList, rte[route].name);
+                GMapRoute r = new GMapRoute(PoinList, id);
                 r.Stroke.Width = 2;
                 r.Stroke.Color = Color.Orange;
 
@@ -1129,8 +1140,8 @@ namespace ASTERIX
 
                 Action action = () =>
                 {
-                    AddRoute(routeOverlay, xml);
-                    RouteGridView.Rows.Add(new object[] { Id, TargetAddress, Color.Orange, false });
+                    AddRoute(routeOverlay, xml, Id);
+                    RouteGridView.Rows.Add(new object[] { Id, TargetAddress, Color.Blue, false });
 
                     if (autoFocus)
                     {
@@ -1156,7 +1167,7 @@ namespace ASTERIX
             GMapRoute deleting = null;
             for (int route = 0; route < routeOverlay.Routes.Count; route++) {
 
-                if (routeOverlay.Routes[route].Name == Convert.ToString(e.Row.Cells["TargetAddress"].Value))
+                if (routeOverlay.Routes[route].Name == Convert.ToString(e.Row.Cells["Id"].Value))
                 {
                     deleting = routeOverlay.Routes[route];
                     break;
@@ -1176,7 +1187,7 @@ namespace ASTERIX
                 {
                     for (int route = 0; route < routeOverlay.Routes.Count; route++)
                     {
-                        if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.SelectedRows[0].Cells["TargetAddress"].Value))
+                        if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.SelectedRows[0].Cells["Id"].Value))
                         {
                             gMapControl.Position = routeOverlay.Routes[route].Points.Last();
                             break;
