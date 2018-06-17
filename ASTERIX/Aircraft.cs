@@ -218,7 +218,7 @@ namespace ASTERIX
             {
                 Back.Enabled = false;
             }
-            if (AllPage > 1)
+            if ((AllPage > 1) && (page != AllPage))
             {
                 Up.Enabled = true;
             }

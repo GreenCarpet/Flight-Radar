@@ -18,6 +18,8 @@ namespace ASTERIX
         public event EventHandler ControlSelectedIndexChanged;
         public List<string> Items = new List<string>();
         private listForm lstForm = new listForm();
+        bool clear = false;
+        bool keypress = false;
         
         public int DisplayItems
         {
@@ -79,8 +81,12 @@ namespace ASTERIX
                         }
                     }
 
-                    lstForm.Show();
-                    uTextBox.Focus();
+                    if (!keypress)
+                    {
+                        lstForm.Show();
+                        uTextBox.Focus();
+                    }
+                    keypress = false;
                 }
                 else
                 {
@@ -123,7 +129,7 @@ namespace ASTERIX
 
         private void uTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            if (TextField != null)
+            if ((TextField != null) && (!clear))
             {
                 DroppedDown = true;
             }
@@ -146,6 +152,7 @@ namespace ASTERIX
                         }
                         else
                         {
+                            keypress = true;
                             if (lstForm.listBox.SelectedIndex == lstForm.listBox.Items.Count - 1)
                             {
                                 lstForm.listBox.SelectedIndex = 0;
@@ -167,6 +174,7 @@ namespace ASTERIX
                         }
                         else
                         {
+                            keypress = true;
                             if (lstForm.listBox.SelectedIndex == 0)
                             {
                                 lstForm.listBox.SelectedIndex = lstForm.listBox.Items.Count - 1;
@@ -209,6 +217,13 @@ namespace ASTERIX
         private void uTextBox_ControlMouseDown(object sender, EventArgs e)
         {
             DroppedDown = true;
+        }
+
+        public void Clear()
+        {
+            clear = true;
+            uTextBox.Clear();
+            clear = false;
         }
 
     }

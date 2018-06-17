@@ -545,9 +545,9 @@
             this.PagePanel.Controls.Add(this.Back);
             this.PagePanel.Controls.Add(this.Up);
             this.PagePanel.Controls.Add(this.INlabel);
-            this.PagePanel.Location = new System.Drawing.Point(0, 91);
+            this.PagePanel.Location = new System.Drawing.Point(0, 88);
             this.PagePanel.Name = "PagePanel";
-            this.PagePanel.Size = new System.Drawing.Size(1200, 26);
+            this.PagePanel.Size = new System.Drawing.Size(1200, 29);
             this.PagePanel.TabIndex = 6;
             // 
             // AllPageTextBox
@@ -556,7 +556,7 @@
             this.AllPageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.AllPageTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.AllPageTextBox.HidePromptOnLeave = true;
-            this.AllPageTextBox.Location = new System.Drawing.Point(612, 3);
+            this.AllPageTextBox.Location = new System.Drawing.Point(612, 5);
             this.AllPageTextBox.Mask = "00000000";
             this.AllPageTextBox.Name = "AllPageTextBox";
             this.AllPageTextBox.PromptChar = ' ';
@@ -571,7 +571,7 @@
             this.PageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PageTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.PageTextBox.HidePromptOnLeave = true;
-            this.PageTextBox.Location = new System.Drawing.Point(530, 3);
+            this.PageTextBox.Location = new System.Drawing.Point(530, 5);
             this.PageTextBox.Mask = "00000000";
             this.PageTextBox.Name = "PageTextBox";
             this.PageTextBox.PromptChar = ' ';
@@ -587,7 +587,7 @@
             this.Back.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Back.Location = new System.Drawing.Point(445, 2);
             this.Back.Name = "Back";
-            this.Back.Size = new System.Drawing.Size(75, 20);
+            this.Back.Size = new System.Drawing.Size(75, 23);
             this.Back.TabIndex = 2;
             this.Back.Text = "Назад";
             this.Back.UseVisualStyleBackColor = false;
@@ -600,9 +600,10 @@
             this.Up.BackColor = System.Drawing.Color.LightSlateGray;
             this.Up.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Up.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Up.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.Up.Location = new System.Drawing.Point(679, 2);
             this.Up.Name = "Up";
-            this.Up.Size = new System.Drawing.Size(75, 20);
+            this.Up.Size = new System.Drawing.Size(75, 23);
             this.Up.TabIndex = 1;
             this.Up.Text = "Вперед";
             this.Up.UseVisualStyleBackColor = false;
@@ -614,7 +615,7 @@
             this.INlabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.INlabel.AutoSize = true;
             this.INlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.INlabel.Location = new System.Drawing.Point(592, 2);
+            this.INlabel.Location = new System.Drawing.Point(592, 4);
             this.INlabel.Name = "INlabel";
             this.INlabel.Size = new System.Drawing.Size(14, 20);
             this.INlabel.TabIndex = 4;

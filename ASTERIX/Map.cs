@@ -395,7 +395,7 @@ namespace ASTERIX
             {
                 Back.Enabled = false;
             }
-            if( AllPage > 1)
+            if ((AllPage > 1) && (page != AllPage))
             {
                 Up.Enabled = true;
             }
@@ -1014,18 +1014,18 @@ namespace ASTERIX
             TargetAddressTextBox.Clear();
             AircraftIdetificationTextBox.Clear();
             RegistrationTextBox.Clear();
-            EmitterCategoryComboBox.TextField = null;
+            EmitterCategoryComboBox.Clear();
             TypeAircraftTextBox.Clear();
             Mode3ATextBox.Clear();
-            CountryComboBox.TextField = null;
+            CountryComboBox.Clear();
             AirportDepatureTextBox.Clear();
             AirportArrivalTextBox.Clear();
             BeginTimePicker.Value = DateTime.Now;
             EndTimePicker.Checked = false;
-            CATcomboBox.TextField = null;
+            CATcomboBox.Clear();
             SACtextBox.Clear();
             SICtextBox.Clear();
-            ClassComboBox.TextField = null;
+            ClassComboBox.Clear();
             clearBox = false;
             ShowDataGridView(false, 1);
         }
