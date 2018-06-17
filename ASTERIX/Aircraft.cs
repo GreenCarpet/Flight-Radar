@@ -14,6 +14,7 @@ namespace ASTERIX
         int Aircraftchcksum = 0;
         bool search = false;
         bool update = false;
+        int RowOfPage = 1000;
 
         public Aircraft()
         {
@@ -185,17 +186,17 @@ namespace ASTERIX
             if (Aircraftchcksum != chcksum)
             {
                 Aircraftchcksum = chcksum;
-                ShowAircraftGridView(true);
+                ShowAircraftGridView(true, 1);
             }
         }
         /// <summary>
         /// Обновляет GridView.
         /// </summary>
-        public void ShowAircraftGridView(bool autoPosition)
+        public void ShowAircraftGridView(bool autoPosition, int page)
         {
-            if (InvokeRequired)
+            if (AircraftGridView.InvokeRequired)
             {
-                Invoke(new Action<bool>(ShowAircraftGridView), new object[] { autoPosition });
+                AircraftGridView.BeginInvoke(new Action<bool, int >(ShowAircraftGridView), new object[] { autoPosition, page });
                 return;
             }
             string f = "";
@@ -203,7 +204,22 @@ namespace ASTERIX
             {
             f = filter();
             }
-            UpdateDataGridView(SQL.query("SELECT TOP 500 [Id], [TargetAddress] AS 'ICAO24',[Country] AS 'Государство', [Registration] AS 'Бортовой', [ICAOTypeCode] AS 'ICAOType', [TypeAircraft] AS 'Тип', [EmitterCategory] AS 'Категория', [Class] AS 'Класс', [UserText] AS 'Примечание' FROM [Aircraft] " + f), autoPosition);
+            double AllPage = Convert.ToDouble(SQL.query("SELECT COUNT(*) FROM [Aircraft] " + f).Rows[0][0])/RowOfPage;
+            if (AllPage > Math.Truncate(AllPage))
+            {
+                AllPage = Math.Truncate(AllPage) + 1;
+            } 
+            if (AllPage == 0)
+            {
+                AllPage++;
+            }
+            UpdateDataGridView(SQL.query("SELECT TOP " + RowOfPage.ToString() + " * FROM (SELECT TOP " + Convert.ToString(page * RowOfPage) + " [Id], [TargetAddress] AS 'ICAO24',[Country] AS 'Государство', [Registration] AS 'Бортовой', [ICAOTypeCode] AS 'ICAOType', [TypeAircraft] AS 'Тип', [EmitterCategory] AS 'Категория', [Class] AS 'Класс', [UserText] AS 'Примечание' FROM [Aircraft] " + f + " ORDER BY [Id] desc) t ORDER BY [Id]"), autoPosition);
+            if (page == 1)
+            {
+                Back.Enabled = false;
+            }
+            PageTextBox.Text = page.ToString();
+            AllPageTextBox.Text = AllPage.ToString();
         }
         /// <summary>
         /// Обновляет данные в AircraftGridView.
@@ -212,16 +228,16 @@ namespace ASTERIX
         /// <param name="autoPosition">Фиксация положения в таблице. Использовать только при добавлении данных в таблицу (когда предыдущие строки не изменяются).</param>
         public void UpdateDataGridView(DataTable table, bool autoPosition)
         {
-            if (InvokeRequired)
+            if (AircraftGridView.InvokeRequired)
             {
-                Invoke(new Action<DataTable, bool>(UpdateDataGridView), new object[] { table, autoPosition });
+                AircraftGridView.BeginInvoke(new Action<DataTable, bool>(UpdateDataGridView), new object[] { table, autoPosition });
                 return;
             }
 
             int selectedId = 0;
             int firstRow = 0;
             int sortedColumn = 0;
-            ListSortDirection sortDirection = ListSortDirection.Ascending;
+            ListSortDirection sortDirection = ListSortDirection.Descending;
 
             if (AircraftGridView.Rows.Count > 0)
             {
@@ -279,49 +295,49 @@ namespace ASTERIX
         {
             if (search)
             {
-                ShowAircraftGridView(false);
+                ShowAircraftGridView(false, 1);
             }
         }
         private void ICAOTypeCodeTextBox_ControlTextChanged(object sender, EventArgs e)
         {
             if (search)
             {
-                ShowAircraftGridView(false);
+                ShowAircraftGridView(false, 1);
             }
         }
         private void RegistrationTextBox_ControlTextChanged(object sender, EventArgs e)
         {
             if (search)
             {
-                ShowAircraftGridView(false);
+                ShowAircraftGridView(false, 1);
             }
         }
         private void TypeAircraftTextBox_ControlTextChanged(object sender, EventArgs e)
         {
             if (search)
             {
-                ShowAircraftGridView(false);
+                ShowAircraftGridView(false, 1);
             }
         }
         private void CountryTextBox_ControlTextChanged(object sender, EventArgs e)
         {
             if (search)
             {
-                ShowAircraftGridView(false);
+                ShowAircraftGridView(false, 1);
             }
         }
         private void ClassTextBox_ControlTextChanged(object sender, EventArgs e)
         {
             if (search)
             {
-                ShowAircraftGridView(false);
+                ShowAircraftGridView(false, 1);
             }
         }
         private void UserTextBox_ControlTextChanged(object sender, EventArgs e)
         {
             if (search)
             {
-                ShowAircraftGridView(false);
+                ShowAircraftGridView(false, 1);
             }
         }
         
@@ -363,6 +379,14 @@ namespace ASTERIX
         private void ResetBTN_MouseDown(object sender, MouseEventArgs e)
         {
             TargetAddressTextBox.Focus();
+        }
+        private void Up_MouseDown(object sender, MouseEventArgs e)
+        {
+            PagePanel.Focus();
+        }
+        private void Back_MouseDown(object sender, MouseEventArgs e)
+        {
+            PagePanel.Focus();
         }
 
         /// <summary>
@@ -432,6 +456,9 @@ namespace ASTERIX
 
                 update = false;
                 UpdateBTN.Text = "ИЗМЕНИТЬ";
+
+                AddBTN.Enabled = true;
+                DeleteBTN.Enabled = true;
             }
             else
             {
@@ -476,6 +503,9 @@ namespace ASTERIX
 
                     update = true;
                     UpdateBTN.Text = "СОХРАНИТЬ";
+
+                    AddBTN.Enabled = false;
+                    DeleteBTN.Enabled = false;
                 }
                 else
                 {
@@ -525,7 +555,7 @@ namespace ASTERIX
                 SearchBTN.BackColor = Color.LightSeaGreen;
                 TargetAddressTextBox.Focus();
 
-                ShowAircraftGridView(true);
+                ShowAircraftGridView(true, 1);
             }
         }
         /// <summary>
@@ -536,8 +566,59 @@ namespace ASTERIX
         private void ResetBTN_MouseUp(object sender, MouseEventArgs e)
         {
             ClearTextBox();
-            ShowAircraftGridView(true);
+            ShowAircraftGridView(true, 1);
         }
 
-      }
+        /// <summary>
+        /// Вперед.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Up_MouseUp(object sender, MouseEventArgs e)
+        {
+            int page = Convert.ToInt32(PageTextBox.Text);
+            int maxpage = Convert.ToInt32(AllPageTextBox.Text);
+            if (page >= maxpage - 1)
+            {
+                page = maxpage;
+                PageTextBox.Text = page.ToString();
+                Up.Enabled = false;
+            }
+            else
+            {
+                page++;
+            }
+            if (!Back.Enabled)
+            {
+                Back.Enabled = true;
+            }
+            ShowAircraftGridView(false, page);
+        }
+        /// <summary>
+        /// Назад.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Back_MouseUp(object sender, MouseEventArgs e)
+        {
+            int page = Convert.ToInt32(PageTextBox.Text);
+            int maxpage = Convert.ToInt32(AllPageTextBox.Text);
+            if (page <= 2)
+            {
+                page = 1;
+                PageTextBox.Text = page.ToString();
+                Back.Enabled = false;
+            }
+            else
+            {
+                page--;
+            }
+            if (!Up.Enabled)
+            {
+                Up.Enabled = true;
+            }
+            ShowAircraftGridView(false, page);
+        }
+
+    }
     }

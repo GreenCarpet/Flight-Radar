@@ -28,10 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.AircraftPanel = new System.Windows.Forms.Panel();
             this.AircraftContainer = new System.Windows.Forms.SplitContainer();
+            this.PagePanel = new System.Windows.Forms.Panel();
+            this.AllPageTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.PageTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.Back = new System.Windows.Forms.Button();
+            this.Up = new System.Windows.Forms.Button();
+            this.INlabel = new System.Windows.Forms.Label();
             this.AircraftGridView = new System.Windows.Forms.DataGridView();
             this.ResetBTN = new System.Windows.Forms.Button();
             this.UpdateBTN = new System.Windows.Forms.Button();
@@ -52,6 +58,7 @@
             this.AircraftContainer.Panel1.SuspendLayout();
             this.AircraftContainer.Panel2.SuspendLayout();
             this.AircraftContainer.SuspendLayout();
+            this.PagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AircraftGridView)).BeginInit();
             this.AddPanel.SuspendLayout();
             this.AddTable.SuspendLayout();
@@ -78,6 +85,7 @@
             // 
             // AircraftContainer.Panel1
             // 
+            this.AircraftContainer.Panel1.Controls.Add(this.PagePanel);
             this.AircraftContainer.Panel1.Controls.Add(this.AircraftGridView);
             // 
             // AircraftContainer.Panel2
@@ -93,6 +101,88 @@
             this.AircraftContainer.TabIndex = 0;
             this.AircraftContainer.TabStop = false;
             // 
+            // PagePanel
+            // 
+            this.PagePanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.PagePanel.BackColor = System.Drawing.Color.LightGray;
+            this.PagePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PagePanel.Controls.Add(this.AllPageTextBox);
+            this.PagePanel.Controls.Add(this.PageTextBox);
+            this.PagePanel.Controls.Add(this.Back);
+            this.PagePanel.Controls.Add(this.Up);
+            this.PagePanel.Controls.Add(this.INlabel);
+            this.PagePanel.Location = new System.Drawing.Point(212, 380);
+            this.PagePanel.Name = "PagePanel";
+            this.PagePanel.Size = new System.Drawing.Size(766, 29);
+            this.PagePanel.TabIndex = 5;
+            // 
+            // AllPageTextBox
+            // 
+            this.AllPageTextBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.AllPageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.AllPageTextBox.HidePromptOnLeave = true;
+            this.AllPageTextBox.Location = new System.Drawing.Point(395, 4);
+            this.AllPageTextBox.Mask = "00000000";
+            this.AllPageTextBox.Name = "AllPageTextBox";
+            this.AllPageTextBox.PromptChar = ' ';
+            this.AllPageTextBox.ReadOnly = true;
+            this.AllPageTextBox.Size = new System.Drawing.Size(56, 20);
+            this.AllPageTextBox.TabIndex = 6;
+            this.AllPageTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // PageTextBox
+            // 
+            this.PageTextBox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.PageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.PageTextBox.HidePromptOnLeave = true;
+            this.PageTextBox.Location = new System.Drawing.Point(313, 4);
+            this.PageTextBox.Mask = "00000000";
+            this.PageTextBox.Name = "PageTextBox";
+            this.PageTextBox.PromptChar = ' ';
+            this.PageTextBox.Size = new System.Drawing.Size(56, 20);
+            this.PageTextBox.TabIndex = 6;
+            this.PageTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // Back
+            // 
+            this.Back.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.Back.BackColor = System.Drawing.Color.LightSlateGray;
+            this.Back.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Back.Location = new System.Drawing.Point(228, 2);
+            this.Back.Name = "Back";
+            this.Back.Size = new System.Drawing.Size(75, 23);
+            this.Back.TabIndex = 2;
+            this.Back.Text = "Назад";
+            this.Back.UseVisualStyleBackColor = false;
+            this.Back.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Back_MouseDown);
+            this.Back.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Back_MouseUp);
+            // 
+            // Up
+            // 
+            this.Up.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.Up.BackColor = System.Drawing.Color.LightSlateGray;
+            this.Up.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.Up.Location = new System.Drawing.Point(462, 2);
+            this.Up.Name = "Up";
+            this.Up.Size = new System.Drawing.Size(75, 23);
+            this.Up.TabIndex = 1;
+            this.Up.Text = "Вперед";
+            this.Up.UseVisualStyleBackColor = false;
+            this.Up.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Up_MouseDown);
+            this.Up.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Up_MouseUp);
+            // 
+            // INlabel
+            // 
+            this.INlabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.INlabel.AutoSize = true;
+            this.INlabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.INlabel.Location = new System.Drawing.Point(375, 3);
+            this.INlabel.Name = "INlabel";
+            this.INlabel.Size = new System.Drawing.Size(14, 20);
+            this.INlabel.TabIndex = 4;
+            this.INlabel.Text = "-";
+            // 
             // AircraftGridView
             // 
             this.AircraftGridView.AllowUserToAddRows = false;
@@ -105,30 +195,30 @@
             this.AircraftGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.AircraftGridView.BackgroundColor = System.Drawing.Color.White;
             this.AircraftGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.AircraftGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.AircraftGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.AircraftGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.AircraftGridView.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.AircraftGridView.DefaultCellStyle = dataGridViewCellStyle2;
             this.AircraftGridView.Location = new System.Drawing.Point(212, 12);
             this.AircraftGridView.MultiSelect = false;
             this.AircraftGridView.Name = "AircraftGridView";
             this.AircraftGridView.ReadOnly = true;
             this.AircraftGridView.RowHeadersVisible = false;
             this.AircraftGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.AircraftGridView.Size = new System.Drawing.Size(766, 387);
+            this.AircraftGridView.Size = new System.Drawing.Size(766, 366);
             this.AircraftGridView.TabIndex = 0;
             this.AircraftGridView.TabStop = false;
             // 
@@ -407,6 +497,8 @@
             this.AircraftContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.AircraftContainer)).EndInit();
             this.AircraftContainer.ResumeLayout(false);
+            this.PagePanel.ResumeLayout(false);
+            this.PagePanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.AircraftGridView)).EndInit();
             this.AddPanel.ResumeLayout(false);
             this.AddTable.ResumeLayout(false);
@@ -433,5 +525,11 @@
         private UTextBox ClassTextBox;
         private System.Windows.Forms.Button UpdateBTN;
         private System.Windows.Forms.Button ResetBTN;
+        private System.Windows.Forms.Button Back;
+        private System.Windows.Forms.Button Up;
+        private System.Windows.Forms.Label INlabel;
+        private System.Windows.Forms.Panel PagePanel;
+        private System.Windows.Forms.MaskedTextBox PageTextBox;
+        private System.Windows.Forms.MaskedTextBox AllPageTextBox;
     }
 }
