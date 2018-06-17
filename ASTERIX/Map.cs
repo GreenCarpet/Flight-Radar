@@ -34,6 +34,8 @@ namespace ASTERIX
         int SearchSplitterPosition = 100;
         bool SearchSplitterLock = false;
 
+        int RowOfPage = 100;
+
         /// <summary>
         /// Формирует текущий фильтр.
         /// </summary>
@@ -243,7 +245,7 @@ namespace ASTERIX
             if (Loadchcksum != newchcksum)
             {
                 Loadchcksum = newchcksum;
-                ShowDataGridView(true);
+                ShowDataGridView(true, Convert.ToInt32(PageTextBox.Text));
             }
         }
         /// <summary>
@@ -291,11 +293,11 @@ namespace ASTERIX
                 {
                     if (i == 0)
                     {
-                        delete += "Id = '" + Convert.ToString(LoadGridView[0, deleteCollection[i].Index].Value) + "'";
+                        delete += "Id = '" + Convert.ToString(LoadGridView["Id", deleteCollection[i].Index].Value) + "'";
                     }
                     else
                     {
-                        delete += " OR Id = '" + Convert.ToString(LoadGridView[0, deleteCollection[i].Index].Value) + "'";
+                        delete += " OR Id = '" + Convert.ToString(LoadGridView["Id", deleteCollection[i].Index].Value) + "'";
                     }
                 }
                 SQL.query(delete);
@@ -304,7 +306,18 @@ namespace ASTERIX
                 {
                     userDeleting = false;
                 }
-            }
+
+                int page = Convert.ToInt32(PageTextBox.Text);
+                if (page > 1)
+                {
+
+                    ShowDataGridView(false, page - 1);
+                }
+                else
+                {
+                    ShowDataGridView(false, 1);
+                }
+                }
 
             if (LoadGridView.SelectedRows.Count == 1)
             {
@@ -348,13 +361,46 @@ namespace ASTERIX
             }
         }
         /// <summary>
+        /// Фокус при наведении на LoadGridView.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LoadGridView_MouseHover(object sender, EventArgs e)
+        {
+            LoadGridView.Focus();
+        }
+        /// <summary>
         /// Отображает LoadGridView с учетом фильтра.
         /// </summary>
         /// <param name="autoPosition">Фиксация положения в таблице. Использовать только при добавлении данных в таблицу (когда предыдущие строки не изменяются).</param>
-        void ShowDataGridView(bool autoPosition)
+        void ShowDataGridView(bool autoPosition, int page)
         {
+            if (LoadGridView.InvokeRequired)
+            {
+                LoadGridView.BeginInvoke(new Action<bool, int>(ShowDataGridView), new object[] { autoPosition, page });
+                return;
+            }
             string f = filter();
-            UpdateDataGridView(SQL.query("SELECT Id, TargetAddress AS 'ICAO24', Mode3A, AircraftIdentification AS 'Позывной', Registration AS 'Бортовой', EmitterCategory AS 'Категория', TypeAircraft AS 'Тип', Class AS 'Класс', Country AS 'Государство', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытия', SAC, SIC, CAT, BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f), autoPosition);
+            double AllPage = Convert.ToDouble(SQL.query("SELECT COUNT(*) FROM [Load] " + f).Rows[0][0]) / RowOfPage;
+            if (AllPage > Math.Truncate(AllPage))
+            {
+                AllPage = Math.Truncate(AllPage) + 1;
+            }
+            if (AllPage == 0)
+            {
+                AllPage++;
+            }
+            UpdateDataGridView(SQL.query("SELECT TOP " + RowOfPage.ToString() + " * FROM (SELECT TOP " + Convert.ToString(page * RowOfPage) + " Id, TargetAddress AS 'ICAO24', Mode3A, AircraftIdentification AS 'Позывной', Registration AS 'Бортовой', EmitterCategory AS 'Категория', TypeAircraft AS 'Тип', Class AS 'Класс', Country AS 'Государство', AirportDepature AS 'Аэропорт вылета', AirportArrival AS 'Аэропорт прибытия', SAC, SIC, CAT, BeginTime AS 'Начало маршрута', EndTime AS 'Конец маршрута', Interval AS 'Продолжительность', Status AS 'Статус' FROM dbo.[Load] " + f + " ORDER BY [Id] desc) t ORDER BY [Id]"), autoPosition);
+            if (page == 1)
+            {
+                Back.Enabled = false;
+            }
+            if( AllPage > 1)
+            {
+                Up.Enabled = true;
+            }
+            PageTextBox.Text = page.ToString();
+            AllPageTextBox.Text = AllPage.ToString();
         }
         /// <summary>
         /// Обновляет данные в LoadGridView.
@@ -371,7 +417,7 @@ namespace ASTERIX
             int selectedId = 0;
                 int firstRow = 0;
                 int sortedColumn = 0;
-                ListSortDirection sortDirection = ListSortDirection.Ascending;
+                ListSortDirection sortDirection = ListSortDirection.Descending;
 
                 if (LoadGridView.Rows.Count > 0)
                 {
@@ -604,7 +650,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -616,7 +662,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -628,7 +674,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -640,7 +686,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -652,7 +698,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -664,7 +710,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -676,7 +722,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -688,7 +734,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -700,7 +746,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -725,7 +771,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -750,7 +796,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -775,7 +821,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -800,7 +846,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
 
@@ -812,7 +858,7 @@ namespace ASTERIX
         private void EndTimePicker_DropDown(object sender, EventArgs e)
         {
             EnableEndTimePicker = true;
-            ShowDataGridView(false);
+            ShowDataGridView(false, 1);
         }
         /// <summary>
         ///  Обновляет LoadGridView по клику на календарь.
@@ -824,7 +870,7 @@ namespace ASTERIX
             if (EnableEndTimePicker != EndTimePicker.Checked)
             {
                 EnableEndTimePicker = !EnableEndTimePicker;
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -836,7 +882,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
 
@@ -848,7 +894,7 @@ namespace ASTERIX
         private void BeginTimePicker_DropDown(object sender, EventArgs e)
         {
             EnableBeginTimePicker = true;
-            ShowDataGridView(false);
+            ShowDataGridView(false, 1);
         }
         /// <summary>
         /// Обновляет LoadGridView по клику на календарь.
@@ -860,7 +906,7 @@ namespace ASTERIX
             if (EnableBeginTimePicker != BeginTimePicker.Checked)
             {
                 EnableBeginTimePicker = !EnableBeginTimePicker;
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
         /// <summary>
@@ -872,7 +918,7 @@ namespace ASTERIX
         {
             if (!clearBox)
             {
-                ShowDataGridView(false);
+                ShowDataGridView(false, 1);
             }
         }
 
@@ -981,7 +1027,72 @@ namespace ASTERIX
             SICtextBox.Clear();
             ClassComboBox.TextField = null;
             clearBox = false;
-            ShowDataGridView(false);
+            ShowDataGridView(false, 1);
+        }
+
+        /// <summary>
+        /// Убирает фокус.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Back_MouseDown(object sender, MouseEventArgs e)
+        {
+            PagePanel.Focus();
+        }
+        private void Up_MouseDown(object sender, MouseEventArgs e)
+        {
+            PagePanel.Focus();
+        }
+
+        /// <summary>
+        /// Назад.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Back_MouseUp(object sender, MouseEventArgs e)
+        {
+            int page = Convert.ToInt32(PageTextBox.Text);
+            int maxpage = Convert.ToInt32(AllPageTextBox.Text);
+            if (page <= 2)
+            {
+                page = 1;
+                PageTextBox.Text = page.ToString();
+                Back.Enabled = false;
+            }
+            else
+            {
+                page--;
+            }
+            if (!Up.Enabled)
+            {
+                Up.Enabled = true;
+            }
+            ShowDataGridView(false, page);
+        }
+        /// <summary>
+        /// Вперед.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Up_MouseUp(object sender, MouseEventArgs e)
+        {
+            int page = Convert.ToInt32(PageTextBox.Text);
+            int maxpage = Convert.ToInt32(AllPageTextBox.Text);
+            if (page >= maxpage - 1)
+            {
+                page = maxpage;
+                PageTextBox.Text = page.ToString();
+                Up.Enabled = false;
+            }
+            else
+            {
+                page++;
+            }
+            if (!Back.Enabled)
+            {
+                Back.Enabled = true;
+            }
+            ShowDataGridView(false, page);
         }
 
         #endregion
@@ -1264,7 +1375,7 @@ namespace ASTERIX
             RoteGridViewInit();
 
             Loadchcksum = checksum("Load");
-            ShowDataGridView(false);
+            ShowDataGridView(false, 1);
 
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;

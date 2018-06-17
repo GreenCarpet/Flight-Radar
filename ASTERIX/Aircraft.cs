@@ -218,6 +218,10 @@ namespace ASTERIX
             {
                 Back.Enabled = false;
             }
+            if (AllPage > 1)
+            {
+                Up.Enabled = true;
+            }
             PageTextBox.Text = page.ToString();
             AllPageTextBox.Text = AllPage.ToString();
         }
