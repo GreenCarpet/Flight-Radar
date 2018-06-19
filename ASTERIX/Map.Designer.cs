@@ -751,6 +751,7 @@
             this.RouteGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.RouteGridView_CellMouseClick);
             this.RouteGridView.SelectionChanged += new System.EventHandler(this.RouteGridView_SelectionChanged);
             this.RouteGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RouteGridView_UserDeletingRow);
+            this.RouteGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RouteGridView_KeyDown);
             this.RouteGridView.MouseEnter += new System.EventHandler(this.RouteGridView_MouseEnter);
             // 
             // tabPage2

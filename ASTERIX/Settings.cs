@@ -17,7 +17,7 @@ namespace ASTERIX
 
         #region Modules
 
-        static DataTable modules;
+        public static DataTable modules;
 
         /// <summary>
         /// Возвращает байтовое представление файла.

@@ -1338,6 +1338,17 @@ namespace ASTERIX
         {
             new Graphics(Convert.ToString(RouteGridView.Rows[e.RowIndex].Cells["Id"].Value));
         }
+        private void RouteGridView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                e.Handled = true;
+                if (RouteGridView.CurrentRow != null)
+                {
+                    new Graphics(Convert.ToString(RouteGridView.CurrentRow.Cells["Id"].Value));
+                }
+            }
+        }
 
         /// <summary>
         /// Убирает фокус с кнопки.
@@ -1380,6 +1391,5 @@ namespace ASTERIX
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
         }
-
     }
 }

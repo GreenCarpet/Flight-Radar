@@ -312,7 +312,7 @@ namespace ASTERIX
         /// </summary>
         static void Thread()
         {
-            DataRow[] modules = Settings.GetModules().Select().Where(module => (bool)module["Status"] == true).ToArray();
+            DataRow[] modules = Settings.modules.Select().Where(module => (bool)module["Status"] == true).ToArray();
             for (int mod = 0; mod < modules.Length; mod++)
             {
                 ((Assembly)modules[mod]["Assembly"]).GetType("Module").GetMethod("Init").Invoke(null, null);
