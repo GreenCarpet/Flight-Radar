@@ -744,11 +744,13 @@
             this.RouteGridView.Margin = new System.Windows.Forms.Padding(0);
             this.RouteGridView.Name = "RouteGridView";
             this.RouteGridView.RowHeadersVisible = false;
-            this.RouteGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.RouteGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.RouteGridView.Size = new System.Drawing.Size(245, 291);
             this.RouteGridView.TabIndex = 0;
             this.RouteGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RouteGridView_CellDoubleClick);
             this.RouteGridView.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.RouteGridView_CellMouseClick);
+            this.RouteGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.RouteGridView_CurrentCellDirtyStateChanged);
+            this.RouteGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.RouteGridView_EditingControlShowing);
             this.RouteGridView.SelectionChanged += new System.EventHandler(this.RouteGridView_SelectionChanged);
             this.RouteGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RouteGridView_UserDeletingRow);
             this.RouteGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RouteGridView_KeyDown);

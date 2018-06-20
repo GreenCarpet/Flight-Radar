@@ -1093,6 +1093,9 @@ namespace ASTERIX
 
         int RouteSplitterPosition = 300;
         bool RouteSplitterLock = false;
+        Color DefaultColor = Color.Orange;
+        Color SelectedColor = Color.Blue;
+        Color[] colorsRoute = { Color.Red, Color.Blue, Color.Green };
         GMapOverlay routeOverlay = new GMapOverlay("route");
 
         /// <summary>
@@ -1145,8 +1148,10 @@ namespace ASTERIX
             colorColumn.Name = "Color";
             colorColumn.FlatStyle = FlatStyle.Flat;
 
-            colorColumn.Items.Add(Color.Orange);
-            colorColumn.Items.Add(Color.Blue);
+            foreach (Color clr in colorsRoute)
+            {
+                colorColumn.Items.Add("");
+            }
 
             DataGridViewCheckBoxColumn fixColumn = new DataGridViewCheckBoxColumn();
             fixColumn.Name = "Fix";
@@ -1162,7 +1167,6 @@ namespace ASTERIX
 
             RouteGridView.Columns["Id"].Visible = false;
             RouteGridView.Columns["CRC"].Visible = false;
-            RouteGridView.Columns["Color"].Visible = false;
             RouteGridView.Columns["Fix"].Visible = false;
 
             RouteGridView.Columns["TargetAddress"].ReadOnly = true;
@@ -1210,7 +1214,7 @@ namespace ASTERIX
         /// </summary>
         /// <param name="routeOverlay">overlay</param>
         /// <param name="xml">gpx</param>
-        GMapRoute GetRoute(GMapOverlay routeOverlay, string xml, string id)
+        GMapRoute GetRoute(string xml, string id)
         {
             GMapRoute r = null;
             gpxType gpx = GMaps.Instance.DeserializeGPX(xml);
@@ -1226,8 +1230,7 @@ namespace ASTERIX
                 }
 
                 r = new GMapRoute(PoinList, id);
-                r.Stroke.Width = 2;
-                r.Stroke.Color = Color.Orange;
+                r.Stroke = new Pen(DefaultColor, 2);
             }
 
             return r;
@@ -1247,9 +1250,15 @@ namespace ASTERIX
 
                 Action action = () =>
                 {
-                    GMapRoute route = GetRoute(routeOverlay, xml, Id);
+                    GMapRoute route = GetRoute(xml, Id);
                     routeOverlay.Routes.Add(route);
-                    RouteGridView.Rows.Add(new object[] { Id, CRC, TargetAddress, Color.Blue, false });
+
+                    RouteGridView.Rows.Add();
+                    RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["Id"].Value = Id;
+                    RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["CRC"].Value = CRC;
+                    RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["TargetAddress"].Value = TargetAddress;
+                    RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["Fix"].Value = false;
+                    ((DataGridViewComboBoxCell)(RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["Color"])).Value = "";
 
                     if (autoFocus)
                     {
@@ -1292,19 +1301,11 @@ namespace ASTERIX
                             if (routeOverlay.Routes[trek].Name == Id)
                             {
                                 string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
-                                GMapRoute newRoute = GetRoute(routeOverlay, xml, Id);
+                                GMapRoute newRoute = GetRoute(xml, Id);
 
-                                routeOverlay.Routes.Remove(routeOverlay.Routes[trek]);
-                                routeOverlay.Routes.Add(newRoute);
+                                routeOverlay.Routes[routeOverlay.Routes.IndexOf(routeOverlay.Routes[trek])].Points.Clear();
+                                routeOverlay.Routes[routeOverlay.Routes.IndexOf(routeOverlay.Routes[trek])].Points.AddRange(newRoute.Points);
 
-                                break;
-                            }
-                        }
-
-                        for (int trek = 0; trek < RouteGridView.Rows.Count; trek++)
-                        {
-                            if (RouteGridView["Id", trek].Value.ToString() == Id)
-                            {
                                 RouteGridView["CRC", trek].Value = NewCRC;
                                 break;
                             }
@@ -1318,20 +1319,14 @@ namespace ASTERIX
                         if (routeOverlay.Routes[trek].Name == Id)
                         {
                             routeOverlay.Routes.Remove(routeOverlay.Routes[trek]);
-                            break;
-                        }
-                    }
-
-                    for (int trek = 0; trek < RouteGridView.Rows.Count; trek++)
-                    {
-                        if (RouteGridView["Id", trek].Value.ToString() == Id)
-                        {
                             RouteGridView.Rows.Remove(RouteGridView.Rows[trek]);
                             break;
                         }
                     }
                 }
             }
+            routeOverlay.IsVisibile = false;
+            routeOverlay.IsVisibile = true;
         }
 
         /// <summary>
@@ -1366,8 +1361,12 @@ namespace ASTERIX
                     {
                         if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.SelectedRows[0].Cells["Id"].Value))
                         {
+                            routeOverlay.Routes[route].Stroke.Color = SelectedColor;
                             gMapControl.Position = routeOverlay.Routes[route].Points.Last();
-                            break;
+                        }
+                        else
+                        {
+                           // routeOverlay.Routes[route].Stroke.Color = (Color)RouteGridView["Color", route].Value;
                         }
                     }
                 }
@@ -1402,7 +1401,7 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void RouteGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            new Graphics(Convert.ToString(RouteGridView.Rows[e.RowIndex].Cells["Id"].Value));
+             new Graphics(Convert.ToString(RouteGridView.Rows[e.RowIndex].Cells["Id"].Value));
         }
         private void RouteGridView_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1456,6 +1455,48 @@ namespace ASTERIX
 
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
+        }
+
+        /// <summary>
+        /// Заполняет comboBox выборанным цветом.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RouteGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (RouteGridView.CurrentCell is DataGridViewComboBoxCell)
+            {
+               RouteGridView.CurrentCell.Style.BackColor = colorsRoute[((DataGridViewComboBoxEditingControl)RouteGridView.EditingControl).SelectedIndex];
+            }
+        }
+        /// <summary>
+        /// Добавляет обработчики событий к comboBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RouteGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (((DataGridView)sender).CurrentCell.OwningColumn.Name == "Color")
+            {
+                ComboBox cb = e.Control as ComboBox;
+                if (cb != null)
+                {
+                    cb.DrawItem += new System.Windows.Forms.DrawItemEventHandler(cb_DrawItem);
+                    cb.DrawMode = DrawMode.OwnerDrawFixed;
+                }
+            }
+        }
+        /// <summary>
+        /// Заполняет comboBox цветами.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cb_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            using (Brush br = new SolidBrush(colorsRoute[e.Index]))
+            {
+                e.Graphics.FillRectangle(br, e.Bounds);
+            }
         }
     }
 }
