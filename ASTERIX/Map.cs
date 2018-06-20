@@ -246,6 +246,7 @@ namespace ASTERIX
             {
                 Loadchcksum = newchcksum;
                 ShowDataGridView(true, Convert.ToInt32(PageTextBox.Text));
+                UpdateRoute(routeOverlay);
             }
         }
         /// <summary>
@@ -306,22 +307,13 @@ namespace ASTERIX
                 {
                     userDeleting = false;
                 }
-
-                int page = Convert.ToInt32(PageTextBox.Text);
-                if (page > 1)
-                {
-
-                    ShowDataGridView(false, page - 1);
-                }
-                else
-                {
-                    ShowDataGridView(false, 1);
-                }
-                }
+            }
 
             if (LoadGridView.SelectedRows.Count == 1)
             {
                 userDeleting = true;
+
+                UpdateRoute(routeOverlay);
             }
         }
         /// <summary>
@@ -1160,6 +1152,7 @@ namespace ASTERIX
             fixColumn.Name = "Fix";
 
             RouteGridView.Columns.Add("Id", "Id");
+            RouteGridView.Columns.Add("CRC", "CRC");
             RouteGridView.Columns.Add("TargetAddress", "TargetAddress");
             RouteGridView.Columns.Add(colorColumn);
             RouteGridView.Columns.Add(fixColumn);
@@ -1168,6 +1161,7 @@ namespace ASTERIX
             RouteGridView.Columns["TargetAddress"].ValueType = typeof(string);
 
             RouteGridView.Columns["Id"].Visible = false;
+            RouteGridView.Columns["CRC"].Visible = false;
             RouteGridView.Columns["Color"].Visible = false;
             RouteGridView.Columns["Fix"].Visible = false;
 
@@ -1216,8 +1210,9 @@ namespace ASTERIX
         /// </summary>
         /// <param name="routeOverlay">overlay</param>
         /// <param name="xml">gpx</param>
-        void AddRoute(GMapOverlay routeOverlay, string xml, string id)
+        GMapRoute GetRoute(GMapOverlay routeOverlay, string xml, string id)
         {
+            GMapRoute r = null;
             gpxType gpx = GMaps.Instance.DeserializeGPX(xml);
             rteType[] rte = gpx.rte;
 
@@ -1230,12 +1225,12 @@ namespace ASTERIX
                     PoinList.Add(point);
                 }
 
-                GMapRoute r = new GMapRoute(PoinList, id);
+                r = new GMapRoute(PoinList, id);
                 r.Stroke.Width = 2;
                 r.Stroke.Color = Color.Orange;
-
-                routeOverlay.Routes.Add(r);
             }
+
+            return r;
         }
         /// <summary>
         /// Отображает выбранный маршрут.
@@ -1247,12 +1242,14 @@ namespace ASTERIX
             try
             {
                 string Id = Convert.ToString(LoadGridView["Id", Convert.ToInt32(RowIndex)].Value);
+                string CRC = Convert.ToString(SQL.query("SELECT GETCHECKSUM() FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
                 string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
 
                 Action action = () =>
                 {
-                    AddRoute(routeOverlay, xml, Id);
-                    RouteGridView.Rows.Add(new object[] { Id, TargetAddress, Color.Blue, false });
+                    GMapRoute route = GetRoute(routeOverlay, xml, Id);
+                    routeOverlay.Routes.Add(route);
+                    RouteGridView.Rows.Add(new object[] { Id, CRC, TargetAddress, Color.Blue, false });
 
                     if (autoFocus)
                     {
@@ -1268,6 +1265,75 @@ namespace ASTERIX
                 MessageBox.Show(ex.Message);
             }
         }
+        /// <summary>
+        /// Обновляет маршрут.
+        /// </summary>
+        /// <param name="routeOverlay"></param>
+        void UpdateRoute(GMapOverlay routeOverlay)
+        {
+            if (gMapControl.InvokeRequired)
+            {
+                gMapControl.BeginInvoke(new Action<GMapOverlay>(UpdateRoute), new object[] { routeOverlay });
+                return;
+            }
+            for (int route = RouteGridView.Rows.Count - 1; route >= 0; route--)
+            {
+                string Id = Convert.ToString(RouteGridView["Id", route].Value);
+                string OldCRC = Convert.ToString(RouteGridView["CRC", route].Value);
+
+                if (Convert.ToInt32(SQL.query("SELECT COUNT(GPX) FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]) > 0)
+                {
+                    string NewCRC = Convert.ToString(SQL.query("SELECT GETCHECKSUM() FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
+
+                    if (OldCRC != NewCRC)
+                    {
+                        for (int trek = 0; trek < routeOverlay.Routes.Count; trek++)
+                        {
+                            if (routeOverlay.Routes[trek].Name == Id)
+                            {
+                                string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
+                                GMapRoute newRoute = GetRoute(routeOverlay, xml, Id);
+
+                                routeOverlay.Routes.Remove(routeOverlay.Routes[trek]);
+                                routeOverlay.Routes.Add(newRoute);
+
+                                break;
+                            }
+                        }
+
+                        for (int trek = 0; trek < RouteGridView.Rows.Count; trek++)
+                        {
+                            if (RouteGridView["Id", trek].Value.ToString() == Id)
+                            {
+                                RouteGridView["CRC", trek].Value = NewCRC;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    for (int trek = 0; trek < routeOverlay.Routes.Count; trek++)
+                    {
+                        if (routeOverlay.Routes[trek].Name == Id)
+                        {
+                            routeOverlay.Routes.Remove(routeOverlay.Routes[trek]);
+                            break;
+                        }
+                    }
+
+                    for (int trek = 0; trek < RouteGridView.Rows.Count; trek++)
+                    {
+                        if (RouteGridView["Id", trek].Value.ToString() == Id)
+                        {
+                            RouteGridView.Rows.Remove(RouteGridView.Rows[trek]);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Удаляет маршрут из overlay.
         /// </summary>
