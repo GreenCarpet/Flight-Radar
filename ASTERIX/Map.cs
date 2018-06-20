@@ -327,6 +327,7 @@ namespace ASTERIX
             {
                 new Thread(() =>
                 {
+                    ClearNotFixedRoute(routeOverlay);
                     openGPXThread(e.RowIndex, true);
                 }
                 ).Start();
@@ -346,6 +347,7 @@ namespace ASTERIX
                 {
                     new Thread(() =>
                     {
+                        ClearNotFixedRoute(routeOverlay);
                         openGPXThread(LoadGridView.CurrentRow.Index, true);
                     }
                     ).Start();
@@ -1095,7 +1097,7 @@ namespace ASTERIX
         bool RouteSplitterLock = false;
         static Color DefaultColor = Color.Orange;
         Color SelectedColor = Color.Blue;
-        Color[] colorsRoute = { DefaultColor, Color.Green, Color.Blue, Color.Gray };
+        Color[] colors = { Color.DarkRed, Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.DarkGreen, Color.Aqua, Color.Blue, Color.Purple, Color.DeepPink};
         GMapOverlay routeOverlay = new GMapOverlay("route");
 
         /// <summary>
@@ -1147,7 +1149,7 @@ namespace ASTERIX
             DataGridViewComboBoxColumn colorColumn = new DataGridViewComboBoxColumn();
             colorColumn.Name = "Color";
             colorColumn.FlatStyle = FlatStyle.Flat;
-            foreach (Color clr in colorsRoute)
+            foreach (Color clr in colors)
             {
                 colorColumn.Items.Add("");
             }
@@ -1349,6 +1351,26 @@ namespace ASTERIX
         }
 
         /// <summary>
+        /// Удаляет не зафиксированные маршруты.
+        /// </summary>
+        /// <param name="routeOverlay"></param>
+        void ClearNotFixedRoute(GMapOverlay routeOverlay)
+        {
+            if (RouteGridView.InvokeRequired)
+            {
+                RouteGridView.BeginInvoke(new Action<GMapOverlay>(ClearNotFixedRoute), new object[] { routeOverlay });
+                return;
+            }
+            for (int route = routeOverlay.Routes.Count - 1; route >= 0; route--)
+            {
+                if ((bool)(RouteGridView["Fix", route].Value) == false)
+                {
+                    routeOverlay.Routes.Remove(routeOverlay.Routes[route]);
+                    RouteGridView.Rows.Remove(RouteGridView.Rows[route]);
+                }
+            }
+        }
+        /// <summary>
         /// Удаляет маршрут из overlay.
         /// </summary>
         /// <param name="sender"></param>
@@ -1356,8 +1378,8 @@ namespace ASTERIX
         private void RouteGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
         {
             GMapRoute deleting = null;
-            for (int route = 0; route < routeOverlay.Routes.Count; route++) {
-
+            for (int route = 0; route < routeOverlay.Routes.Count; route++)
+            {
                 if (routeOverlay.Routes[route].Name == Convert.ToString(e.Row.Cells["Id"].Value))
                 {
                     deleting = routeOverlay.Routes[route];
@@ -1374,7 +1396,7 @@ namespace ASTERIX
         {
             Action action = () =>
             {
-                if (RouteGridView.SelectedRows.Count > 0)
+                if (RouteGridView.CurrentRow != null)
                 {
                     for (int route = 0; route < routeOverlay.Routes.Count; route++)
                     {
@@ -1453,6 +1475,7 @@ namespace ASTERIX
         private void toMapBTN_MouseDown(object sender, MouseEventArgs e)
         {
             new Thread(() => {
+                ClearNotFixedRoute(routeOverlay);
                 for (int RowIndex = 0; RowIndex < LoadGridView.Rows.Count; RowIndex++)
                 {
                     openGPXThread(RowIndex, false);
@@ -1469,7 +1492,7 @@ namespace ASTERIX
         {
             if (RouteGridView.CurrentCell is DataGridViewComboBoxCell)
             {
-                RouteGridView.CurrentCell.Style.BackColor = colorsRoute[((DataGridViewComboBoxEditingControl)RouteGridView.EditingControl).SelectedIndex];
+                RouteGridView.CurrentCell.Style.BackColor = colors[((DataGridViewComboBoxEditingControl)RouteGridView.EditingControl).SelectedIndex];
 
                 string Id = (string)RouteGridView.CurrentCell.OwningRow.Cells["Id"].Value;
                 UpdateColorRoute(routeOverlay, Id, RouteGridView.CurrentCell.Style.BackColor);
@@ -1499,7 +1522,7 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void cb_DrawItem(object sender, DrawItemEventArgs e)
         {
-            using (Brush br = new SolidBrush(colorsRoute[e.Index]))
+            using (Brush br = new SolidBrush(colors[e.Index]))
             {
                 e.Graphics.FillRectangle(br, e.Bounds);
             }
