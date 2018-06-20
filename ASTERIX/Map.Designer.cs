@@ -744,7 +744,7 @@
             this.RouteGridView.Margin = new System.Windows.Forms.Padding(0);
             this.RouteGridView.Name = "RouteGridView";
             this.RouteGridView.RowHeadersVisible = false;
-            this.RouteGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.RouteGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.RouteGridView.Size = new System.Drawing.Size(245, 291);
             this.RouteGridView.TabIndex = 0;
             this.RouteGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RouteGridView_CellDoubleClick);

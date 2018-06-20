@@ -1093,9 +1093,9 @@ namespace ASTERIX
 
         int RouteSplitterPosition = 300;
         bool RouteSplitterLock = false;
-        Color DefaultColor = Color.Orange;
+        static Color DefaultColor = Color.Orange;
         Color SelectedColor = Color.Blue;
-        Color[] colorsRoute = { Color.Red, Color.Blue, Color.Green };
+        Color[] colorsRoute = { DefaultColor, Color.Green, Color.Blue, Color.Gray };
         GMapOverlay routeOverlay = new GMapOverlay("route");
 
         /// <summary>
@@ -1147,7 +1147,6 @@ namespace ASTERIX
             DataGridViewComboBoxColumn colorColumn = new DataGridViewComboBoxColumn();
             colorColumn.Name = "Color";
             colorColumn.FlatStyle = FlatStyle.Flat;
-
             foreach (Color clr in colorsRoute)
             {
                 colorColumn.Items.Add("");
@@ -1162,12 +1161,11 @@ namespace ASTERIX
             RouteGridView.Columns.Add(colorColumn);
             RouteGridView.Columns.Add(fixColumn);
 
-            RouteGridView.Columns["Id"].ValueType = typeof(string);
-            RouteGridView.Columns["TargetAddress"].ValueType = typeof(string);
-
             RouteGridView.Columns["Id"].Visible = false;
             RouteGridView.Columns["CRC"].Visible = false;
-            RouteGridView.Columns["Fix"].Visible = false;
+
+            RouteGridView.Columns["Color"].Width = 20;
+            RouteGridView.Columns["Fix"].Width = 30;
 
             RouteGridView.Columns["TargetAddress"].ReadOnly = true;
         }
@@ -1259,6 +1257,7 @@ namespace ASTERIX
                     RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["TargetAddress"].Value = TargetAddress;
                     RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["Fix"].Value = false;
                     ((DataGridViewComboBoxCell)(RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["Color"])).Value = "";
+                    ((DataGridViewComboBoxCell)(RouteGridView.Rows[RouteGridView.Rows.Count - 1].Cells["Color"])).Style.BackColor = DefaultColor;
 
                     if (autoFocus)
                     {
@@ -1275,7 +1274,7 @@ namespace ASTERIX
             }
         }
         /// <summary>
-        /// Обновляет маршрут.
+        /// Обновляет маршруты.
         /// </summary>
         /// <param name="routeOverlay"></param>
         void UpdateRoute(GMapOverlay routeOverlay)
@@ -1328,6 +1327,26 @@ namespace ASTERIX
             routeOverlay.IsVisibile = false;
             routeOverlay.IsVisibile = true;
         }
+        /// <summary>
+        /// Изменяет цвет маршрута.
+        /// </summary>
+        /// <param name="routeOverlay"></param>
+        /// <param name="Id"></param>
+        /// <param name="newColor"></param>
+        void UpdateColorRoute(GMapOverlay routeOverlay, string Id, Color newColor)
+        {
+            for (int route = 0; route < routeOverlay.Routes.Count; route++)
+            {
+                if (routeOverlay.Routes[route].Name == Id)
+                {
+                    routeOverlay.Routes[route].Stroke.Color = newColor;
+
+                    routeOverlay.IsVisibile = false;
+                    routeOverlay.IsVisibile = true;
+                    break;
+                }
+            }
+        }
 
         /// <summary>
         /// Удаляет маршрут из overlay.
@@ -1359,16 +1378,18 @@ namespace ASTERIX
                 {
                     for (int route = 0; route < routeOverlay.Routes.Count; route++)
                     {
-                        if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.SelectedRows[0].Cells["Id"].Value))
+                        if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.CurrentRow.Cells["Id"].Value))
                         {
                             routeOverlay.Routes[route].Stroke.Color = SelectedColor;
                             gMapControl.Position = routeOverlay.Routes[route].Points.Last();
                         }
                         else
                         {
-                           // routeOverlay.Routes[route].Stroke.Color = (Color)RouteGridView["Color", route].Value;
+                            routeOverlay.Routes[route].Stroke.Color = ((DataGridViewComboBoxCell)(RouteGridView.Rows[route].Cells["Color"])).Style.BackColor;
                         }
                     }
+                    routeOverlay.IsVisibile = false;
+                    routeOverlay.IsVisibile = true;
                 }
             };
             gMapControl.BeginInvoke(action);
@@ -1439,24 +1460,6 @@ namespace ASTERIX
             }).Start();
         }
 
-        #endregion
-
-        public Map()
-        {
-            InitializeComponent();
-
-            HideSearchBTNInit();
-            HideRouteBTNInit();
-
-            RoteGridViewInit();
-
-            Loadchcksum = checksum("Load");
-            ShowDataGridView(false, 1);
-
-            UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
-            UpdateTimer.Enabled = true;
-        }
-
         /// <summary>
         /// Заполняет comboBox выборанным цветом.
         /// </summary>
@@ -1466,7 +1469,10 @@ namespace ASTERIX
         {
             if (RouteGridView.CurrentCell is DataGridViewComboBoxCell)
             {
-               RouteGridView.CurrentCell.Style.BackColor = colorsRoute[((DataGridViewComboBoxEditingControl)RouteGridView.EditingControl).SelectedIndex];
+                RouteGridView.CurrentCell.Style.BackColor = colorsRoute[((DataGridViewComboBoxEditingControl)RouteGridView.EditingControl).SelectedIndex];
+
+                string Id = (string)RouteGridView.CurrentCell.OwningRow.Cells["Id"].Value;
+                UpdateColorRoute(routeOverlay, Id, RouteGridView.CurrentCell.Style.BackColor);
             }
         }
         /// <summary>
@@ -1497,6 +1503,23 @@ namespace ASTERIX
             {
                 e.Graphics.FillRectangle(br, e.Bounds);
             }
+        }
+        #endregion
+
+        public Map()
+        {
+            InitializeComponent();
+
+            HideSearchBTNInit();
+            HideRouteBTNInit();
+
+            RoteGridViewInit();
+
+            Loadchcksum = checksum("Load");
+            ShowDataGridView(false, 1);
+
+            UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
+            UpdateTimer.Enabled = true;
         }
     }
 }
