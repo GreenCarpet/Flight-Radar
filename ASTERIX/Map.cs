@@ -1095,9 +1095,9 @@ namespace ASTERIX
 
         int RouteSplitterPosition = 300;
         bool RouteSplitterLock = false;
-        static Color DefaultColor = Color.Orange;
+        Color DefaultColor = Color.Orange;
         Color SelectedColor = Color.Blue;
-        Color[] colors = { Color.DarkRed, Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.DarkGreen, Color.Aqua, Color.Blue, Color.Purple, Color.DeepPink};
+        public static Color[] colors = { Color.DarkRed, Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.DarkGreen, Color.Aqua, Color.Blue, Color.Purple, Color.DeepPink};
         GMapOverlay routeOverlay = new GMapOverlay("route");
 
         /// <summary>
@@ -1544,5 +1544,6 @@ namespace ASTERIX
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
         }
+
     }
 }

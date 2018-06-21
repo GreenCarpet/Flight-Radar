@@ -16,6 +16,8 @@ namespace ASTERIX
         bool update = false;
         int RowOfPage = 1000;
 
+        bool clearBox = false;
+
         public Aircraft()
         {
             InitializeComponent();
@@ -297,49 +299,49 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void TargetAddressTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            if (search)
+            if ((search) && (!clearBox))
             {
                 ShowAircraftGridView(false, 1);
             }
         }
         private void ICAOTypeCodeTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            if (search)
+            if ((search) && (!clearBox))
             {
                 ShowAircraftGridView(false, 1);
             }
         }
         private void RegistrationTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            if (search)
+            if ((search) && (!clearBox))
             {
                 ShowAircraftGridView(false, 1);
             }
         }
         private void TypeAircraftTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            if (search)
+            if ((search) && (!clearBox))
             {
                 ShowAircraftGridView(false, 1);
             }
         }
         private void CountryTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            if (search)
+            if ((search) && (!clearBox))
             {
                 ShowAircraftGridView(false, 1);
             }
         }
         private void ClassTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            if (search)
+            if ((search) && (!clearBox))
             {
                 ShowAircraftGridView(false, 1);
             }
         }
         private void UserTextBox_ControlTextChanged(object sender, EventArgs e)
         {
-            if (search)
+            if ((search) && (!clearBox))
             {
                 ShowAircraftGridView(false, 1);
             }
@@ -569,7 +571,9 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void ResetBTN_MouseUp(object sender, MouseEventArgs e)
         {
+            clearBox = true;
             ClearTextBox();
+            clearBox = false;
             ShowAircraftGridView(true, 1);
         }
 

@@ -219,43 +219,6 @@ namespace ASTERIX
         }
 
         /// <summary>
-        /// Обработчик кнопки. Добавляет новый модуль.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AddModuleButton_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ImportModuleDialog.Filter = "DLL files (*.dll)|*.dll";
-                if (ImportModuleDialog.ShowDialog() == DialogResult.OK)
-                {
-                    if (AddModule(ImportModuleDialog.FileName))
-                    {
-                        LoadModules();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-        /// <summary>
-        /// Обработчик кнопки. Удаляет файл модуля.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DeleteModuleButton_Click(object sender, EventArgs e)
-        {
-            if (DeleteModule(ModulesGridView.SelectedRows[0]))
-            {
-                ModulesGridView.Rows.Remove(ModulesGridView.SelectedRows[0]);
-                ModulesGridView.Refresh();
-                UpdateModules(modules);
-            }
-        }
-        /// <summary>
         /// Обработчик клика под модулю. Изменяет состояние.
         /// </summary>
         /// <param name="sender"></param>
@@ -290,6 +253,58 @@ namespace ASTERIX
             UpdateModules(modules);
         }
 
+        /// <summary>
+        /// Убирает фокус.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddModuleBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            ModulesGridView.Focus();
+        }
+        private void DeleteModuleBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            ModulesGridView.Focus();
+        }
+
+        /// <summary>
+        /// Обработчик кнопки. Добавляет новый модуль.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddModuleBTN_MouseUp(object sender, MouseEventArgs e)
+        {
+            try
+            {
+                ImportModuleDialog.Filter = "DLL files (*.dll)|*.dll";
+                if (ImportModuleDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (AddModule(ImportModuleDialog.FileName))
+                    {
+                        LoadModules();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Обработчик кнопки. Удаляет файл модуля.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeleteModuleBTN_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (DeleteModule(ModulesGridView.SelectedRows[0]))
+            {
+                ModulesGridView.Rows.Remove(ModulesGridView.SelectedRows[0]);
+                ModulesGridView.Refresh();
+                UpdateModules(modules);
+            }
+        }
+
         void LoadModules()
         {
             modules = GetModules();
@@ -311,10 +326,84 @@ namespace ASTERIX
 
         #endregion
 
+        #region Setting
+
+        /// <summary>
+        /// Устанавливает курсор в начало.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpdateTextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            UpdateTextBox.SelectionStart = 0;
+        }
+        private void RoutOfPageTextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            RoutOfPageTextBox.SelectionStart = 0;
+        }
+        private void AircraftOfPageTextBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            AircraftOfPageTextBox.SelectionStart = 0;
+        }
+        
+        /// <summary>
+        /// Заполнение ComboBox цветами.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ColorNewRouteComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            using (Brush br = new SolidBrush(Map.colors[e.Index]))
+            {
+                e.Graphics.FillRectangle(br, e.Bounds);
+            }
+
+        }
+        private void ColorSelectedComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            using (Brush br = new SolidBrush(Map.colors[e.Index]))
+            {
+                e.Graphics.FillRectangle(br, e.Bounds);
+            }
+        }
+
+        /// <summary>
+        /// ВЫбор цвета нового маршрута.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ColorNewRouteComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ColorNewRouteComboBox.BackColor = Map.colors[ColorNewRouteComboBox.SelectedIndex];
+        }
+        /// <summary>
+        /// ВЫбор цвета выделенного маршрута.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ColorSelectedComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ColorSelectedComboBox.BackColor = Map.colors[ColorSelectedComboBox.SelectedIndex];
+        }
+
+        void LoadSettings()
+        {
+            foreach (Color clr in Map.colors)
+            {
+                ColorNewRouteComboBox.Items.Add("");
+                ColorSelectedComboBox.Items.Add("");
+            }
+            ColorNewRouteComboBox.DrawMode = DrawMode.OwnerDrawFixed;
+            ColorSelectedComboBox.DrawMode = DrawMode.OwnerDrawFixed;
+        }
+
+        #endregion
+
         public Settings()
         {
             InitializeComponent();
 
+            LoadSettings();
             LoadModules();
         }
     }

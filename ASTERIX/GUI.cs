@@ -227,7 +227,8 @@ namespace ASTERIX
                 Settings = new Settings();
                 SettingsPanel = Settings.Controls.Find("SettingsPanel", false).First();
 
-                MapBTN_Click(null, null);
+                //MapBTN_Click(null, null);
+                SettingsBTN_Click(null, null);
             }
           
         }

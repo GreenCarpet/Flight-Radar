@@ -205,7 +205,7 @@ namespace ASTERIX
             }
             if ((textBox.Text != MaskField) && (textBox.ForeColor == maskColor) && (textBox.Text != ""))
             {
-                if (MaskField != "")
+                if ((MaskField != "") && (MaskField != null))
                 {
                     textBox.Text = textBox.Text.Replace(MaskField, "");
                 }
