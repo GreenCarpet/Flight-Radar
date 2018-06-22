@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             this.SettingsPanel = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.BackBTN = new System.Windows.Forms.Button();
@@ -42,7 +42,7 @@
             this.AircraftOfPageTextBox = new System.Windows.Forms.MaskedTextBox();
             this.RoutOfPageLBL = new System.Windows.Forms.Label();
             this.SecondLBL = new System.Windows.Forms.Label();
-            this.RoutOfPageTextBox = new System.Windows.Forms.MaskedTextBox();
+            this.RouteOfPageTextBox = new System.Windows.Forms.MaskedTextBox();
             this.UpdateTextBox = new System.Windows.Forms.MaskedTextBox();
             this.UpdageLBL = new System.Windows.Forms.Label();
             this.PasswordTextBox = new ASTERIX.UTextBox();
@@ -94,7 +94,7 @@
             this.splitContainer1.Panel1.Controls.Add(this.AircraftOfPageTextBox);
             this.splitContainer1.Panel1.Controls.Add(this.RoutOfPageLBL);
             this.splitContainer1.Panel1.Controls.Add(this.SecondLBL);
-            this.splitContainer1.Panel1.Controls.Add(this.RoutOfPageTextBox);
+            this.splitContainer1.Panel1.Controls.Add(this.RouteOfPageTextBox);
             this.splitContainer1.Panel1.Controls.Add(this.UpdateTextBox);
             this.splitContainer1.Panel1.Controls.Add(this.UpdageLBL);
             this.splitContainer1.Panel1.Controls.Add(this.PasswordTextBox);
@@ -128,13 +128,15 @@
             this.BackBTN.TabStop = false;
             this.BackBTN.Text = "ОТМЕНИТЬ";
             this.BackBTN.UseVisualStyleBackColor = false;
+            this.BackBTN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BackBTN_MouseDown);
+            this.BackBTN.MouseUp += new System.Windows.Forms.MouseEventHandler(this.BackBTN_MouseUp);
             // 
             // ColorSelectedComboBox
             // 
             this.ColorSelectedComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ColorSelectedComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ColorSelectedComboBox.FormattingEnabled = true;
-            this.ColorSelectedComboBox.Location = new System.Drawing.Point(293, 296);
+            this.ColorSelectedComboBox.Location = new System.Drawing.Point(400, 296);
             this.ColorSelectedComboBox.Name = "ColorSelectedComboBox";
             this.ColorSelectedComboBox.Size = new System.Drawing.Size(47, 21);
             this.ColorSelectedComboBox.TabIndex = 13;
@@ -154,13 +156,15 @@
             this.SaveBTN.TabStop = false;
             this.SaveBTN.Text = "СОХРАНИТЬ";
             this.SaveBTN.UseVisualStyleBackColor = false;
+            this.SaveBTN.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SaveBTN_MouseDown);
+            this.SaveBTN.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SaveBTN_MouseUp);
             // 
             // ColorNewRouteComboBox
             // 
             this.ColorNewRouteComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ColorNewRouteComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ColorNewRouteComboBox.FormattingEnabled = true;
-            this.ColorNewRouteComboBox.Location = new System.Drawing.Point(293, 257);
+            this.ColorNewRouteComboBox.Location = new System.Drawing.Point(400, 257);
             this.ColorNewRouteComboBox.Name = "ColorNewRouteComboBox";
             this.ColorNewRouteComboBox.Size = new System.Drawing.Size(47, 21);
             this.ColorNewRouteComboBox.TabIndex = 13;
@@ -172,7 +176,7 @@
             this.ColorSelectedLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ColorSelectedLBL.AutoSize = true;
             this.ColorSelectedLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ColorSelectedLBL.Location = new System.Drawing.Point(78, 297);
+            this.ColorSelectedLBL.Location = new System.Drawing.Point(76, 297);
             this.ColorSelectedLBL.Name = "ColorSelectedLBL";
             this.ColorSelectedLBL.Size = new System.Drawing.Size(198, 16);
             this.ColorSelectedLBL.TabIndex = 12;
@@ -183,7 +187,7 @@
             this.ColorNewRouteLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ColorNewRouteLBL.AutoSize = true;
             this.ColorNewRouteLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ColorNewRouteLBL.Location = new System.Drawing.Point(78, 258);
+            this.ColorNewRouteLBL.Location = new System.Drawing.Point(76, 258);
             this.ColorNewRouteLBL.Name = "ColorNewRouteLBL";
             this.ColorNewRouteLBL.Size = new System.Drawing.Size(157, 16);
             this.ColorNewRouteLBL.TabIndex = 12;
@@ -194,7 +198,7 @@
             this.AircraftOfPageLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.AircraftOfPageLBL.AutoSize = true;
             this.AircraftOfPageLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AircraftOfPageLBL.Location = new System.Drawing.Point(78, 204);
+            this.AircraftOfPageLBL.Location = new System.Drawing.Point(76, 204);
             this.AircraftOfPageLBL.Name = "AircraftOfPageLBL";
             this.AircraftOfPageLBL.Size = new System.Drawing.Size(197, 16);
             this.AircraftOfPageLBL.TabIndex = 11;
@@ -205,7 +209,7 @@
             this.AircraftOfPageTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.AircraftOfPageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.AircraftOfPageTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AircraftOfPageTextBox.Location = new System.Drawing.Point(293, 204);
+            this.AircraftOfPageTextBox.Location = new System.Drawing.Point(400, 204);
             this.AircraftOfPageTextBox.Mask = "0000";
             this.AircraftOfPageTextBox.Name = "AircraftOfPageTextBox";
             this.AircraftOfPageTextBox.PromptChar = ' ';
@@ -219,7 +223,7 @@
             this.RoutOfPageLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.RoutOfPageLBL.AutoSize = true;
             this.RoutOfPageLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.RoutOfPageLBL.Location = new System.Drawing.Point(78, 167);
+            this.RoutOfPageLBL.Location = new System.Drawing.Point(76, 167);
             this.RoutOfPageLBL.Name = "RoutOfPageLBL";
             this.RoutOfPageLBL.Size = new System.Drawing.Size(208, 16);
             this.RoutOfPageLBL.TabIndex = 9;
@@ -230,32 +234,32 @@
             this.SecondLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.SecondLBL.AutoSize = true;
             this.SecondLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.SecondLBL.Location = new System.Drawing.Point(356, 119);
+            this.SecondLBL.Location = new System.Drawing.Point(463, 119);
             this.SecondLBL.Name = "SecondLBL";
             this.SecondLBL.Size = new System.Drawing.Size(30, 16);
             this.SecondLBL.TabIndex = 8;
             this.SecondLBL.Text = "сек";
             // 
-            // RoutOfPageTextBox
+            // RouteOfPageTextBox
             // 
-            this.RoutOfPageTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.RoutOfPageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.RoutOfPageTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.RoutOfPageTextBox.Location = new System.Drawing.Point(293, 167);
-            this.RoutOfPageTextBox.Mask = "0000";
-            this.RoutOfPageTextBox.Name = "RoutOfPageTextBox";
-            this.RoutOfPageTextBox.PromptChar = ' ';
-            this.RoutOfPageTextBox.Size = new System.Drawing.Size(47, 20);
-            this.RoutOfPageTextBox.TabIndex = 7;
-            this.RoutOfPageTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.RoutOfPageTextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RoutOfPageTextBox_MouseDown);
+            this.RouteOfPageTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.RouteOfPageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.RouteOfPageTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.RouteOfPageTextBox.Location = new System.Drawing.Point(400, 167);
+            this.RouteOfPageTextBox.Mask = "0000";
+            this.RouteOfPageTextBox.Name = "RouteOfPageTextBox";
+            this.RouteOfPageTextBox.PromptChar = ' ';
+            this.RouteOfPageTextBox.Size = new System.Drawing.Size(47, 20);
+            this.RouteOfPageTextBox.TabIndex = 7;
+            this.RouteOfPageTextBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.RouteOfPageTextBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.RoutOfPageTextBox_MouseDown);
             // 
             // UpdateTextBox
             // 
             this.UpdateTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.UpdateTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.UpdateTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.UpdateTextBox.Location = new System.Drawing.Point(293, 119);
+            this.UpdateTextBox.Location = new System.Drawing.Point(400, 119);
             this.UpdateTextBox.Mask = "0000";
             this.UpdateTextBox.Name = "UpdateTextBox";
             this.UpdateTextBox.PromptChar = ' ';
@@ -269,7 +273,7 @@
             this.UpdageLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.UpdageLBL.AutoSize = true;
             this.UpdageLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.UpdageLBL.Location = new System.Drawing.Point(78, 119);
+            this.UpdageLBL.Location = new System.Drawing.Point(76, 119);
             this.UpdageLBL.Name = "UpdageLBL";
             this.UpdageLBL.Size = new System.Drawing.Size(194, 16);
             this.UpdageLBL.TabIndex = 6;
@@ -282,7 +286,7 @@
             this.PasswordTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.PasswordTextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Normal;
             this.PasswordTextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.PasswordTextBox.Location = new System.Drawing.Point(402, 70);
+            this.PasswordTextBox.Location = new System.Drawing.Point(400, 70);
             this.PasswordTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.PasswordTextBox.MaskColoField = System.Drawing.Color.Gray;
             this.PasswordTextBox.MaskField = null;
@@ -300,7 +304,7 @@
             this.PasswordLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.PasswordLBL.AutoSize = true;
             this.PasswordLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.PasswordLBL.Location = new System.Drawing.Point(329, 70);
+            this.PasswordLBL.Location = new System.Drawing.Point(327, 70);
             this.PasswordLBL.Name = "PasswordLBL";
             this.PasswordLBL.Size = new System.Drawing.Size(57, 16);
             this.PasswordLBL.TabIndex = 4;
@@ -313,7 +317,7 @@
             this.NameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.NameTextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Normal;
             this.NameTextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.NameTextBox.Location = new System.Drawing.Point(191, 70);
+            this.NameTextBox.Location = new System.Drawing.Point(189, 70);
             this.NameTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.NameTextBox.MaskColoField = System.Drawing.Color.Gray;
             this.NameTextBox.MaskField = null;
@@ -331,7 +335,7 @@
             this.NameLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.NameLBL.AutoSize = true;
             this.NameLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.NameLBL.Location = new System.Drawing.Point(95, 70);
+            this.NameLBL.Location = new System.Drawing.Point(93, 70);
             this.NameLBL.Name = "NameLBL";
             this.NameLBL.Size = new System.Drawing.Size(75, 16);
             this.NameLBL.TabIndex = 2;
@@ -344,7 +348,7 @@
             this.ServerNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.ServerNameTextBox.CharacterCasingField = System.Windows.Forms.CharacterCasing.Normal;
             this.ServerNameTextBox.ClearBTNBackColorField = System.Drawing.Color.LightGray;
-            this.ServerNameTextBox.Location = new System.Drawing.Point(191, 34);
+            this.ServerNameTextBox.Location = new System.Drawing.Point(189, 34);
             this.ServerNameTextBox.Margin = new System.Windows.Forms.Padding(0);
             this.ServerNameTextBox.MaskColoField = System.Drawing.Color.Gray;
             this.ServerNameTextBox.MaskField = "НАПРИМЕР: SERVER-OTO\\SQLEXPRESS";
@@ -362,7 +366,7 @@
             this.ServerNameLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ServerNameLBL.AutoSize = true;
             this.ServerNameLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ServerNameLBL.Location = new System.Drawing.Point(78, 34);
+            this.ServerNameLBL.Location = new System.Drawing.Point(76, 34);
             this.ServerNameLBL.Name = "ServerNameLBL";
             this.ServerNameLBL.Size = new System.Drawing.Size(92, 16);
             this.ServerNameLBL.TabIndex = 0;
@@ -374,7 +378,7 @@
             this.DeleteModuleBTN.BackColor = System.Drawing.Color.LightSlateGray;
             this.DeleteModuleBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.DeleteModuleBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.DeleteModuleBTN.Location = new System.Drawing.Point(362, 513);
+            this.DeleteModuleBTN.Location = new System.Drawing.Point(365, 513);
             this.DeleteModuleBTN.Name = "DeleteModuleBTN";
             this.DeleteModuleBTN.Size = new System.Drawing.Size(126, 44);
             this.DeleteModuleBTN.TabIndex = 10;
@@ -390,7 +394,7 @@
             this.AddModuleBTN.BackColor = System.Drawing.Color.LightSlateGray;
             this.AddModuleBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AddModuleBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AddModuleBTN.Location = new System.Drawing.Point(160, 513);
+            this.AddModuleBTN.Location = new System.Drawing.Point(163, 513);
             this.AddModuleBTN.Name = "AddModuleBTN";
             this.AddModuleBTN.Size = new System.Drawing.Size(126, 44);
             this.AddModuleBTN.TabIndex = 9;
@@ -410,24 +414,24 @@
             this.ModulesGridView.BackgroundColor = System.Drawing.SystemColors.Control;
             this.ModulesGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ModulesGridView.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.ModulesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.ModulesGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.ModulesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.ModulesGridView.DefaultCellStyle = dataGridViewCellStyle8;
-            this.ModulesGridView.Location = new System.Drawing.Point(82, 34);
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.ModulesGridView.DefaultCellStyle = dataGridViewCellStyle10;
+            this.ModulesGridView.Location = new System.Drawing.Point(85, 34);
             this.ModulesGridView.MultiSelect = false;
             this.ModulesGridView.Name = "ModulesGridView";
             this.ModulesGridView.ReadOnly = true;
@@ -479,7 +483,7 @@
         private System.Windows.Forms.MaskedTextBox AircraftOfPageTextBox;
         private System.Windows.Forms.Label RoutOfPageLBL;
         private System.Windows.Forms.Label SecondLBL;
-        private System.Windows.Forms.MaskedTextBox RoutOfPageTextBox;
+        private System.Windows.Forms.MaskedTextBox RouteOfPageTextBox;
         private System.Windows.Forms.MaskedTextBox UpdateTextBox;
         private System.Windows.Forms.Button BackBTN;
         private System.Windows.Forms.ComboBox ColorSelectedComboBox;

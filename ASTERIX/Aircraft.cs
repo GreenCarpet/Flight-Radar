@@ -14,13 +14,22 @@ namespace ASTERIX
         int Aircraftchcksum = 0;
         bool search = false;
         bool update = false;
-        int RowOfPage = 1000;
+        static int RowOfPage;
 
         bool clearBox = false;
 
         public Aircraft()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Инициализирует переменные.
+        /// </summary>
+        /// <param name="AircraftOfPage">Кол-во привязок на странице.</param>
+        public static void Init(int AircraftOfPage)
+        {
+            RowOfPage = AircraftOfPage;
         }
 
         /// <summary>
@@ -289,6 +298,18 @@ namespace ASTERIX
                     }
                     AircraftGridView.FirstDisplayedScrollingRowIndex = firstRow;
                 }
+            }
+        }
+        /// <summary>
+        /// Обновляет Grid при установке видимости в true.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AircraftPanel_VisibleChanged(object sender, EventArgs e)
+        {
+            if (AircraftPanel.Visible)
+            {
+                ShowAircraftGridView(true, Convert.ToInt32(PageTextBox.Text));
             }
         }
 
@@ -627,6 +648,5 @@ namespace ASTERIX
             }
             ShowAircraftGridView(false, page);
         }
-
     }
     }

@@ -29,12 +29,12 @@ namespace ASTERIX
         bool EnableEndTimePicker = false;
         bool userDeleting = true;
 
-        int UPDATEGRIDMILLISECONDS = 5000;
+        static int UPDATEGRIDMILLISECONDS;
 
         int SearchSplitterPosition = 100;
         bool SearchSplitterLock = false;
 
-        int RowOfPage = 100;
+        static int RowOfPage;
 
         /// <summary>
         /// Формирует текущий фильтр.
@@ -465,6 +465,21 @@ namespace ASTERIX
                         LoadGridView.FirstDisplayedScrollingRowIndex = firstRow;
                     }
                 }
+        }
+        /// <summary>
+        /// Обновляет Grid при установке видимости в true.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MapPanel_VisibleChanged(object sender, EventArgs e)
+        {
+            if (MapPanel.Visible)
+            {
+                ShowDataGridView(true, Convert.ToInt32(PageTextBox.Text));
+
+                UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
+                UpdateTimer.Enabled = true;
+            }
         }
 
         /// <summary>
@@ -1095,8 +1110,8 @@ namespace ASTERIX
 
         int RouteSplitterPosition = 300;
         bool RouteSplitterLock = false;
-        Color DefaultColor = Color.Orange;
-        Color SelectedColor = Color.Blue;
+        static Color DefaultColor;
+        static Color SelectedColor;
         public static Color[] colors = { Color.DarkRed, Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.DarkGreen, Color.Aqua, Color.Blue, Color.Purple, Color.DeepPink};
         GMapOverlay routeOverlay = new GMapOverlay("route");
 
@@ -1543,6 +1558,22 @@ namespace ASTERIX
 
             UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
             UpdateTimer.Enabled = true;
+        }
+
+        /// <summary>
+        /// Инициализирует переменные.
+        /// </summary>
+        /// <param name="UpdateScreen">Частота обновления данных.</param>
+        /// <param name="RouteOfPage">Число маршрутов на странице.</param>
+        /// <param name="ColorNewRoute">Цвет нового маршрута.</param>
+        /// <param name="ColorSelected">Цвет выделенного маршрута.</param>
+        public static void Init(int UpdateScreen, int RouteOfPage, Color ColorNewRoute, Color ColorSelected)
+        {
+            UPDATEGRIDMILLISECONDS = UpdateScreen * 1000;
+            RowOfPage = RouteOfPage;
+
+            DefaultColor = ColorNewRoute;
+            SelectedColor = ColorSelected;
         }
 
     }

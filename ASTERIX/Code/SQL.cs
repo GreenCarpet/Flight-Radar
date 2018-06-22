@@ -12,6 +12,23 @@ namespace ASTERIX
         static SqlConnection sqlConnection1;
 
         static object locker = new object();
+
+        static string Server;
+        static string User;
+        static string Password;
+
+        /// <summary>
+        /// Инициализирует переменные.
+        /// </summary>
+        /// <param name="ServerName">Имя сервера.</param>
+        /// <param name="UserName">Имя входа.</param>
+        /// <param name="Passwrd">Пароль.</param>
+        public static void Init(string ServerName, string UserName, string Passwrd)
+        {
+            Server = ServerName;
+            User = UserName;
+            Password = Passwrd;
+        }
         /// <summary>
         /// Устанавливает соединение с БД.
         /// </summary>
@@ -21,7 +38,7 @@ namespace ASTERIX
             try
             {
                 sqlConnection1 =
-              new SqlConnection("Data Source=SERVER-OTO\\SQLEXPRESS;Initial Catalog=ADS-B;Persist Security Info=True;User ID=Adm;Password=Analiz2");
+              new SqlConnection("Data Source=" + Server + ";Initial Catalog=ADS-B;Persist Security Info=True;User ID=" + User + ";Password=" + Password);
                 sqlConnection1.Open();
             }
             catch (SqlException ex)

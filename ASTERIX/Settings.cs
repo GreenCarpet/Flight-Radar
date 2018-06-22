@@ -14,7 +14,6 @@ namespace ASTERIX
 {
     public partial class Settings : Form
     {
-
         #region Modules
 
         public static DataTable modules;
@@ -328,6 +327,119 @@ namespace ASTERIX
 
         #region Setting
 
+        public static string ServerName;
+        public static string UserName;
+        public static string Password;
+        public static int UpdateScreen;
+        public static int RouteOfPage;
+        public static int AircraftOfPage;
+        public static Color ColorNewRoute;
+        public static Color ColorSelected;
+
+        /// <summary>
+        /// Загружает пользовательские настройки.
+        /// </summary>
+        void GetSettings()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("Settings.xml");
+
+            ServerName = doc.GetElementsByTagName("ServerName")[0].FirstChild.Value;
+            UserName = doc.GetElementsByTagName("Name")[0].FirstChild.Value;
+            Password = doc.GetElementsByTagName("Password")[0].FirstChild.Value;
+            UpdateScreen = Convert.ToInt32(doc.GetElementsByTagName("Update")[0].FirstChild.Value);
+            RouteOfPage = Convert.ToInt32(doc.GetElementsByTagName("RouteOfPage")[0].FirstChild.Value);
+            AircraftOfPage = Convert.ToInt32(doc.GetElementsByTagName("AircraftOfPage")[0].FirstChild.Value);         
+            ColorNewRoute = Color.FromName(doc.GetElementsByTagName("ColorNewRoute")[0].FirstChild.Value);
+            ColorSelected = Color.FromName(doc.GetElementsByTagName("ColorSelected")[0].FirstChild.Value);
+
+            ServerNameTextBox.TextField = ServerName;
+            NameTextBox.TextField = UserName;
+            PasswordTextBox.TextField = Password;
+            UpdateTextBox.Text = UpdateScreen.ToString();
+            RouteOfPageTextBox.Text = RouteOfPage.ToString();
+            AircraftOfPageTextBox.Text = AircraftOfPage.ToString();
+            ColorNewRouteComboBox.BackColor = ColorNewRoute;
+            ColorSelectedComboBox.BackColor = ColorSelected;
+
+            Aircraft.Init(AircraftOfPage);
+            Map.Init(UpdateScreen, RouteOfPage, ColorNewRoute, ColorSelected);
+            SQL.Init(ServerName, UserName, Password);
+        }
+        /// <summary>
+        /// Выгружает пользовательские настройки.
+        /// </summary>
+        void SetSettings()
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load("Settings.xml");
+
+            ServerName = ServerNameTextBox.TextField;
+            UserName = NameTextBox.TextField;
+            Password = PasswordTextBox.TextField;
+            UpdateScreen = Convert.ToInt32(UpdateTextBox.Text);
+            RouteOfPage = Convert.ToInt32(RouteOfPageTextBox.Text);
+            AircraftOfPage = Convert.ToInt32(AircraftOfPageTextBox.Text);
+            ColorNewRoute = ColorNewRouteComboBox.BackColor;
+            ColorSelected = ColorSelectedComboBox.BackColor;
+
+            doc.GetElementsByTagName("ServerName")[0].FirstChild.Value = ServerName;
+            doc.GetElementsByTagName("Name")[0].FirstChild.Value = UserName;
+            doc.GetElementsByTagName("Password")[0].FirstChild.Value = Password;
+            doc.GetElementsByTagName("Update")[0].FirstChild.Value = UpdateScreen.ToString();
+            doc.GetElementsByTagName("RouteOfPage")[0].FirstChild.Value = RouteOfPage.ToString();
+            doc.GetElementsByTagName("AircraftOfPage")[0].FirstChild.Value = AircraftOfPage.ToString();
+            doc.GetElementsByTagName("ColorNewRoute")[0].FirstChild.Value = ColorNewRoute.Name;
+            doc.GetElementsByTagName("ColorSelected")[0].FirstChild.Value = ColorSelected.Name;
+            
+            Aircraft.Init(AircraftOfPage);
+            Map.Init(UpdateScreen, RouteOfPage, ColorNewRoute, ColorSelected);
+            SQL.Init(ServerName, UserName, Password);
+
+            doc.Save("Settings.xml");
+        }
+
+        /// <summary>
+        /// Убирает фокус.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SaveBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            SettingsPanel.Focus();
+        }
+        private void BackBTN_MouseDown(object sender, MouseEventArgs e)
+        {
+            SettingsPanel.Focus();
+        }
+
+        /// <summary>
+        /// Кнопка "Сохранить"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SaveBTN_MouseUp(object sender, MouseEventArgs e)
+        {
+            SetSettings();
+            MessageBox.Show("Сохранено");
+        }
+        /// <summary>
+        /// Кнопка "Отменить"
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BackBTN_MouseUp(object sender, MouseEventArgs e)
+        {
+            ServerNameTextBox.TextField = ServerName;
+            NameTextBox.TextField = UserName;
+            PasswordTextBox.TextField = Password;
+            UpdateTextBox.Text = UpdateScreen.ToString();
+            RouteOfPageTextBox.Text = RouteOfPage.ToString();
+            AircraftOfPageTextBox.Text = AircraftOfPage.ToString();
+            ColorNewRouteComboBox.BackColor = ColorNewRoute;
+            ColorSelectedComboBox.BackColor = ColorSelected;
+        }
+
         /// <summary>
         /// Устанавливает курсор в начало.
         /// </summary>
@@ -339,7 +451,7 @@ namespace ASTERIX
         }
         private void RoutOfPageTextBox_MouseDown(object sender, MouseEventArgs e)
         {
-            RoutOfPageTextBox.SelectionStart = 0;
+            RouteOfPageTextBox.SelectionStart = 0;
         }
         private void AircraftOfPageTextBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -386,7 +498,10 @@ namespace ASTERIX
             ColorSelectedComboBox.BackColor = Map.colors[ColorSelectedComboBox.SelectedIndex];
         }
 
-        void LoadSettings()
+        /// <summary>
+        /// Инициализация настроек.
+        /// </summary>
+        void InitSettings()
         {
             foreach (Color clr in Map.colors)
             {
@@ -403,8 +518,11 @@ namespace ASTERIX
         {
             InitializeComponent();
 
-            LoadSettings();
+            InitSettings();
             LoadModules();
+
+            GetSettings();
         }
+
     }
 }

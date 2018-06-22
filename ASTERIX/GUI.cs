@@ -215,6 +215,8 @@ namespace ASTERIX
         /// </summary>
         public GUI()
         {
+            Settings = new Settings();
+
             if (SQL.Connect())
             {
                 InitializeComponent();
@@ -224,13 +226,10 @@ namespace ASTERIX
                 MapPanel = Map.Controls.Find("MapPanel", false).First();
                 Aircraft = new Aircraft();
                 AircraftPanel = Aircraft.Controls.Find("AircraftPanel", false).First();
-                Settings = new Settings();
                 SettingsPanel = Settings.Controls.Find("SettingsPanel", false).First();
 
-                //MapBTN_Click(null, null);
-                SettingsBTN_Click(null, null);
+                MapBTN_Click(null, null);
             }
-          
         }
     }
 }

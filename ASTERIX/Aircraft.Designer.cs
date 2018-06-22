@@ -73,6 +73,7 @@
             this.AircraftPanel.Name = "AircraftPanel";
             this.AircraftPanel.Size = new System.Drawing.Size(1200, 600);
             this.AircraftPanel.TabIndex = 1;
+            this.AircraftPanel.VisibleChanged += new System.EventHandler(this.AircraftPanel_VisibleChanged);
             // 
             // AircraftContainer
             // 
