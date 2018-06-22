@@ -30,8 +30,8 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GUI));
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.tabPanel = new System.Windows.Forms.Panel();
             this.tabTable = new System.Windows.Forms.TableLayoutPanel();
             this.AircraftBTN = new System.Windows.Forms.Label();
@@ -63,9 +63,9 @@
             this.progressBar1.TabIndex = 1;
             this.progressBar1.Visible = false;
             // 
-            // openFileDialog1
+            // openFileDialog
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog.FileName = "openFileDialog1";
             // 
             // tabPanel
             // 
@@ -277,8 +277,8 @@
 
         #endregion
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Panel tabPanel;
         private System.Windows.Forms.TableLayoutPanel tabTable;
         private System.Windows.Forms.PictureBox ScanPicture;

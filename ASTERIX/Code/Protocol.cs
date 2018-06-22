@@ -13,7 +13,7 @@ namespace ASTERIX
 {
     class Protocol
     {
-        static GUI gui;
+        public static GUI gui;
 
         static Stream binStream;
         public static Thread mythread;
@@ -34,14 +34,6 @@ namespace ASTERIX
             // return Convert.ToString(query("SELECT CONVERT(DATETIME, SWITCHOFFSET(TODATETIMEOFFSET(DATEADD(SECOND, 10, CONVERT(DATETIME, CONVERT(DATE, GETUTCDATE()))), '+00:00'), DATENAME(TZ, SYSDATETIMEOFFSET())))").Rows[0][0]);    
         }
 
-        /// <summary>
-        /// Инициализирует переменные, необходимые для вызова функций текущего класса.
-        /// </summary>
-        /// <param name="guiForm">Основная форма.</param>
-        public static void Init(GUI guiForm)
-        {
-            gui = guiForm;
-        }
         /// <summary>
         /// Запускает обработку протокола.
         /// </summary>

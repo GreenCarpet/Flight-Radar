@@ -13,22 +13,10 @@ namespace ASTERIX
 
         static object locker = new object();
 
-        static string Server;
-        static string User;
-        static string Password;
+        public static string Server;
+        public static string User;
+        public static string Password;
 
-        /// <summary>
-        /// Инициализирует переменные.
-        /// </summary>
-        /// <param name="ServerName">Имя сервера.</param>
-        /// <param name="UserName">Имя входа.</param>
-        /// <param name="Passwrd">Пароль.</param>
-        public static void Init(string ServerName, string UserName, string Passwrd)
-        {
-            Server = ServerName;
-            User = UserName;
-            Password = Passwrd;
-        }
         /// <summary>
         /// Устанавливает соединение с БД.
         /// </summary>
@@ -44,7 +32,6 @@ namespace ASTERIX
             catch (SqlException ex)
             {
                 MessageBox.Show(ex.Message);
-                Environment.Exit(0);
             }
             if (sqlConnection1.State == ConnectionState.Open)
             {

@@ -15,6 +15,7 @@ namespace ASTERIX
         Map Map;
         Aircraft Aircraft;
         Settings Settings;
+        Connect Connect;
         Control MapPanel, AircraftPanel, SettingsPanel;
 
         public bool start = false;
@@ -64,13 +65,13 @@ namespace ASTERIX
         {
             if (start == false)
             {
-                  if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+                  if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                   {
                     tabTable.RowStyles[1].Height = 15;
                     progressBar1.Visible = true;
                     start = true;
 
-                    Protocol.START(folderBrowserDialog1.SelectedPath, "*.sig");
+                    Protocol.START(folderBrowserDialog.SelectedPath, "*.sig");
                   }    
             }
 
@@ -117,14 +118,19 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void MapBTN_Click(object sender, EventArgs e)
         {
-            ClearBackColor();
+            if (!pagePanel.Controls.Contains(MapPanel))
+            {
+                ClearBackColor();
 
-            MapPicture.BackColor = Color.CornflowerBlue;
-            MapBTN.BackColor = Color.CornflowerBlue;
-            ColorPanel.BackColor = Color.CornflowerBlue;
+                MapPicture.BackColor = Color.CornflowerBlue;
+                MapBTN.BackColor = Color.CornflowerBlue;
+                ColorPanel.BackColor = Color.CornflowerBlue;
 
-            pagePanel.Controls.Clear();
-            pagePanel.Controls.Add(MapPanel);
+                pagePanel.Controls.Clear();
+                pagePanel.Controls.Add(MapPanel);
+
+                Map.UpdateVariable();
+            }
         }
         /// <summary>
         /// Выбор меню "Привязки".
@@ -142,16 +148,21 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void AircraftBTN_Click(object sender, EventArgs e)
         {
-            ClearBackColor();
+            if (!pagePanel.Controls.Contains(AircraftPanel))
+            {
+                ClearBackColor();
 
-            AircraftPicture.BackColor = Color.LightSeaGreen;
-            AircraftBTN.BackColor = Color.LightSeaGreen;
-            ColorPanel.BackColor = Color.LightSeaGreen;
+                AircraftPicture.BackColor = Color.LightSeaGreen;
+                AircraftBTN.BackColor = Color.LightSeaGreen;
+                ColorPanel.BackColor = Color.LightSeaGreen;
 
-            Aircraft.UpdateGrid();
+                Aircraft.UpdateGrid();
 
-            pagePanel.Controls.Clear();
-            pagePanel.Controls.Add(AircraftPanel);
+                pagePanel.Controls.Clear();
+                pagePanel.Controls.Add(AircraftPanel);
+
+                Aircraft.UpdateVariable();
+            }
         }
         /// <summary>
         /// Выбор меню "Настройки".
@@ -169,14 +180,17 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void SettingsBTN_Click(object sender, EventArgs e)
         {
-            ClearBackColor();
+            if (!pagePanel.Controls.Contains(SettingsPanel))
+            {
+                ClearBackColor();
 
-            SettingsPicture.BackColor = Color.DarkGray;
-            SettingsBTN.BackColor = Color.DarkGray;
-            ColorPanel.BackColor = Color.DarkGray;
+                SettingsPicture.BackColor = Color.DarkGray;
+                SettingsBTN.BackColor = Color.DarkGray;
+                ColorPanel.BackColor = Color.DarkGray;
 
-            pagePanel.Controls.Clear();
-            pagePanel.Controls.Add(SettingsPanel);
+                pagePanel.Controls.Clear();
+                pagePanel.Controls.Add(SettingsPanel);
+            }
         }
 
         /// <summary>
@@ -215,20 +229,30 @@ namespace ASTERIX
         /// </summary>
         public GUI()
         {
-            Settings = new Settings();
-
-            if (SQL.Connect())
+            Connect = new Connect();
+            bool con = false;
+            while (!con)
             {
-                InitializeComponent();
-                Protocol.Init(this);
+                if (Connect.Connecting())
+                {
+                    con = true;
 
-                Map = new Map();
-                MapPanel = Map.Controls.Find("MapPanel", false).First();
-                Aircraft = new Aircraft();
-                AircraftPanel = Aircraft.Controls.Find("AircraftPanel", false).First();
-                SettingsPanel = Settings.Controls.Find("SettingsPanel", false).First();
+                    InitializeComponent();
+                    Protocol.gui = this;
 
-                MapBTN_Click(null, null);
+                    Settings = new Settings();
+                    SettingsPanel = Settings.Controls.Find("SettingsPanel", false).First();
+                    Map = new Map();
+                    MapPanel = Map.Controls.Find("MapPanel", false).First();
+                    Aircraft = new Aircraft();
+                    AircraftPanel = Aircraft.Controls.Find("AircraftPanel", false).First();
+
+                    MapBTN_Click(null, null);
+                }
+                else
+                {
+                    Connect.ShowDialog();
+                }
             }
         }
     }

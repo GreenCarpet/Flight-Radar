@@ -13,6 +13,7 @@ namespace ASTERIX
     {
         private string text;
         private string Masktext;
+        private char passChar;
         private CharacterCasing ChCasing = CharacterCasing.Upper;
         private Color maskColor = Color.Gray;
         private Color textColor = Color.Black;
@@ -180,6 +181,18 @@ namespace ASTERIX
                 mouseBackColor = value;
                 ClearBTN.FlatAppearance.MouseDownBackColor = mouseBackColor;
                 ClearBTN.FlatAppearance.MouseOverBackColor = mouseBackColor;
+            }
+        }
+        public char PasswordChar
+        {
+            get
+            {
+                return passChar;
+            }
+            set
+            {
+                passChar = value;
+                textBox.PasswordChar = passChar;
             }
         }
 

@@ -104,7 +104,6 @@
             this.MapPanel.Name = "MapPanel";
             this.MapPanel.Size = new System.Drawing.Size(1200, 600);
             this.MapPanel.TabIndex = 0;
-            this.MapPanel.VisibleChanged += new System.EventHandler(this.MapPanel_VisibleChanged);
             // 
             // MapContainer
             // 

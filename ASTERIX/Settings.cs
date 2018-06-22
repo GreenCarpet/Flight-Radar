@@ -327,9 +327,6 @@ namespace ASTERIX
 
         #region Setting
 
-        public static string ServerName;
-        public static string UserName;
-        public static string Password;
         public static int UpdateScreen;
         public static int RouteOfPage;
         public static int AircraftOfPage;
@@ -344,18 +341,12 @@ namespace ASTERIX
             XmlDocument doc = new XmlDocument();
             doc.Load("Settings.xml");
 
-            ServerName = doc.GetElementsByTagName("ServerName")[0].FirstChild.Value;
-            UserName = doc.GetElementsByTagName("Name")[0].FirstChild.Value;
-            Password = doc.GetElementsByTagName("Password")[0].FirstChild.Value;
             UpdateScreen = Convert.ToInt32(doc.GetElementsByTagName("Update")[0].FirstChild.Value);
             RouteOfPage = Convert.ToInt32(doc.GetElementsByTagName("RouteOfPage")[0].FirstChild.Value);
             AircraftOfPage = Convert.ToInt32(doc.GetElementsByTagName("AircraftOfPage")[0].FirstChild.Value);         
             ColorNewRoute = Color.FromName(doc.GetElementsByTagName("ColorNewRoute")[0].FirstChild.Value);
             ColorSelected = Color.FromName(doc.GetElementsByTagName("ColorSelected")[0].FirstChild.Value);
 
-            ServerNameTextBox.TextField = ServerName;
-            NameTextBox.TextField = UserName;
-            PasswordTextBox.TextField = Password;
             UpdateTextBox.Text = UpdateScreen.ToString();
             RouteOfPageTextBox.Text = RouteOfPage.ToString();
             AircraftOfPageTextBox.Text = AircraftOfPage.ToString();
@@ -364,7 +355,6 @@ namespace ASTERIX
 
             Aircraft.Init(AircraftOfPage);
             Map.Init(UpdateScreen, RouteOfPage, ColorNewRoute, ColorSelected);
-            SQL.Init(ServerName, UserName, Password);
         }
         /// <summary>
         /// Выгружает пользовательские настройки.
@@ -374,18 +364,12 @@ namespace ASTERIX
             XmlDocument doc = new XmlDocument();
             doc.Load("Settings.xml");
 
-            ServerName = ServerNameTextBox.TextField;
-            UserName = NameTextBox.TextField;
-            Password = PasswordTextBox.TextField;
             UpdateScreen = Convert.ToInt32(UpdateTextBox.Text);
             RouteOfPage = Convert.ToInt32(RouteOfPageTextBox.Text);
             AircraftOfPage = Convert.ToInt32(AircraftOfPageTextBox.Text);
             ColorNewRoute = ColorNewRouteComboBox.BackColor;
             ColorSelected = ColorSelectedComboBox.BackColor;
 
-            doc.GetElementsByTagName("ServerName")[0].FirstChild.Value = ServerName;
-            doc.GetElementsByTagName("Name")[0].FirstChild.Value = UserName;
-            doc.GetElementsByTagName("Password")[0].FirstChild.Value = Password;
             doc.GetElementsByTagName("Update")[0].FirstChild.Value = UpdateScreen.ToString();
             doc.GetElementsByTagName("RouteOfPage")[0].FirstChild.Value = RouteOfPage.ToString();
             doc.GetElementsByTagName("AircraftOfPage")[0].FirstChild.Value = AircraftOfPage.ToString();
@@ -394,7 +378,6 @@ namespace ASTERIX
             
             Aircraft.Init(AircraftOfPage);
             Map.Init(UpdateScreen, RouteOfPage, ColorNewRoute, ColorSelected);
-            SQL.Init(ServerName, UserName, Password);
 
             doc.Save("Settings.xml");
         }
@@ -430,9 +413,6 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void BackBTN_MouseUp(object sender, MouseEventArgs e)
         {
-            ServerNameTextBox.TextField = ServerName;
-            NameTextBox.TextField = UserName;
-            PasswordTextBox.TextField = Password;
             UpdateTextBox.Text = UpdateScreen.ToString();
             RouteOfPageTextBox.Text = RouteOfPage.ToString();
             AircraftOfPageTextBox.Text = AircraftOfPage.ToString();

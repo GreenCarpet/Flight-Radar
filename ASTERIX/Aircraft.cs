@@ -300,17 +300,13 @@ namespace ASTERIX
                 }
             }
         }
+
         /// <summary>
-        /// Обновляет Grid при установке видимости в true.
+        /// Обновляет переменные.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void AircraftPanel_VisibleChanged(object sender, EventArgs e)
+        public void UpdateVariable()
         {
-            if (AircraftPanel.Visible)
-            {
-                ShowAircraftGridView(true, Convert.ToInt32(PageTextBox.Text));
-            }
+            ShowAircraftGridView(true, Convert.ToInt32(PageTextBox.Text));
         }
 
         /// <summary>
@@ -647,6 +643,11 @@ namespace ASTERIX
                 Up.Enabled = true;
             }
             ShowAircraftGridView(false, page);
+        }
+
+        private void AircraftContainer_Panel1_MouseEnter(object sender, EventArgs e)
+        {
+            AircraftGridView.Focus();
         }
     }
     }

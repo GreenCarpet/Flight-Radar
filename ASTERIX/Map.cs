@@ -413,16 +413,21 @@ namespace ASTERIX
                 int sortedColumn = 0;
                 ListSortDirection sortDirection = ListSortDirection.Descending;
 
-                if (LoadGridView.Rows.Count > 0)
+            if (LoadGridView.Rows.Count > 0)
+            {
+                if (LoadGridView.CurrentCell != null)
                 {
-                    if (LoadGridView.CurrentCell != null)
-                    {
-                        selectedId = Convert.ToInt32(LoadGridView["Id", LoadGridView.CurrentCell.RowIndex].Value);
-                    }
-                    firstRow = LoadGridView.FirstDisplayedScrollingRowIndex;
+                    selectedId = Convert.ToInt32(LoadGridView["Id", LoadGridView.CurrentCell.RowIndex].Value);
                 }
 
-                if (LoadGridView.SortedColumn != null)
+
+                if (LoadGridView.FirstDisplayedScrollingRowIndex >= 0)
+                {
+                    firstRow = LoadGridView.FirstDisplayedScrollingRowIndex;
+                }
+            }
+
+            if (LoadGridView.SortedColumn != null)
                 {
                     sortedColumn = LoadGridView.SortedColumn.Index;
                     if (LoadGridView.SortOrder == System.Windows.Forms.SortOrder.Ascending)
@@ -466,20 +471,16 @@ namespace ASTERIX
                     }
                 }
         }
-        /// <summary>
-        /// Обновляет Grid при установке видимости в true.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MapPanel_VisibleChanged(object sender, EventArgs e)
-        {
-            if (MapPanel.Visible)
-            {
-                ShowDataGridView(true, Convert.ToInt32(PageTextBox.Text));
 
-                UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
-                UpdateTimer.Enabled = true;
-            }
+        /// <summary>
+        /// Обновляет переменные.
+        /// </summary>
+        public void UpdateVariable()
+        {
+            ShowDataGridView(true, Convert.ToInt32(PageTextBox.Text));
+
+            UpdateTimer.Interval = UPDATEGRIDMILLISECONDS;
+            UpdateTimer.Enabled = true;
         }
 
         /// <summary>

@@ -73,7 +73,6 @@
             this.AircraftPanel.Name = "AircraftPanel";
             this.AircraftPanel.Size = new System.Drawing.Size(1200, 600);
             this.AircraftPanel.TabIndex = 1;
-            this.AircraftPanel.VisibleChanged += new System.EventHandler(this.AircraftPanel_VisibleChanged);
             // 
             // AircraftContainer
             // 
@@ -88,6 +87,7 @@
             // 
             this.AircraftContainer.Panel1.Controls.Add(this.PagePanel);
             this.AircraftContainer.Panel1.Controls.Add(this.AircraftGridView);
+            this.AircraftContainer.Panel1.MouseEnter += new System.EventHandler(this.AircraftContainer_Panel1_MouseEnter);
             // 
             // AircraftContainer.Panel2
             // 
@@ -302,6 +302,7 @@
             this.TargetAddressTextBox.MinimumSize = new System.Drawing.Size(30, 20);
             this.TargetAddressTextBox.MouseBackColorField = System.Drawing.Color.Gray;
             this.TargetAddressTextBox.Name = "TargetAddressTextBox";
+            this.TargetAddressTextBox.PasswordChar = '\0';
             this.TargetAddressTextBox.Size = new System.Drawing.Size(196, 20);
             this.TargetAddressTextBox.TabIndex = 0;
             this.TargetAddressTextBox.TextColorField = System.Drawing.Color.Black;
@@ -323,6 +324,7 @@
             this.RegistrationTextBox.MinimumSize = new System.Drawing.Size(30, 20);
             this.RegistrationTextBox.MouseBackColorField = System.Drawing.Color.Gray;
             this.RegistrationTextBox.Name = "RegistrationTextBox";
+            this.RegistrationTextBox.PasswordChar = '\0';
             this.RegistrationTextBox.Size = new System.Drawing.Size(196, 20);
             this.RegistrationTextBox.TabIndex = 2;
             this.RegistrationTextBox.TextColorField = System.Drawing.Color.Black;
@@ -344,6 +346,7 @@
             this.ICAOTypeCodeTextBox.MinimumSize = new System.Drawing.Size(30, 20);
             this.ICAOTypeCodeTextBox.MouseBackColorField = System.Drawing.Color.Gray;
             this.ICAOTypeCodeTextBox.Name = "ICAOTypeCodeTextBox";
+            this.ICAOTypeCodeTextBox.PasswordChar = '\0';
             this.ICAOTypeCodeTextBox.Size = new System.Drawing.Size(196, 20);
             this.ICAOTypeCodeTextBox.TabIndex = 1;
             this.ICAOTypeCodeTextBox.TextColorField = System.Drawing.Color.Black;
@@ -365,6 +368,7 @@
             this.TypeAircraftTextBox.MinimumSize = new System.Drawing.Size(30, 20);
             this.TypeAircraftTextBox.MouseBackColorField = System.Drawing.Color.Gray;
             this.TypeAircraftTextBox.Name = "TypeAircraftTextBox";
+            this.TypeAircraftTextBox.PasswordChar = '\0';
             this.TypeAircraftTextBox.Size = new System.Drawing.Size(196, 20);
             this.TypeAircraftTextBox.TabIndex = 3;
             this.TypeAircraftTextBox.TextColorField = System.Drawing.Color.Black;
@@ -386,6 +390,7 @@
             this.CountryTextBox.MinimumSize = new System.Drawing.Size(30, 20);
             this.CountryTextBox.MouseBackColorField = System.Drawing.Color.Gray;
             this.CountryTextBox.Name = "CountryTextBox";
+            this.CountryTextBox.PasswordChar = '\0';
             this.CountryTextBox.Size = new System.Drawing.Size(196, 20);
             this.CountryTextBox.TabIndex = 4;
             this.CountryTextBox.TextColorField = System.Drawing.Color.Black;
@@ -407,6 +412,7 @@
             this.ClassTextBox.MinimumSize = new System.Drawing.Size(30, 20);
             this.ClassTextBox.MouseBackColorField = System.Drawing.Color.Gray;
             this.ClassTextBox.Name = "ClassTextBox";
+            this.ClassTextBox.PasswordChar = '\0';
             this.ClassTextBox.Size = new System.Drawing.Size(196, 20);
             this.ClassTextBox.TabIndex = 5;
             this.ClassTextBox.TextColorField = System.Drawing.Color.Black;
@@ -429,6 +435,7 @@
             this.UserTextBox.MinimumSize = new System.Drawing.Size(30, 20);
             this.UserTextBox.MouseBackColorField = System.Drawing.Color.Gray;
             this.UserTextBox.Name = "UserTextBox";
+            this.UserTextBox.PasswordChar = '\0';
             this.UserTextBox.Size = new System.Drawing.Size(616, 20);
             this.UserTextBox.TabIndex = 6;
             this.UserTextBox.TextColorField = System.Drawing.Color.Black;
