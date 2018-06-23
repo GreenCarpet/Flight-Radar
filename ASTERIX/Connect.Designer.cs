@@ -161,6 +161,7 @@
             this.Name = "Connect";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Connect_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();

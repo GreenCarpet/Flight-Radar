@@ -16,6 +16,7 @@ namespace ASTERIX
         Aircraft Aircraft;
         Settings Settings;
         Connect Connect;
+        Loading LoadPicture;
         Control MapPanel, AircraftPanel, SettingsPanel;
 
         public bool start = false;
@@ -225,14 +226,27 @@ namespace ASTERIX
         }
 
         /// <summary>
+        /// Отключает анимацию после загрузки формы.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GUI_Shown(object sender, EventArgs e)
+        {
+            LoadPicture.Off();
+        }
+
+
+        /// <summary>
         /// Основная функция формы. Производит инициализацию компонентов.
         /// </summary>
         public GUI()
         {
+            LoadPicture = new Loading();
             Connect = new Connect();
             bool con = false;
             while (!con)
             {
+                LoadPicture.On();
                 if (Connect.Connecting())
                 {
                     con = true;
@@ -251,6 +265,7 @@ namespace ASTERIX
                 }
                 else
                 {
+                    LoadPicture.Off();
                     Connect.ShowDialog();
                 }
             }

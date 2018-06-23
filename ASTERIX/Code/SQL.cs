@@ -28,19 +28,21 @@ namespace ASTERIX
                 sqlConnection1 =
               new SqlConnection("Data Source=" + Server + ";Initial Catalog=ADS-B;Persist Security Info=True;User ID=" + User + ";Password=" + Password);
                 sqlConnection1.Open();
+
+                if (sqlConnection1.State == ConnectionState.Open)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            catch (SqlException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            if (sqlConnection1.State == ConnectionState.Open)
-            {
-                return true;
-            }
-            else
+            catch (SqlException)
             {
                 return false;
             }
+
         }
         /// <summary>
         /// Выполняет запрос к БД.

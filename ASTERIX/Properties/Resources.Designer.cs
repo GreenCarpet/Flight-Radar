@@ -61,6 +61,16 @@ namespace ASTERIX.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap _ip___104_17_144_76__10_251_210_126___tcp_00080_18725___426973 {
+            get {
+                object obj = ResourceManager.GetObject("(ip___104_17_144_76-_10_251_210_126)_(tcp_00080-18725)__426973", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на 
         ///LIGHT AIRCRAFT
         ///SMALL AIRCRAFT

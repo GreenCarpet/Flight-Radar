@@ -21,19 +21,12 @@ namespace ASTERIX
         #region База
 
         int Loadchcksum;
-
         bool clearBox = false;
-
         bool FirstSetting = false;
-        bool EnableBeginTimePicker = true;
-        bool EnableEndTimePicker = false;
         bool userDeleting = true;
-
         static int UPDATEGRIDMILLISECONDS;
-
         int SearchSplitterPosition = 100;
         bool SearchSplitterLock = false;
-
         static int RowOfPage;
 
         /// <summary>
@@ -151,7 +144,7 @@ namespace ASTERIX
                     filter += " AND AirportArrival LIKE '" + AirportArrival + "%'";
                 }
             }
-            if ((BeginTime != "") && (EnableBeginTimePicker) && (BeginTime != null))
+            if ((BeginTime != "") && (BeginTimePicker.Checked) && (BeginTime != null))
             {
                 if (filter == "")
                 {
@@ -162,7 +155,7 @@ namespace ASTERIX
                     filter += " AND BeginTime > '" + BeginTime + "'";
                 }
             }
-            if ((EndTime != "") && (EnableEndTimePicker) && (EndTime != null))
+            if ((EndTime != "") && (EndTimePicker.Checked) && (EndTime != null))
             {
                 if (filter == "")
                 {
@@ -867,7 +860,6 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void EndTimePicker_DropDown(object sender, EventArgs e)
         {
-            EnableEndTimePicker = true;
             ShowDataGridView(false, 1);
         }
         /// <summary>
@@ -877,9 +869,8 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void EndTimePicker_MouseDown(object sender, MouseEventArgs e)
         {
-            if (EnableEndTimePicker != EndTimePicker.Checked)
+            if (EndTimePicker.Checked)
             {
-                EnableEndTimePicker = !EnableEndTimePicker;
                 ShowDataGridView(false, 1);
             }
         }
@@ -903,7 +894,6 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void BeginTimePicker_DropDown(object sender, EventArgs e)
         {
-            EnableBeginTimePicker = true;
             ShowDataGridView(false, 1);
         }
         /// <summary>
@@ -913,9 +903,8 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void BeginTimePicker_MouseDown(object sender, MouseEventArgs e)
         {
-            if (EnableBeginTimePicker != BeginTimePicker.Checked)
+            if (BeginTimePicker.Checked)
             {
-                EnableBeginTimePicker = !EnableBeginTimePicker;
                 ShowDataGridView(false, 1);
             }
         }
@@ -1576,6 +1565,5 @@ namespace ASTERIX
             DefaultColor = ColorNewRoute;
             SelectedColor = ColorSelected;
         }
-
     }
 }

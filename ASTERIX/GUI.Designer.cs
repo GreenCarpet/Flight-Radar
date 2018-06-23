@@ -262,6 +262,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Flight Radar";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GUI_FormClosed);
+            this.Shown += new System.EventHandler(this.GUI_Shown);
             this.LocationChanged += new System.EventHandler(this.GUI_LocationChanged);
             this.SizeChanged += new System.EventHandler(this.GUI_SizeChanged);
             this.tabPanel.ResumeLayout(false);
