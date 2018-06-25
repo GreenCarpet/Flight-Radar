@@ -13,6 +13,8 @@ using System.Xml;
 using System.Threading;
 using GMap.NET;
 using GMap.NET.WindowsForms;
+using GMap.NET.WindowsForms.Markers;
+using GMap.NET.WindowsForms.ToolTips;
 
 namespace ASTERIX
 {
@@ -1102,8 +1104,14 @@ namespace ASTERIX
         bool RouteSplitterLock = false;
         static Color DefaultColor;
         static Color SelectedColor;
+        static Color DefaultPolygonColor = Color.Blue;
         public static Color[] colors = { Color.DarkRed, Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.DarkGreen, Color.Aqua, Color.Blue, Color.Purple, Color.DeepPink};
+
         GMapOverlay routeOverlay = new GMapOverlay("route");
+        GMapOverlay polyOverlay = new GMapOverlay("polygons");
+        GMapOverlay markersOverlay = new GMapOverlay("markers");
+
+        string Tool = "Free";
 
         /// <summary>
         /// Убирает фокус с кнопки маршрутов.
@@ -1190,7 +1198,9 @@ namespace ASTERIX
 
             gMapControl.GrayScaleMode = true;
 
+            gMapControl.RoutesEnabled = true;
             gMapControl.MarkersEnabled = true;
+            gMapControl.PolygonsEnabled = true;
 
             gMapControl.MaxZoom = 18;
             gMapControl.MinZoom = 2;
@@ -1198,8 +1208,6 @@ namespace ASTERIX
             gMapControl.MouseWheelZoomType = MouseWheelZoomType.MousePositionAndCenter;
 
             gMapControl.NegativeMode = false;
-
-            gMapControl.RoutesEnabled = true;
 
             gMapControl.ShowTileGridLines = false;
 
@@ -1212,6 +1220,10 @@ namespace ASTERIX
             GMaps.Instance.ImportFromGMDB("Data.gmdb");
 
             gMapControl.Overlays.Add(routeOverlay);
+            gMapControl.Overlays.Add(polyOverlay);
+            gMapControl.Overlays.Add(markersOverlay);
+
+            UpdateCoordinatePanel(gMapControl.Position);
         }
 
         /// <summary>
@@ -1235,6 +1247,7 @@ namespace ASTERIX
                 }
 
                 r = new GMapRoute(PoinList, id);
+                r.IsHitTestVisible = true;
                 r.Stroke = new Pen(DefaultColor, 2);
             }
 
@@ -1399,9 +1412,12 @@ namespace ASTERIX
         /// </summary>
         void setFocusRoute()
         {
-            Action action = () =>
+            if (gMapControl.InvokeRequired)
             {
-                if (RouteGridView.CurrentRow != null)
+                gMapControl.BeginInvoke(new Action(setFocusRoute));
+                return;
+            }
+            if (RouteGridView.CurrentRow != null)
                 {
                     for (int route = 0; route < routeOverlay.Routes.Count; route++)
                     {
@@ -1418,8 +1434,6 @@ namespace ASTERIX
                     routeOverlay.IsVisibile = false;
                     routeOverlay.IsVisibile = true;
                 }
-            };
-            gMapControl.BeginInvoke(action);
         }
         private void RouteGridView_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -1434,7 +1448,6 @@ namespace ASTERIX
             new Thread(() =>
             {
                 setFocusRoute();
-                Thread.CurrentThread.Abort();
             }).Start();
         }
         private void RouteGridView_MouseEnter(object sender, EventArgs e)
@@ -1532,6 +1545,371 @@ namespace ASTERIX
                 e.Graphics.FillRectangle(br, e.Bounds);
             }
         }
+
+        /// <summary>
+        /// Обновление панели координат.
+        /// </summary>
+        /// <param name="point">Координаты.</param>
+        void UpdateCoordinatePanel(PointLatLng point)
+        {
+            double Lat = point.Lat;
+            double Lng = point.Lng;
+            if (Lat > 0)
+            {
+                LatLBL.Text = "N" + Math.Abs(Lat).ToString();
+            }
+            else
+            {
+                LatLBL.Text = "S" + Math.Abs(Lat).ToString();
+            }
+
+            if (Lng > 0)
+            {
+                LngLBL.Text = "E" + Math.Abs(Lng).ToString();
+            }
+            else
+            {
+                LngLBL.Text = "W" + Math.Abs(Lng).ToString();
+            }
+        }
+        /// <summary>
+        /// Получение координат по курсору.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void gMapControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            PointLatLng point = gMapControl.FromLocalToLatLng(e.X, e.Y);
+            UpdateCoordinatePanel(point);
+
+            if (e.Button == MouseButtons.Right)
+            {
+                switch (Tool)
+                {
+                    case "Free":
+                        {
+                            GMapPolygon tempPolygon = getPolygon(polyOverlay, "tempPolygon");
+                            tempPolygon.Points.Add(point);
+
+                            polyOverlay.IsVisibile = false;
+                            polyOverlay.IsVisibile = true;
+                            break;
+                        }
+                    case "Rectangle":
+                        {
+                            GMapPolygon tempPolygon = getPolygon(polyOverlay, "tempPolygon");
+                            if (tempPolygon.Points.Count == 0)
+                            {
+                                tempPolygon.Points.Add(point);
+                            }
+                            else
+                            {
+                                PointLatLng firstPoint = tempPolygon.Points.First();
+                                tempPolygon.Points.Clear();
+                                tempPolygon.Points.Add(firstPoint);
+                                tempPolygon.Points.Add(new PointLatLng(firstPoint.Lat, point.Lng));
+                                tempPolygon.Points.Add(new PointLatLng(point.Lat, point.Lng));
+                                tempPolygon.Points.Add(new PointLatLng(point.Lat, firstPoint.Lng));
+                            }
+                            break;
+                        }
+                }
+
+                polyOverlay.IsVisibile = false;
+                polyOverlay.IsVisibile = true;
+            }
+        }
+
+        /// <summary>
+        /// Возвращает полигон из overlay.
+        /// </summary>
+        /// <param name="polyOverlay">Overlay.</param>
+        /// <param name="Name">Имя полигона.</param>
+        /// <returns></returns>
+        GMapPolygon getPolygon(GMapOverlay polyOverlay, string Name)
+        {
+            GMapPolygon polygon = null;
+
+            foreach (GMapPolygon pol in polyOverlay.Polygons)
+            {
+                if(pol.Name == Name)
+                {
+                    polygon = pol;
+                }
+            }
+
+            return polygon;
+        }
+        /// <summary>
+        /// Возвращает маркер из overlay.
+        /// </summary>
+        /// <param name="markersOverlay">Overlay</param>
+        /// <param name="point">Координаты.</param>
+        /// <returns></returns>
+        GMarkerGoogle getMarker(GMapOverlay markersOverlay, PointLatLng point)
+        {
+            GMarkerGoogle marker = null;
+
+            foreach (GMarkerGoogle mark in markersOverlay.Markers)
+            {
+                if (mark.Position == point)
+                {
+                    marker = mark;
+                }
+            }
+
+            return marker;
+        }
+
+        /// <summary>
+        /// Создает пустой полигон.
+        /// </summary>
+        /// <param name="color">Цвет полигона.</param>
+        /// <param name="name">Название полигона.</param>
+        /// <returns></returns>
+        GMapPolygon CreatePolygon(Color color, string name)
+        {
+            GMapPolygon tempPolygon;
+            List<PointLatLng> points = new List<PointLatLng>();
+            tempPolygon = new GMapPolygon(points, "tempPolygon");
+            tempPolygon.IsHitTestVisible = true;
+            tempPolygon.Stroke = new Pen(color, 3);
+
+            return tempPolygon;
+        }
+        /// <summary>
+        /// Создает маркер.
+        /// </summary>
+        /// <param name="point">Координаты.</param>
+        /// <param name="color">Тип маркера.</param>
+        /// <param name="name">Название маркера.</param>
+        /// <returns></returns>
+        GMarkerGoogle CreateGMarker(PointLatLng point, GMarkerGoogleType color, string name)
+        {
+            GMarkerGoogle marker = new GMarkerGoogle(point, color);
+            marker.ToolTip = new GMapRoundedToolTip(marker);
+            marker.ToolTipText = name;
+
+            return marker;
+        }
+
+        /// <summary>
+        /// Набор инструментов.
+        /// </summary>
+        /// <param name="point"></param>
+        void Tools(PointLatLng point)
+        {
+            switch (Tool)
+            {
+                case "Free":
+                    {
+                        GMapPolygon tempPolygon = getPolygon(polyOverlay, "tempPolygon");
+                        polyOverlay.Polygons.Remove(tempPolygon);
+
+                        tempPolygon = CreatePolygon(DefaultPolygonColor, "tempPolygon");
+                        polyOverlay.Polygons.Add(tempPolygon);
+                        break;
+                    }
+                case "Rectangle":
+                    {
+                        GMapPolygon tempPolygon = getPolygon(polyOverlay, "tempPolygon");
+                        polyOverlay.Polygons.Remove(tempPolygon);
+
+                        tempPolygon = CreatePolygon(DefaultPolygonColor, "tempPolygon");
+                        polyOverlay.Polygons.Add(tempPolygon);
+                        break;
+                    }
+                case "Marker":
+                    {
+                        Edit edit = new Edit("markers", Color.Red, null);
+                        edit.ShowDialog();
+                        if (edit.onClick == "OK")
+                        {
+                            string name = edit.name;
+
+                            GMarkerGoogleType type = getGMarkerGoogleType(edit.color.Name);
+
+                            GMarkerGoogle marker = CreateGMarker(point, type, name);
+
+                            markersOverlay.Markers.Add(marker);
+                        }
+                        break;
+                    }
+            }
+        }
+        /// <summary>
+        /// Обработка клика по карте.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void gMapControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                PointLatLng point = gMapControl.FromLocalToLatLng(e.X, e.Y);
+                Tools(point);
+            }
+        }
+
+        /// <summary>
+        /// Возвращает GMarkerGoogleType по названию цвета.
+        /// </summary>
+        /// <param name="ColorName">Название цвета.</param>
+        /// <returns></returns>
+        GMarkerGoogleType getGMarkerGoogleType(string ColorName)
+        {
+            GMarkerGoogleType type = GMarkerGoogleType.none;
+
+            switch (ColorName)
+            {
+                case "LightBlue":
+                    {
+                        type = GMarkerGoogleType.lightblue;
+                        break;
+                    }
+                case "Blue":
+                    {
+                        type = GMarkerGoogleType.blue;
+                        break;
+                    }
+                case "Green":
+                    {
+                        type = GMarkerGoogleType.green;
+                        break;
+                    }
+                case "Orange":
+                    {
+                        type = GMarkerGoogleType.orange;
+                        break;
+                    }
+                case "Pink":
+                    {
+                        type = GMarkerGoogleType.pink;
+                        break;
+                    }
+                case "Purple":
+                    {
+                        type = GMarkerGoogleType.purple;
+                        break;
+                    }
+                case "Red":
+                    {
+                        type = GMarkerGoogleType.red;
+                        break;
+                    }
+                case "Yellow":
+                    {
+                        type = GMarkerGoogleType.yellow;
+                        break;
+                    }
+            }
+
+            return type;
+        }
+
+        /// <summary>
+        /// Клик по маршруту.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="e"></param>
+        private void gMapControl_OnRouteClick(GMapRoute item, MouseEventArgs e)
+        {
+            for (int cell = 0; cell < RouteGridView.Rows.Count; cell++)
+            {
+                if (RouteGridView["Id", cell].Value.ToString() == item.Name)
+                {
+                    if (RouteGridView.CurrentRow != null)
+                    {
+                        RouteGridView.CurrentRow.Selected = false;
+                    }
+                    RouteGridView.Rows[cell].Selected = true;
+                    RouteGridView.CurrentCell = RouteGridView["TargetAddress", cell];
+                    break;
+                }
+            }
+            setFocusRoute();
+        }
+        /// <summary>
+        /// Клик по маркеру.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="e"></param>
+        private void gMapControl_OnMarkerClick(GMapMarker item, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Edit edit = new Edit("markers", Color.Blue, item.ToolTipText);
+                edit.ShowDialog();
+
+                string onClick = edit.onClick;
+                switch (onClick)
+                {
+                    case "OK":
+                        {
+                            markersOverlay.Markers.Remove(item);
+
+                            string name = edit.name;
+                            Color color = edit.color;
+                            GMarkerGoogleType type = getGMarkerGoogleType(color.Name);
+                            PointLatLng point = item.Position;
+
+                            GMarkerGoogle marker = CreateGMarker(point, type, name);
+
+                            markersOverlay.Markers.Add(marker);
+                            break;
+                        }
+                    case "DELETE":
+                        {
+                            markersOverlay.Markers.Remove(item);
+                            break;
+                        }
+                    case "EDITDB":
+                        {
+
+                            break;
+                        }
+                }
+            }
+        }
+        /// <summary>
+        /// Клик по полигону.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="e"></param>
+        private void gMapControl_OnPolygonClick(GMapPolygon item, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                Edit edit = new Edit("polygons", item.Stroke.Color, item.Name);
+                edit.ShowDialog();
+
+                string onClick = edit.onClick;
+                switch (onClick)
+                {
+                    case "OK":
+                        {
+                            string name = edit.name;
+                            Color color = edit.color;
+
+                            item.Stroke.Color = color;
+                            item.Name = name;
+
+                            break;
+                        }
+                    case "DELETE":
+                        {
+                            polyOverlay.Polygons.Remove(item);
+                            break;
+                        }
+                    case "EDITDB":
+                        {
+
+                            break;
+                        }
+                }
+            }
+        }
+
         #endregion
 
         public Map()
@@ -1564,6 +1942,34 @@ namespace ASTERIX
 
             DefaultColor = ColorNewRoute;
             SelectedColor = ColorSelected;
+        }
+
+        /// <summary>
+        /// Прямоугольное выделение.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RectangleBTN_Click(object sender, EventArgs e)
+        {
+            Tool = "Rectangle";
+        }
+        /// <summary>
+        /// Произвольное выделение.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FreeBTN_Click(object sender, EventArgs e)
+        {
+            Tool = "Free";
+        }
+        /// <summary>
+        /// Маркер.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MarkerBTN_Click(object sender, EventArgs e)
+        {
+            Tool = "Marker";
         }
     }
 }

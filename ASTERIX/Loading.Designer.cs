@@ -39,7 +39,7 @@
             this.LoadPictureBox.Image = global::ASTERIX.Properties.Resources._ip___104_17_144_76__10_251_210_126___tcp_00080_18725___426973;
             this.LoadPictureBox.Location = new System.Drawing.Point(0, 0);
             this.LoadPictureBox.Name = "LoadPictureBox";
-            this.LoadPictureBox.Size = new System.Drawing.Size(120, 120);
+            this.LoadPictureBox.Size = new System.Drawing.Size(100, 100);
             this.LoadPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.LoadPictureBox.TabIndex = 0;
             this.LoadPictureBox.TabStop = false;
@@ -49,7 +49,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.ClientSize = new System.Drawing.Size(120, 120);
+            this.ClientSize = new System.Drawing.Size(100, 100);
             this.ControlBox = false;
             this.Controls.Add(this.LoadPictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

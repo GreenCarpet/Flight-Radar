@@ -14,6 +14,7 @@ namespace ASTERIX
         private string text;
         private string Masktext;
         private char passChar;
+        private bool Readonly = false;
         private CharacterCasing ChCasing = CharacterCasing.Upper;
         private Color maskColor = Color.Gray;
         private Color textColor = Color.Black;
@@ -196,6 +197,23 @@ namespace ASTERIX
             }
         }
 
+        public bool ReadOnly
+        {
+            get
+            {
+                return Readonly;
+            }
+            set
+            {
+                Readonly = value;
+                textBox.ReadOnly = Readonly;
+                if (Readonly)
+                {
+                    ClearBTN.Visible = false;
+                }
+            }
+        }
+
         public void Clear()
         {
             ClearBTN_MouseUp(null, null);
@@ -228,7 +246,10 @@ namespace ASTERIX
             if (textBox.ForeColor == textColor)
             {
                 text = textBox.Text;
-                ClearBTN.Visible = true;
+                if (!Readonly)
+                {
+                    ClearBTN.Visible = true;
+                }
                 this.ControlTextChanged?.Invoke(this, e);
             }
         }
@@ -260,13 +281,16 @@ namespace ASTERIX
         }
         private void ClearBTN_MouseUp(object sender, MouseEventArgs e)
         {
-            text = null;
-            textBox.Text = null;
-            ClearBTN.Visible = false;
-            this.ControlTextChanged?.Invoke(this, e);
+            if (!Readonly)
+            {
+                text = null;
+                textBox.Text = null;
+                ClearBTN.Visible = false;
+                this.ControlTextChanged?.Invoke(this, e);
 
-            textBox.ForeColor = maskColor;
-            textBox.Text = MaskField;
+                textBox.ForeColor = maskColor;
+                textBox.Text = MaskField;
+            }
         }
 
         private void textBox_Enter(object sender, EventArgs e)
