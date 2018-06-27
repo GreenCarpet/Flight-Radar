@@ -18,13 +18,14 @@ namespace ASTERIX
 
         public string name = null;
         public Color color;
-        public Color oldColor = Color.Red;
+        public Color oldColor;
 
-        public Edit(string tool, string MultiButton)
+        public Edit(string tool, Color oldcolor, string MultiButton)
         {
             InitializeComponent();
 
             Tool = tool;
+            oldColor = oldcolor;
 
             MultiBTN.Text = MultiButton;
         }
@@ -52,7 +53,6 @@ namespace ASTERIX
                 case "polygons":
                     {
                         colors = Map.colors;
-                        NameTextBox.ReadOnly = true;
 
                         break;
                     }

@@ -24,6 +24,7 @@ namespace ASTERIX
 
         int Loadchcksum;
         int Markerschcksum;
+        int Polygonschcksum;
         bool clearBox = false;
         bool FirstSetting = false;
         bool userDeleting = true;
@@ -249,6 +250,12 @@ namespace ASTERIX
             {
                 Markerschcksum = newMarkerschcksum;
                 UpdateMarkerGridView();
+            }
+            int newPolygonschcksum = checksum("Polygons");
+            if (Polygonschcksum != newPolygonschcksum)
+            {
+                Polygonschcksum = newPolygonschcksum;
+                UpdatePolygonGridView();
             }
         }
         /// <summary>
@@ -1111,8 +1118,8 @@ namespace ASTERIX
         bool RouteSplitterLock = false;
         static Color DefaultColor;
         static Color SelectedColor;
-        static Color DefaultPolygonColor = Color.Blue;
-        static Color DefaultMarkerColor = Color.Red;
+        static Color DefaultPolygonColor;
+        static Color DefaultMarkerColor;
         public static Color[] colors = { Color.DarkRed, Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.DarkGreen, Color.Aqua, Color.Blue, Color.Purple, Color.DeepPink};
         public static Color[] Markercolors = { Color.LightBlue, Color.Blue, Color.Green, Color.Orange, Color.Pink, Color.Purple, Color.Red, Color.Yellow };
 
@@ -1616,6 +1623,58 @@ namespace ASTERIX
         }
 
         /// <summary>
+        /// Обновляет таблицу полигонов.
+        /// </summary>
+        void UpdatePolygonGridView()
+        {
+            if (PolygonGridView.InvokeRequired)
+            {
+                PolygonGridView.BeginInvoke(new Action(UpdatePolygonGridView));
+                return;
+            }
+            DataTable polygons = SQL.query("SELECT [Id], [Name], [Color] FROM dbo.[Polygons]");
+            List<string> OnPolygon = new List<string>();
+            foreach (DataGridViewRow row in PolygonGridView.Rows)
+            {
+                if (Convert.ToBoolean(row.Cells["Fix"].Value) == true)
+                {
+                    OnPolygon.Add(row.Cells["Id"].Value.ToString());
+                }
+            }
+            string selectedId = null;
+            if (PolygonGridView.SelectedCells.Count > 0)
+            {
+                selectedId = PolygonGridView.SelectedCells[0].OwningRow.Cells["Id"].Value.ToString();
+            }
+            this.PolygonGridView.CurrentCellDirtyStateChanged -= new System.EventHandler(this.PolygonGridView_CurrentCellDirtyStateChanged);
+            PolygonGridView.Rows.Clear();
+
+            for (int pol = 0; pol < polygons.Rows.Count; pol++)
+            {
+                PolygonGridView.Rows.Add();
+                PolygonGridView.Rows[PolygonGridView.Rows.Count - 1].Cells["Id"].Value = polygons.Rows[pol]["Id"];
+                PolygonGridView.Rows[PolygonGridView.Rows.Count - 1].Cells["Name"].Value = polygons.Rows[pol]["Name"];
+
+                ((DataGridViewComboBoxCell)(PolygonGridView.Rows[PolygonGridView.Rows.Count - 1].Cells["Color"])).Value = "";
+                ((DataGridViewComboBoxCell)(PolygonGridView.Rows[PolygonGridView.Rows.Count - 1].Cells["Color"])).Style.BackColor = Color.FromName(polygons.Rows[pol]["Color"].ToString());
+
+                if (OnPolygon.Contains(polygons.Rows[pol]["Id"].ToString()))
+                {
+                    PolygonGridView.Rows[PolygonGridView.Rows.Count - 1].Cells["Fix"].Value = true;
+                }
+            }
+
+            foreach (DataGridViewRow row in PolygonGridView.Rows)
+            {
+                if (row.Cells["Id"].Value.ToString() == selectedId)
+                {
+                    PolygonGridView.CurrentCell = row.Cells["Name"];
+                }
+            }
+            this.PolygonGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.PolygonGridView_CurrentCellDirtyStateChanged);
+        }
+
+        /// <summary>
         /// Возвращает полигон из overlay.
         /// </summary>
         /// <param name="polyOverlay">Overlay.</param>
@@ -1661,7 +1720,23 @@ namespace ASTERIX
         {
             if (e.Button == MouseButtons.Left)
             {
-                Edit edit = new Edit("polygons", item.Stroke.Color, item.Name, "ДОБАВИТЬ В БД");
+                string buttonType;
+                string name = null;
+                if (item.Name == "tempPolygon")
+                {
+                    buttonType = "ДОБАВИТЬ В БД";
+                }
+                else
+                {
+                    name = SQL.query("SELECT [Name] FROM dbo.[Polygons] WHERE [Id] = " + item.Name + "").Rows[0]["Name"].ToString();
+                    if (name == "")
+                    {
+                        name = null;
+                    }
+                    buttonType = "УДАЛИТЬ ИЗ БД";
+                }
+                
+                Edit edit = new Edit("polygons", item.Stroke.Color, name, buttonType);
                 edit.ShowDialog();
 
                 string onClick = edit.onClick;
@@ -1669,30 +1744,201 @@ namespace ASTERIX
                 {
                     case "OK":
                         {
-                            string name = edit.name;
+                            name = edit.name;
                             Color color = edit.color;
 
                             item.Stroke.Color = color;
-                            item.Name = name;
-
+                            if (item.Name != "tempPolygon")
+                            {
+                                SQL.query("UPDATE dbo.[Polygons] SET [Name] = '" + name + "', [Color] = '" + color.Name + "' WHERE[Id] = " + item.Name);
+                                UpdatePolygonGridView();
+                            }
                             break;
                         }
                     case "DELETE":
                         {
                             polyOverlay.Polygons.Remove(item);
+
+                            if (item.Name != "tempPolygon")
+                            {
+                                foreach (DataGridViewRow row in PolygonGridView.Rows)
+                                {
+                                    if (row.Cells["Id"].Value.ToString() == item.Name)
+                                    {
+                                        row.Cells["Fix"].Value = false;
+                                        break;
+                                    }
+                                }
+                            }
                             break;
                         }
                     case "INSERTDB":
                         {
+                            name = edit.name;
+                            Color color = edit.color;
 
+                            gpxType gpx = new gpxType();
+                            wptType[] wpt = new wptType[item.Points.Count];
+
+                            for (int point = 0; point < item.Points.Count; point++)
+                            {
+                                wpt[point] = new wptType();
+                                wpt[point].lat = Convert.ToDecimal(item.Points[point].Lat);
+                                wpt[point].lon = Convert.ToDecimal(item.Points[point].Lng);
+                            }
+
+                            gpx.wpt = wpt;
+
+                            string xml = GMaps.Instance.SerializeGPX(gpx);
+
+                            SQL.query("INSERT INTO dbo.[Polygons] (Name, Gpx, Color) VALUES ('" + name + "', '" + xml + "', '" + color.Name + "')");
+                            UpdatePolygonGridView();
+
+                            item.Name = SQL.query("SELECT scope_identity()").Rows[0][0].ToString();
+                            item.Stroke.Color = color;
+
+                            foreach (DataGridViewRow row in PolygonGridView.Rows)
+                            {
+                                if (row.Cells["Id"].Value.ToString() == item.Name)
+                                {
+                                    row.Cells["Fix"].Value = true;
+                                }
+                            }
                             break;
                         }
                     case "DELETEDB":
                         {
+                            polyOverlay.Polygons.Remove(item);
 
+                            SQL.query("DELETE FROM dbo.[Polygons] WHERE [Id] = " + item.Name);
+                            UpdatePolygonGridView();
                             break;
                         }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Убирает лишнее выделение столбцов.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PolygonGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            foreach (DataGridViewCell cell in PolygonGridView.SelectedCells)
+            {
+                if ((cell.OwningColumn.Name == "Color") || (cell.OwningColumn.Name == "Fix"))
+                {
+                    cell.Selected = false;
+                    cell.OwningRow.Cells["Name"].Selected = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Добавляет обработчик для comboBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PolygonGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (((DataGridView)sender).CurrentCell.OwningColumn.Name == "Color")
+            {
+                ComboBox cb = e.Control as ComboBox;
+                if (cb != null)
+                {
+                    cb.DrawItem += new System.Windows.Forms.DrawItemEventHandler(polygon_cb_DrawItem);
+                    cb.DrawMode = DrawMode.OwnerDrawFixed;
+                }
+            }
+        }
+        /// <summary>
+        /// Заполняет comboBox цветами.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void polygon_cb_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            using (Brush br = new SolidBrush(colors[e.Index]))
+            {
+                e.Graphics.FillRectangle(br, e.Bounds);
+            }
+        }
+
+        /// <summary>
+        /// Изменяет цвет полигона.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PolygonGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (PolygonGridView.CurrentCell is DataGridViewComboBoxCell)
+            {
+                Color color = colors[((DataGridViewComboBoxEditingControl)PolygonGridView.EditingControl).SelectedIndex];
+                string Id = PolygonGridView.CurrentCell.OwningRow.Cells["Id"].Value.ToString();
+
+                SQL.query("UPDATE dbo.[Polygons] SET [Color] = '" + color.Name + "'  WHERE [Id] = " + Id);
+                UpdatePolygonGridView();
+
+                if (Convert.ToBoolean(PolygonGridView.CurrentCell.OwningRow.Cells["Fix"].Value) == true)
+                {
+                    getPolygon(polyOverlay, Id).Stroke.Color = color;
+
+                    polyOverlay.IsVisibile = false;
+                    polyOverlay.IsVisibile = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Завершает режим редактирования checkBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PolygonGridView_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (PolygonGridView.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                PolygonGridView.EndEdit();
+            }
+        }
+        /// <summary>
+        /// Выводит полигон на карту.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PolygonGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (PolygonGridView.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                string Id = Convert.ToString(PolygonGridView.CurrentCell.OwningRow.Cells["Id"].Value);
+                Color color = ((DataGridViewComboBoxCell)(PolygonGridView.CurrentCell.OwningRow.Cells["Color"])).Style.BackColor;
+                List<PointLatLng> points = new List<PointLatLng>();
+
+                if (Convert.ToBoolean(PolygonGridView.CurrentCell.Value) == true)
+                {
+                    string xml = SQL.query("SELECT [Gpx] FROM dbo.[Polygons] WHERE Id = " + Id).Rows[0]["Gpx"].ToString();
+                    gpxType gpx = GMaps.Instance.DeserializeGPX(xml);
+
+                    GMapPolygon polygon = CreatePolygon(color, Id);
+
+                    foreach (wptType wpt in gpx.wpt)
+                    {
+                        PointLatLng point = new PointLatLng(Convert.ToDouble(wpt.lat), Convert.ToDouble(wpt.lon));
+                        points.Add(point);
+                    }
+
+                    polygon.Name = Id;
+                    polygon.Points.AddRange(points);
+
+                    polyOverlay.Polygons.Add(polygon);
+                }
+                else
+                {
+                    polyOverlay.Polygons.Remove(getPolygon(polyOverlay, Id));
+                }
+
+                PolygonGridView.CurrentCell = PolygonGridView.CurrentCell.OwningRow.Cells["Name"];
             }
         }
         #endregion
@@ -2272,7 +2518,7 @@ namespace ASTERIX
                     }
                 case "Marker":
                     {
-                        Edit edit = new Edit("markers", "ДОБАВИТЬ В БД");
+                        Edit edit = new Edit("markers", DefaultMarkerColor, "ДОБАВИТЬ В БД");
                         edit.ShowDialog();
 
                         string onClick = edit.onClick;
@@ -2331,6 +2577,10 @@ namespace ASTERIX
 
             RoteGridViewInit();
             MarkerGridViewInit();
+            PolygonGridViewInit();
+
+            Polygonschcksum = checksum("Polygons");
+            UpdatePolygonGridView();
 
             Markerschcksum = checksum("Markers");
             UpdateMarkerGridView();
@@ -2349,14 +2599,15 @@ namespace ASTERIX
         /// <param name="RouteOfPage">Число маршрутов на странице.</param>
         /// <param name="ColorNewRoute">Цвет нового маршрута.</param>
         /// <param name="ColorSelected">Цвет выделенного маршрута.</param>
-        public static void Init(int UpdateScreen, int RouteOfPage, Color ColorNewRoute, Color ColorSelected)
+        public static void Init(int UpdateScreen, int RouteOfPage, Color ColorNewRoute, Color ColorSelected, Color PolygonColor, Color MarkerColor)
         {
             UPDATEGRIDMILLISECONDS = UpdateScreen * 1000;
             RowOfPage = RouteOfPage;
 
             DefaultColor = ColorNewRoute;
             SelectedColor = ColorSelected;
+            DefaultPolygonColor = PolygonColor;
+            DefaultMarkerColor = MarkerColor;
         }
-
     }
 }

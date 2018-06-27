@@ -94,7 +94,7 @@ namespace ASTERIX
             string Country = Convert.ToString(Trek["Country"]);
 
             XmlDocument doc = new XmlDocument();
-            doc.InnerXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?> <gpx xmlns = \"http://www.topografix.com/GPX/1/1\" creator = \"MapSource 6.16.3\" version = \"1.1\"> </gpx>";
+            doc.InnerXml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?> <gpx xmlns = \"http://www.topografix.com/GPX/1/1\"> </gpx>";
 
             XmlElement name = doc.CreateElement("name");
             name.InnerText = TargetAddress;

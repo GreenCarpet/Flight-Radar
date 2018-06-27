@@ -32,6 +32,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.SettingsPanel = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.ColorNewMarkerComboBox = new System.Windows.Forms.ComboBox();
+            this.ColorNewPolygonСomboBox = new System.Windows.Forms.ComboBox();
+            this.ColorNewMarkerLBL = new System.Windows.Forms.Label();
+            this.ColorNewPolygonLBL = new System.Windows.Forms.Label();
             this.BackBTN = new System.Windows.Forms.Button();
             this.ColorSelectedComboBox = new System.Windows.Forms.ComboBox();
             this.SaveBTN = new System.Windows.Forms.Button();
@@ -78,6 +82,10 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel1.Controls.Add(this.ColorNewMarkerComboBox);
+            this.splitContainer1.Panel1.Controls.Add(this.ColorNewPolygonСomboBox);
+            this.splitContainer1.Panel1.Controls.Add(this.ColorNewMarkerLBL);
+            this.splitContainer1.Panel1.Controls.Add(this.ColorNewPolygonLBL);
             this.splitContainer1.Panel1.Controls.Add(this.BackBTN);
             this.splitContainer1.Panel1.Controls.Add(this.ColorSelectedComboBox);
             this.splitContainer1.Panel1.Controls.Add(this.SaveBTN);
@@ -103,6 +111,52 @@
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 0;
             // 
+            // ColorNewMarkerComboBox
+            // 
+            this.ColorNewMarkerComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.ColorNewMarkerComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ColorNewMarkerComboBox.FormattingEnabled = true;
+            this.ColorNewMarkerComboBox.Location = new System.Drawing.Point(427, 202);
+            this.ColorNewMarkerComboBox.Name = "ColorNewMarkerComboBox";
+            this.ColorNewMarkerComboBox.Size = new System.Drawing.Size(47, 21);
+            this.ColorNewMarkerComboBox.TabIndex = 16;
+            this.ColorNewMarkerComboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ColorNewMarkerComboBox_DrawItem);
+            this.ColorNewMarkerComboBox.SelectedIndexChanged += new System.EventHandler(this.ColorNewMarkerComboBox_SelectedIndexChanged);
+            // 
+            // ColorNewPolygonСomboBox
+            // 
+            this.ColorNewPolygonСomboBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.ColorNewPolygonСomboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.ColorNewPolygonСomboBox.FormattingEnabled = true;
+            this.ColorNewPolygonСomboBox.Location = new System.Drawing.Point(427, 163);
+            this.ColorNewPolygonСomboBox.Name = "ColorNewPolygonСomboBox";
+            this.ColorNewPolygonСomboBox.Size = new System.Drawing.Size(47, 21);
+            this.ColorNewPolygonСomboBox.TabIndex = 17;
+            this.ColorNewPolygonСomboBox.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.ColorNewPolygonСomboBox_DrawItem);
+            this.ColorNewPolygonСomboBox.SelectedIndexChanged += new System.EventHandler(this.ColorNewPolygonСomboBox_SelectedIndexChanged);
+            // 
+            // ColorNewMarkerLBL
+            // 
+            this.ColorNewMarkerLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.ColorNewMarkerLBL.AutoSize = true;
+            this.ColorNewMarkerLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ColorNewMarkerLBL.Location = new System.Drawing.Point(79, 203);
+            this.ColorNewMarkerLBL.Name = "ColorNewMarkerLBL";
+            this.ColorNewMarkerLBL.Size = new System.Drawing.Size(148, 16);
+            this.ColorNewMarkerLBL.TabIndex = 14;
+            this.ColorNewMarkerLBL.Text = "Цвет нового маркера";
+            // 
+            // ColorNewPolygonLBL
+            // 
+            this.ColorNewPolygonLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.ColorNewPolygonLBL.AutoSize = true;
+            this.ColorNewPolygonLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.ColorNewPolygonLBL.Location = new System.Drawing.Point(79, 164);
+            this.ColorNewPolygonLBL.Name = "ColorNewPolygonLBL";
+            this.ColorNewPolygonLBL.Size = new System.Drawing.Size(149, 16);
+            this.ColorNewPolygonLBL.TabIndex = 15;
+            this.ColorNewPolygonLBL.Text = "Цвет нового шаблона";
+            // 
             // BackBTN
             // 
             this.BackBTN.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
@@ -124,7 +178,7 @@
             this.ColorSelectedComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ColorSelectedComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ColorSelectedComboBox.FormattingEnabled = true;
-            this.ColorSelectedComboBox.Location = new System.Drawing.Point(427, 211);
+            this.ColorSelectedComboBox.Location = new System.Drawing.Point(427, 281);
             this.ColorSelectedComboBox.Name = "ColorSelectedComboBox";
             this.ColorSelectedComboBox.Size = new System.Drawing.Size(47, 21);
             this.ColorSelectedComboBox.TabIndex = 13;
@@ -152,7 +206,7 @@
             this.ColorNewRouteComboBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ColorNewRouteComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ColorNewRouteComboBox.FormattingEnabled = true;
-            this.ColorNewRouteComboBox.Location = new System.Drawing.Point(427, 172);
+            this.ColorNewRouteComboBox.Location = new System.Drawing.Point(427, 242);
             this.ColorNewRouteComboBox.Name = "ColorNewRouteComboBox";
             this.ColorNewRouteComboBox.Size = new System.Drawing.Size(47, 21);
             this.ColorNewRouteComboBox.TabIndex = 13;
@@ -164,7 +218,7 @@
             this.ColorSelectedLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ColorSelectedLBL.AutoSize = true;
             this.ColorSelectedLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ColorSelectedLBL.Location = new System.Drawing.Point(79, 212);
+            this.ColorSelectedLBL.Location = new System.Drawing.Point(79, 282);
             this.ColorSelectedLBL.Name = "ColorSelectedLBL";
             this.ColorSelectedLBL.Size = new System.Drawing.Size(198, 16);
             this.ColorSelectedLBL.TabIndex = 12;
@@ -175,7 +229,7 @@
             this.ColorNewRouteLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ColorNewRouteLBL.AutoSize = true;
             this.ColorNewRouteLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ColorNewRouteLBL.Location = new System.Drawing.Point(79, 173);
+            this.ColorNewRouteLBL.Location = new System.Drawing.Point(79, 243);
             this.ColorNewRouteLBL.Name = "ColorNewRouteLBL";
             this.ColorNewRouteLBL.Size = new System.Drawing.Size(157, 16);
             this.ColorNewRouteLBL.TabIndex = 12;
@@ -186,7 +240,7 @@
             this.AircraftOfPageLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.AircraftOfPageLBL.AutoSize = true;
             this.AircraftOfPageLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AircraftOfPageLBL.Location = new System.Drawing.Point(79, 119);
+            this.AircraftOfPageLBL.Location = new System.Drawing.Point(79, 117);
             this.AircraftOfPageLBL.Name = "AircraftOfPageLBL";
             this.AircraftOfPageLBL.Size = new System.Drawing.Size(197, 16);
             this.AircraftOfPageLBL.TabIndex = 11;
@@ -197,7 +251,7 @@
             this.AircraftOfPageTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.AircraftOfPageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.AircraftOfPageTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AircraftOfPageTextBox.Location = new System.Drawing.Point(427, 119);
+            this.AircraftOfPageTextBox.Location = new System.Drawing.Point(427, 117);
             this.AircraftOfPageTextBox.Mask = "0000";
             this.AircraftOfPageTextBox.Name = "AircraftOfPageTextBox";
             this.AircraftOfPageTextBox.PromptChar = ' ';
@@ -211,7 +265,7 @@
             this.RoutOfPageLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.RoutOfPageLBL.AutoSize = true;
             this.RoutOfPageLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.RoutOfPageLBL.Location = new System.Drawing.Point(79, 82);
+            this.RoutOfPageLBL.Location = new System.Drawing.Point(79, 80);
             this.RoutOfPageLBL.Name = "RoutOfPageLBL";
             this.RoutOfPageLBL.Size = new System.Drawing.Size(208, 16);
             this.RoutOfPageLBL.TabIndex = 9;
@@ -233,7 +287,7 @@
             this.RouteOfPageTextBox.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.RouteOfPageTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.RouteOfPageTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.RouteOfPageTextBox.Location = new System.Drawing.Point(427, 82);
+            this.RouteOfPageTextBox.Location = new System.Drawing.Point(427, 80);
             this.RouteOfPageTextBox.Mask = "0000";
             this.RouteOfPageTextBox.Name = "RouteOfPageTextBox";
             this.RouteOfPageTextBox.PromptChar = ' ';
@@ -273,7 +327,7 @@
             this.DeleteModuleBTN.BackColor = System.Drawing.Color.LightSlateGray;
             this.DeleteModuleBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.DeleteModuleBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.DeleteModuleBTN.Location = new System.Drawing.Point(338, 513);
+            this.DeleteModuleBTN.Location = new System.Drawing.Point(340, 513);
             this.DeleteModuleBTN.Name = "DeleteModuleBTN";
             this.DeleteModuleBTN.Size = new System.Drawing.Size(126, 44);
             this.DeleteModuleBTN.TabIndex = 10;
@@ -289,7 +343,7 @@
             this.AddModuleBTN.BackColor = System.Drawing.Color.LightSlateGray;
             this.AddModuleBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.AddModuleBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.AddModuleBTN.Location = new System.Drawing.Point(136, 513);
+            this.AddModuleBTN.Location = new System.Drawing.Point(138, 513);
             this.AddModuleBTN.Name = "AddModuleBTN";
             this.AddModuleBTN.Size = new System.Drawing.Size(126, 44);
             this.AddModuleBTN.TabIndex = 9;
@@ -326,7 +380,7 @@
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.ModulesGridView.DefaultCellStyle = dataGridViewCellStyle2;
-            this.ModulesGridView.Location = new System.Drawing.Point(61, 34);
+            this.ModulesGridView.Location = new System.Drawing.Point(63, 34);
             this.ModulesGridView.MultiSelect = false;
             this.ModulesGridView.Name = "ModulesGridView";
             this.ModulesGridView.ReadOnly = true;
@@ -380,5 +434,9 @@
         private System.Windows.Forms.ComboBox ColorNewRouteComboBox;
         private System.Windows.Forms.Label ColorSelectedLBL;
         private System.Windows.Forms.Label ColorNewRouteLBL;
+        private System.Windows.Forms.ComboBox ColorNewMarkerComboBox;
+        private System.Windows.Forms.ComboBox ColorNewPolygonСomboBox;
+        private System.Windows.Forms.Label ColorNewMarkerLBL;
+        private System.Windows.Forms.Label ColorNewPolygonLBL;
     }
 }

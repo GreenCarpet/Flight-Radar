@@ -330,6 +330,8 @@ namespace ASTERIX
         public static int UpdateScreen;
         public static int RouteOfPage;
         public static int AircraftOfPage;
+        public static Color ColorNewPolygon;
+        public static Color ColorNewMarker;
         public static Color ColorNewRoute;
         public static Color ColorSelected;
 
@@ -343,18 +345,22 @@ namespace ASTERIX
 
             UpdateScreen = Convert.ToInt32(doc.GetElementsByTagName("Update")[0].FirstChild.Value);
             RouteOfPage = Convert.ToInt32(doc.GetElementsByTagName("RouteOfPage")[0].FirstChild.Value);
-            AircraftOfPage = Convert.ToInt32(doc.GetElementsByTagName("AircraftOfPage")[0].FirstChild.Value);         
+            AircraftOfPage = Convert.ToInt32(doc.GetElementsByTagName("AircraftOfPage")[0].FirstChild.Value);
+            ColorNewPolygon = Color.FromName(doc.GetElementsByTagName("ColorNewPolygon")[0].FirstChild.Value);
+            ColorNewMarker = Color.FromName(doc.GetElementsByTagName("ColorNewMarker")[0].FirstChild.Value);
             ColorNewRoute = Color.FromName(doc.GetElementsByTagName("ColorNewRoute")[0].FirstChild.Value);
             ColorSelected = Color.FromName(doc.GetElementsByTagName("ColorSelected")[0].FirstChild.Value);
 
             UpdateTextBox.Text = UpdateScreen.ToString();
             RouteOfPageTextBox.Text = RouteOfPage.ToString();
             AircraftOfPageTextBox.Text = AircraftOfPage.ToString();
+            ColorNewPolygonСomboBox.BackColor = ColorNewPolygon;
+            ColorNewMarkerComboBox.BackColor = ColorNewMarker;
             ColorNewRouteComboBox.BackColor = ColorNewRoute;
             ColorSelectedComboBox.BackColor = ColorSelected;
 
             Aircraft.Init(AircraftOfPage);
-            Map.Init(UpdateScreen, RouteOfPage, ColorNewRoute, ColorSelected);
+            Map.Init(UpdateScreen, RouteOfPage, ColorNewRoute, ColorSelected, ColorNewPolygon, ColorNewMarker);
         }
         /// <summary>
         /// Выгружает пользовательские настройки.
@@ -367,17 +373,21 @@ namespace ASTERIX
             UpdateScreen = Convert.ToInt32(UpdateTextBox.Text);
             RouteOfPage = Convert.ToInt32(RouteOfPageTextBox.Text);
             AircraftOfPage = Convert.ToInt32(AircraftOfPageTextBox.Text);
+            ColorNewPolygon = ColorNewPolygonСomboBox.BackColor;
+            ColorNewMarker = ColorNewMarkerComboBox.BackColor;
             ColorNewRoute = ColorNewRouteComboBox.BackColor;
             ColorSelected = ColorSelectedComboBox.BackColor;
 
             doc.GetElementsByTagName("Update")[0].FirstChild.Value = UpdateScreen.ToString();
             doc.GetElementsByTagName("RouteOfPage")[0].FirstChild.Value = RouteOfPage.ToString();
             doc.GetElementsByTagName("AircraftOfPage")[0].FirstChild.Value = AircraftOfPage.ToString();
+            doc.GetElementsByTagName("ColorNewPolygon")[0].FirstChild.Value = ColorNewPolygon.Name;
+            doc.GetElementsByTagName("ColorNewMarker")[0].FirstChild.Value = ColorNewMarker.Name;
             doc.GetElementsByTagName("ColorNewRoute")[0].FirstChild.Value = ColorNewRoute.Name;
             doc.GetElementsByTagName("ColorSelected")[0].FirstChild.Value = ColorSelected.Name;
             
             Aircraft.Init(AircraftOfPage);
-            Map.Init(UpdateScreen, RouteOfPage, ColorNewRoute, ColorSelected);
+            Map.Init(UpdateScreen, RouteOfPage, ColorNewRoute, ColorSelected, ColorNewPolygon, ColorNewMarker);
 
             doc.Save("Settings.xml");
         }
@@ -458,6 +468,20 @@ namespace ASTERIX
                 e.Graphics.FillRectangle(br, e.Bounds);
             }
         }
+        private void ColorNewPolygonСomboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            using (Brush br = new SolidBrush(Map.colors[e.Index]))
+            {
+                e.Graphics.FillRectangle(br, e.Bounds);
+            }
+        }
+        private void ColorNewMarkerComboBox_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            using (Brush br = new SolidBrush(Map.Markercolors[e.Index]))
+            {
+                e.Graphics.FillRectangle(br, e.Bounds);
+            }
+        }
 
         /// <summary>
         /// ВЫбор цвета нового маршрута.
@@ -477,6 +501,24 @@ namespace ASTERIX
         {
             ColorSelectedComboBox.BackColor = Map.colors[ColorSelectedComboBox.SelectedIndex];
         }
+        /// <summary>
+        /// Выбор цвета нового полигона.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ColorNewPolygonСomboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ColorNewPolygonСomboBox.BackColor = Map.colors[ColorNewPolygonСomboBox.SelectedIndex];
+        }
+        /// <summary>
+        /// Выбор цвета нового маркера.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ColorNewMarkerComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ColorNewMarkerComboBox.BackColor = Map.Markercolors[ColorNewMarkerComboBox.SelectedIndex];
+        }
 
         /// <summary>
         /// Инициализация настроек.
@@ -485,9 +527,16 @@ namespace ASTERIX
         {
             foreach (Color clr in Map.colors)
             {
+                ColorNewPolygonСomboBox.Items.Add("");
                 ColorNewRouteComboBox.Items.Add("");
                 ColorSelectedComboBox.Items.Add("");
             }
+            foreach (Color clr in Map.Markercolors)
+            {
+                ColorNewMarkerComboBox.Items.Add("");
+            }
+            ColorNewPolygonСomboBox.DrawMode = DrawMode.OwnerDrawFixed;
+            ColorNewMarkerComboBox.DrawMode = DrawMode.OwnerDrawFixed;
             ColorNewRouteComboBox.DrawMode = DrawMode.OwnerDrawFixed;
             ColorSelectedComboBox.DrawMode = DrawMode.OwnerDrawFixed;
         }
@@ -503,6 +552,5 @@ namespace ASTERIX
 
             GetSettings();
         }
-
     }
 }

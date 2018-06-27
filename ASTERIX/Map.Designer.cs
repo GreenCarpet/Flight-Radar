@@ -824,9 +824,14 @@
             this.PolygonGridView.Margin = new System.Windows.Forms.Padding(0);
             this.PolygonGridView.Name = "PolygonGridView";
             this.PolygonGridView.RowHeadersVisible = false;
-            this.PolygonGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.PolygonGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.PolygonGridView.Size = new System.Drawing.Size(245, 291);
             this.PolygonGridView.TabIndex = 2;
+            this.PolygonGridView.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.PolygonGridView_CellMouseUp);
+            this.PolygonGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.PolygonGridView_CellValueChanged);
+            this.PolygonGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.PolygonGridView_CurrentCellDirtyStateChanged);
+            this.PolygonGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.PolygonGridView_EditingControlShowing);
+            this.PolygonGridView.SelectionChanged += new System.EventHandler(this.PolygonGridView_SelectionChanged);
             // 
             // MarkersTabPage
             // 
