@@ -1357,24 +1357,6 @@ namespace ASTERIX
                 }
             }
         }
-        /// <summary>
-        /// Удаляет маршрут из overlay.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RouteGridView_UserDeletingRow(object sender, DataGridViewRowCancelEventArgs e)
-        {
-            GMapRoute deleting = null;
-            for (int route = 0; route < routeOverlay.Routes.Count; route++)
-            {
-                if (routeOverlay.Routes[route].Name == Convert.ToString(e.Row.Cells["Id"].Value))
-                {
-                    deleting = routeOverlay.Routes[route];
-                    break;
-                }
-            }
-            routeOverlay.Routes.Remove(deleting);
-        }
 
         /// <summary>
         /// Устанавливает фокус на выбранный маршрут.
@@ -1386,19 +1368,18 @@ namespace ASTERIX
                 gMapControl.BeginInvoke(new Action(setFocusRoute));
                 return;
             }
-            if (RouteGridView.CurrentRow != null)
+            if (RouteGridView.CurrentCell != null)
             {
                 for (int route = 0; route < routeOverlay.Routes.Count; route++)
                 {
-                    if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.CurrentRow.Cells["Id"].Value))
+                    if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.CurrentCell.OwningRow.Cells["Id"].Value))
                     {
                         routeOverlay.Routes[route].Stroke.Color = SelectedColor;
-                        //routeOverlay.Routes[route].Stroke.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                         gMapControl.Position = routeOverlay.Routes[route].Points.Last();
                     }
                     else
                     {
-                        routeOverlay.Routes[route].Stroke.Color = ((DataGridViewComboBoxCell)(RouteGridView.Rows[route].Cells["Color"])).Style.BackColor;
+                        routeOverlay.Routes[route].Stroke.Color = ((DataGridViewComboBoxCell)(RouteGridView["Color", route])).Style.BackColor;
                     }
                 }
                 routeOverlay.IsVisibile = false;
@@ -1410,11 +1391,18 @@ namespace ASTERIX
             new Thread(() =>
             {
                 setFocusRoute();
-                Thread.CurrentThread.Abort();
             }).Start();
         }
         private void RouteGridView_SelectionChanged(object sender, EventArgs e)
         {
+            foreach (DataGridViewCell cell in RouteGridView.SelectedCells)
+            {
+                if ((cell.OwningColumn.Name == "Color") || (cell.OwningColumn.Name == "Fix"))
+                {
+                    cell.Selected = false;
+                    cell.OwningRow.Cells["TargetAddress"].Selected = true;
+                }
+            }
             new Thread(() =>
             {
                 setFocusRoute();
@@ -1434,14 +1422,39 @@ namespace ASTERIX
         {
             new Graphics(Convert.ToString(RouteGridView.Rows[e.RowIndex].Cells["Id"].Value));
         }
+        /// <summary>
+        /// Обрабатывает нажатия клавиш.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RouteGridView_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
             {
                 e.Handled = true;
-                if (RouteGridView.CurrentRow != null)
+                if (RouteGridView.CurrentCell != null)
                 {
-                    new Graphics(Convert.ToString(RouteGridView.CurrentRow.Cells["Id"].Value));
+                    new Graphics(Convert.ToString(RouteGridView.CurrentCell.OwningRow.Cells["Id"].Value));
+                }
+            }
+            if (e.KeyData == Keys.Delete)
+            {
+                foreach (DataGridViewCell cell in RouteGridView.SelectedCells)
+                {
+                    if (cell.OwningColumn.Name == "TargetAddress")
+                    {
+                        GMapRoute deleting = null;
+                        for (int route = 0; route < routeOverlay.Routes.Count; route++)
+                        {
+                            if (routeOverlay.Routes[route].Name == Convert.ToString(cell.OwningRow.Cells["Id"].Value))
+                            {
+                                deleting = routeOverlay.Routes[route];
+                                break;
+                            }
+                        }
+                        routeOverlay.Routes.Remove(deleting);
+                        RouteGridView.Rows.Remove(cell.OwningRow);
+                    }
                 }
             }
         }
@@ -1523,14 +1536,16 @@ namespace ASTERIX
         /// <param name="e"></param>
         private void gMapControl_OnRouteClick(GMapRoute item, MouseEventArgs e)
         {
+            DataGridViewRow routeRow = null;
             for (int cell = 0; cell < RouteGridView.Rows.Count; cell++)
             {
                 if (RouteGridView["Id", cell].Value.ToString() == item.Name)
                 {
-                    if (RouteGridView.CurrentRow != null)
+                    if (RouteGridView.CurrentCell != null)
                     {
-                        RouteGridView.CurrentRow.Selected = false;
+                        RouteGridView.CurrentCell.OwningRow.Selected = false;
                     }
+                    routeRow = RouteGridView.Rows[cell];
                     RouteGridView.Rows[cell].Selected = true;
                     RouteGridView.CurrentCell = RouteGridView["TargetAddress", cell];
                     break;
@@ -1538,7 +1553,7 @@ namespace ASTERIX
             }
             setFocusRoute();
 
-            Edit edit = new Edit("route", item.Stroke.Color, RouteGridView.CurrentRow.Cells["TargetAddress"].Value.ToString(), "ГРАФИК ВЫСОТЫ");
+            Edit edit = new Edit("route", item.Stroke.Color, RouteGridView.CurrentCell.OwningRow.Cells["TargetAddress"].Value.ToString(), "ГРАФИК ВЫСОТЫ");
             edit.ShowDialog();
 
             string onClick = edit.onClick;
@@ -1550,6 +1565,7 @@ namespace ASTERIX
                         Color color = edit.color;
 
                         item.Stroke.Color = color;
+                        ((DataGridViewComboBoxCell)(routeRow.Cells["Color"])).Style.BackColor = color;
                         break;
                     }
                 case "GRAPHICS":
@@ -1560,7 +1576,7 @@ namespace ASTERIX
                 case "DELETE":
                     {
                         routeOverlay.Routes.Remove(item);
-                        RouteGridView.Rows.Remove(RouteGridView.CurrentRow);
+                        RouteGridView.Rows.Remove(RouteGridView.CurrentCell.OwningRow);
                         break;
                     }
             }
@@ -2062,6 +2078,23 @@ namespace ASTERIX
 
                         break;
                     }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Убирает лишнее выделение столбцов.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MarkerGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            foreach (DataGridViewCell cell in MarkerGridView.SelectedCells)
+            {
+                if ((cell.OwningColumn.Name == "Color") || (cell.OwningColumn.Name == "Fix"))
+                {
+                    cell.Selected = false;
+                    cell.OwningRow.Cells["Name"].Selected = true;
                 }
             }
         }

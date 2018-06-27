@@ -35,8 +35,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.MapPanel = new System.Windows.Forms.Panel();
             this.MapContainer = new System.Windows.Forms.SplitContainer();
             this.SearchContainer = new System.Windows.Forms.SplitContainer();
@@ -72,6 +72,7 @@
             this.RoutesTabPage = new System.Windows.Forms.TabPage();
             this.RouteGridView = new System.Windows.Forms.DataGridView();
             this.PolygonsTabPage = new System.Windows.Forms.TabPage();
+            this.PolygonGridView = new System.Windows.Forms.DataGridView();
             this.MarkersTabPage = new System.Windows.Forms.TabPage();
             this.MarkerGridView = new System.Windows.Forms.DataGridView();
             this.HideRouteBTN = new System.Windows.Forms.Button();
@@ -83,7 +84,6 @@
             this.LatLBL = new System.Windows.Forms.Label();
             this.gMapControl = new GMap.NET.WindowsForms.GMapControl();
             this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
-            this.PolygonGridView = new System.Windows.Forms.DataGridView();
             this.MapPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MapContainer)).BeginInit();
             this.MapContainer.Panel1.SuspendLayout();
@@ -105,10 +105,10 @@
             this.RoutesTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RouteGridView)).BeginInit();
             this.PolygonsTabPage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PolygonGridView)).BeginInit();
             this.MarkersTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MarkerGridView)).BeginInit();
             this.PositionPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PolygonGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // MapPanel
@@ -780,7 +780,7 @@
             this.RouteGridView.Margin = new System.Windows.Forms.Padding(0);
             this.RouteGridView.Name = "RouteGridView";
             this.RouteGridView.RowHeadersVisible = false;
-            this.RouteGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.RouteGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.RouteGridView.Size = new System.Drawing.Size(245, 291);
             this.RouteGridView.TabIndex = 0;
             this.RouteGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.RouteGridView_CellDoubleClick);
@@ -788,7 +788,6 @@
             this.RouteGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.RouteGridView_CurrentCellDirtyStateChanged);
             this.RouteGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.RouteGridView_EditingControlShowing);
             this.RouteGridView.SelectionChanged += new System.EventHandler(this.RouteGridView_SelectionChanged);
-            this.RouteGridView.UserDeletingRow += new System.Windows.Forms.DataGridViewRowCancelEventHandler(this.RouteGridView_UserDeletingRow);
             this.RouteGridView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.RouteGridView_KeyDown);
             this.RouteGridView.MouseEnter += new System.EventHandler(this.RouteGridView_MouseEnter);
             // 
@@ -802,6 +801,32 @@
             this.PolygonsTabPage.TabIndex = 1;
             this.PolygonsTabPage.Text = "Шаблоны";
             this.PolygonsTabPage.UseVisualStyleBackColor = true;
+            // 
+            // PolygonGridView
+            // 
+            this.PolygonGridView.AllowUserToAddRows = false;
+            this.PolygonGridView.AllowUserToResizeRows = false;
+            this.PolygonGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.PolygonGridView.BackgroundColor = System.Drawing.Color.White;
+            this.PolygonGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.PolygonGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.PolygonGridView.ColumnHeadersVisible = false;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.DimGray;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.PolygonGridView.DefaultCellStyle = dataGridViewCellStyle6;
+            this.PolygonGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.PolygonGridView.Location = new System.Drawing.Point(3, 3);
+            this.PolygonGridView.Margin = new System.Windows.Forms.Padding(0);
+            this.PolygonGridView.Name = "PolygonGridView";
+            this.PolygonGridView.RowHeadersVisible = false;
+            this.PolygonGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.PolygonGridView.Size = new System.Drawing.Size(245, 291);
+            this.PolygonGridView.TabIndex = 2;
             // 
             // MarkersTabPage
             // 
@@ -836,13 +861,14 @@
             this.MarkerGridView.Margin = new System.Windows.Forms.Padding(0);
             this.MarkerGridView.Name = "MarkerGridView";
             this.MarkerGridView.RowHeadersVisible = false;
-            this.MarkerGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.MarkerGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.MarkerGridView.Size = new System.Drawing.Size(245, 291);
             this.MarkerGridView.TabIndex = 1;
             this.MarkerGridView.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.MarkerGridView_CellMouseUp);
             this.MarkerGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.MarkerGridView_CellValueChanged);
             this.MarkerGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.MarkerGridView_CurrentCellDirtyStateChanged);
             this.MarkerGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.MarkerGridView_EditingControlShowing);
+            this.MarkerGridView.SelectionChanged += new System.EventHandler(this.MarkerGridView_SelectionChanged);
             // 
             // HideRouteBTN
             // 
@@ -968,32 +994,6 @@
             // 
             this.UpdateTimer.Tick += new System.EventHandler(this.UpdateTimer_Tick);
             // 
-            // PolygonGridView
-            // 
-            this.PolygonGridView.AllowUserToAddRows = false;
-            this.PolygonGridView.AllowUserToResizeRows = false;
-            this.PolygonGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.PolygonGridView.BackgroundColor = System.Drawing.Color.White;
-            this.PolygonGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PolygonGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.PolygonGridView.ColumnHeadersVisible = false;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.DimGray;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.PolygonGridView.DefaultCellStyle = dataGridViewCellStyle6;
-            this.PolygonGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PolygonGridView.Location = new System.Drawing.Point(3, 3);
-            this.PolygonGridView.Margin = new System.Windows.Forms.Padding(0);
-            this.PolygonGridView.Name = "PolygonGridView";
-            this.PolygonGridView.RowHeadersVisible = false;
-            this.PolygonGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.PolygonGridView.Size = new System.Drawing.Size(245, 291);
-            this.PolygonGridView.TabIndex = 2;
-            // 
             // Map
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1030,11 +1030,11 @@
             this.RoutesTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.RouteGridView)).EndInit();
             this.PolygonsTabPage.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.PolygonGridView)).EndInit();
             this.MarkersTabPage.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.MarkerGridView)).EndInit();
             this.PositionPanel.ResumeLayout(false);
             this.PositionPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PolygonGridView)).EndInit();
             this.ResumeLayout(false);
 
         }
