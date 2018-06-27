@@ -1241,10 +1241,12 @@ namespace ASTERIX
                 string Id = Convert.ToString(LoadGridView["Id", Convert.ToInt32(RowIndex)].Value);
                 string CRC = Convert.ToString(SQL.query("SELECT GETCHECKSUM() FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
                 string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
+                string name = Convert.ToString(SQL.query("SELECT TargetAddress FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
 
                 Action action = () =>
                 {
                     GMapRoute route = GetRoute(xml, Id);
+                    routeOverlay.Markers.Add(new GMarkerCross(route.Points.Last()) { ToolTipText = name, IsVisible = false, ToolTipMode = MarkerTooltipMode.Always });
                     routeOverlay.Routes.Add(route);
 
                     RouteGridView.Rows.Add();
@@ -1313,6 +1315,7 @@ namespace ASTERIX
                     {
                         if (routeOverlay.Routes[trek].Name == Id)
                         {
+                            routeOverlay.Markers.Remove(routeOverlay.Markers[routeOverlay.Routes.IndexOf(routeOverlay.Routes[trek])]);
                             routeOverlay.Routes.Remove(routeOverlay.Routes[trek]);
                             RouteGridView.Rows.Remove(RouteGridView.Rows[trek]);
                             break;
@@ -1359,6 +1362,7 @@ namespace ASTERIX
             {
                 if ((bool)(RouteGridView["Fix", route].Value) == false)
                 {
+                    routeOverlay.Markers.Remove(routeOverlay.Markers[routeOverlay.Routes.IndexOf(routeOverlay.Routes[route])]);
                     routeOverlay.Routes.Remove(routeOverlay.Routes[route]);
                     RouteGridView.Rows.Remove(RouteGridView.Rows[route]);
                 }
@@ -1459,6 +1463,7 @@ namespace ASTERIX
                                 break;
                             }
                         }
+                        routeOverlay.Markers.Remove(routeOverlay.Markers[routeOverlay.Routes.IndexOf(deleting)]);
                         routeOverlay.Routes.Remove(deleting);
                         RouteGridView.Rows.Remove(cell.OwningRow);
                     }
@@ -1582,11 +1587,25 @@ namespace ASTERIX
                     }
                 case "DELETE":
                     {
+                        routeOverlay.Markers.Remove(routeOverlay.Markers[routeOverlay.Routes.IndexOf(item)]);
                         routeOverlay.Routes.Remove(item);
                         RouteGridView.Rows.Remove(RouteGridView.CurrentCell.OwningRow);
                         break;
                     }
             }
+        }
+
+        /// <summary>
+        /// Вывод названия маршрута.
+        /// </summary>
+        /// <param name="item"></param>
+        private void gMapControl_OnRouteEnter(GMapRoute item)
+        {
+            routeOverlay.Markers[routeOverlay.Routes.IndexOf(item)].IsVisible = true;
+        }
+        private void gMapControl_OnRouteLeave(GMapRoute item)
+        {
+            routeOverlay.Markers[routeOverlay.Routes.IndexOf(item)].IsVisible = false;
         }
         #endregion
 
@@ -1757,6 +1776,7 @@ namespace ASTERIX
                         }
                     case "DELETE":
                         {
+                            polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
                             polyOverlay.Polygons.Remove(item);
 
                             if (item.Name != "tempPolygon")
@@ -1808,6 +1828,7 @@ namespace ASTERIX
                         }
                     case "DELETEDB":
                         {
+                            polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
                             polyOverlay.Polygons.Remove(item);
 
                             SQL.query("DELETE FROM dbo.[Polygons] WHERE [Id] = " + item.Name);
@@ -1918,6 +1939,8 @@ namespace ASTERIX
                 if (Convert.ToBoolean(PolygonGridView.CurrentCell.Value) == true)
                 {
                     string xml = SQL.query("SELECT [Gpx] FROM dbo.[Polygons] WHERE Id = " + Id).Rows[0]["Gpx"].ToString();
+                    string name = SQL.query("SELECT [Name] FROM dbo.[Polygons] WHERE Id = " + Id).Rows[0]["Name"].ToString();
+
                     gpxType gpx = GMaps.Instance.DeserializeGPX(xml);
 
                     GMapPolygon polygon = CreatePolygon(color, Id);
@@ -1931,15 +1954,42 @@ namespace ASTERIX
                     polygon.Name = Id;
                     polygon.Points.AddRange(points);
 
+                    PointLatLng ToolPoint = new PointLatLng();
+                    List<double> Lat = new List<double>();
+                    List<double> Lng = new List<double>();
+                    foreach (PointLatLng point in points)
+                    {
+                        Lat.Add(point.Lat);
+                        Lng.Add(point.Lng);
+                    }
+                    ToolPoint.Lat = Lat.Average();
+                    ToolPoint.Lng = Lng.Average();
+
+                    polyOverlay.Markers.Add(new GMarkerCross(ToolPoint) { ToolTipText = name, IsVisible = false, ToolTipMode = MarkerTooltipMode.Always });
                     polyOverlay.Polygons.Add(polygon);
                 }
                 else
                 {
-                    polyOverlay.Polygons.Remove(getPolygon(polyOverlay, Id));
+                    GMapPolygon polygon = getPolygon(polyOverlay, Id);
+                    polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(polygon)]);
+                    polyOverlay.Polygons.Remove(polygon);
                 }
 
                 PolygonGridView.CurrentCell = PolygonGridView.CurrentCell.OwningRow.Cells["Name"];
             }
+        }
+
+        /// <summary>
+        /// Выводит название полигона.
+        /// </summary>
+        /// <param name="item"></param>
+        private void gMapControl_OnPolygonEnter(GMapPolygon item)
+        {
+            polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)].IsVisible = true;
+        }
+        private void gMapControl_OnPolygonLeave(GMapPolygon item)
+        {
+            polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)].IsVisible = false;
         }
         #endregion
 
