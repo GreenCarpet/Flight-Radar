@@ -23,6 +23,7 @@ namespace ASTERIX
         #region База
 
         int Loadchcksum;
+        int Markerschcksum;
         bool clearBox = false;
         bool FirstSetting = false;
         bool userDeleting = true;
@@ -236,12 +237,18 @@ namespace ASTERIX
         void timerThread()
         {
             SQL.query("UPDATE dbo.[Load] SET Status = 'Завершен' WHERE AddTime < DATEADD(MINUTE, -" + Convert.ToString(Protocol.UPDATESTATUSMINUTE) + ", GETDATE()) AND Status = 'Активен'");
-            int newchcksum = checksum("Load");
-            if (Loadchcksum != newchcksum)
+            int newLoadchcksum = checksum("Load");
+            if (Loadchcksum != newLoadchcksum)
             {
-                Loadchcksum = newchcksum;
+                Loadchcksum = newLoadchcksum;
                 ShowDataGridView(true, Convert.ToInt32(PageTextBox.Text));
                 UpdateRoute(routeOverlay);
+            }
+            int newMarkerschcksum = checksum("Markers");
+            if (Markerschcksum != newMarkerschcksum)
+            {
+                Markerschcksum = newMarkerschcksum;
+                UpdateMarkerGridView();
             }
         }
         /// <summary>
@@ -1105,7 +1112,9 @@ namespace ASTERIX
         static Color DefaultColor;
         static Color SelectedColor;
         static Color DefaultPolygonColor = Color.Blue;
+        static Color DefaultMarkerColor = Color.Red;
         public static Color[] colors = { Color.DarkRed, Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.DarkGreen, Color.Aqua, Color.Blue, Color.Purple, Color.DeepPink};
+        public static Color[] Markercolors = { Color.LightBlue, Color.Blue, Color.Green, Color.Orange, Color.Pink, Color.Purple, Color.Red, Color.Yellow };
 
         GMapOverlay routeOverlay = new GMapOverlay("route");
         GMapOverlay polyOverlay = new GMapOverlay("polygons");
@@ -1384,6 +1393,7 @@ namespace ASTERIX
                     if (routeOverlay.Routes[route].Name == Convert.ToString(RouteGridView.CurrentRow.Cells["Id"].Value))
                     {
                         routeOverlay.Routes[route].Stroke.Color = SelectedColor;
+                        //routeOverlay.Routes[route].Stroke.EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor;
                         gMapControl.Position = routeOverlay.Routes[route].Points.Last();
                     }
                     else
@@ -1527,10 +1537,68 @@ namespace ASTERIX
                 }
             }
             setFocusRoute();
+
+            Edit edit = new Edit("route", item.Stroke.Color, RouteGridView.CurrentRow.Cells["TargetAddress"].Value.ToString(), "ГРАФИК ВЫСОТЫ");
+            edit.ShowDialog();
+
+            string onClick = edit.onClick;
+            switch (onClick)
+            {
+                case "OK":
+                    {
+                        string name = edit.name;
+                        Color color = edit.color;
+
+                        item.Stroke.Color = color;
+                        break;
+                    }
+                case "GRAPHICS":
+                    {
+                        new Graphics(item.Name);
+                        break;
+                    }
+                case "DELETE":
+                    {
+                        routeOverlay.Routes.Remove(item);
+                        RouteGridView.Rows.Remove(RouteGridView.CurrentRow);
+                        break;
+                    }
+            }
         }
         #endregion
 
         #region Шаблоны
+        /// <summary>
+        /// Инициализирует PolygonGridView.
+        /// </summary>
+        void PolygonGridViewInit()
+        {
+            DataGridViewComboBoxColumn colorColumn = new DataGridViewComboBoxColumn();
+            colorColumn.Name = "Color";
+            colorColumn.FlatStyle = FlatStyle.Flat;
+            foreach (Color clr in colors)
+            {
+                colorColumn.Items.Add("");
+            }
+
+            DataGridViewCheckBoxColumn fixColumn = new DataGridViewCheckBoxColumn();
+            fixColumn.Name = "Fix";
+
+            PolygonGridView.Columns.Add("Id", "Id");
+            PolygonGridView.Columns.Add("Name", "Name");
+            PolygonGridView.Columns.Add("gpx", "gpx");
+            PolygonGridView.Columns.Add(colorColumn);
+            PolygonGridView.Columns.Add(fixColumn);
+
+            PolygonGridView.Columns["Id"].Visible = false;
+            PolygonGridView.Columns["gpx"].Visible = false;
+
+            PolygonGridView.Columns["Color"].Width = 20;
+            PolygonGridView.Columns["Fix"].Width = 30;
+
+            PolygonGridView.Columns["Name"].ReadOnly = true;
+        }
+
         /// <summary>
         /// Возвращает полигон из overlay.
         /// </summary>
@@ -1577,7 +1645,7 @@ namespace ASTERIX
         {
             if (e.Button == MouseButtons.Left)
             {
-                Edit edit = new Edit("polygons", item.Stroke.Color, item.Name);
+                Edit edit = new Edit("polygons", item.Stroke.Color, item.Name, "ДОБАВИТЬ В БД");
                 edit.ShowDialog();
 
                 string onClick = edit.onClick;
@@ -1598,7 +1666,12 @@ namespace ASTERIX
                             polyOverlay.Polygons.Remove(item);
                             break;
                         }
-                    case "EDITDB":
+                    case "INSERTDB":
+                        {
+
+                            break;
+                        }
+                    case "DELETEDB":
                         {
 
                             break;
@@ -1609,6 +1682,94 @@ namespace ASTERIX
         #endregion
 
         #region Маркеры
+        /// <summary>
+        /// Инициализирует MarkerGridView.
+        /// </summary>
+        void MarkerGridViewInit()
+        {
+            DataGridViewComboBoxColumn colorColumn = new DataGridViewComboBoxColumn();
+            colorColumn.Name = "Color";
+            colorColumn.FlatStyle = FlatStyle.Flat;
+            foreach (Color clr in Markercolors)
+            {
+                colorColumn.Items.Add("");
+            }
+
+            DataGridViewCheckBoxColumn fixColumn = new DataGridViewCheckBoxColumn();
+            fixColumn.Name = "Fix";
+
+            MarkerGridView.Columns.Add("Id", "Id");
+            MarkerGridView.Columns.Add("Name", "Name");
+            MarkerGridView.Columns.Add("Lat", "Lat");
+            MarkerGridView.Columns.Add("Lng", "Lng");
+            MarkerGridView.Columns.Add(colorColumn);
+            MarkerGridView.Columns.Add(fixColumn);
+
+            MarkerGridView.Columns["Id"].Visible = false;
+            MarkerGridView.Columns["Lat"].Visible = false;
+            MarkerGridView.Columns["Lng"].Visible = false;
+
+            MarkerGridView.Columns["Color"].Width = 20;
+            MarkerGridView.Columns["Fix"].Width = 30;
+
+            MarkerGridView.Columns["Name"].ReadOnly = true;
+        }
+
+        /// <summary>
+        /// Обновляет таблицу маркеров.
+        /// </summary>
+        /// <param name="routeOverlay"></param>
+        void UpdateMarkerGridView()
+        {
+            if (MarkerGridView.InvokeRequired)
+            {
+                MarkerGridView.BeginInvoke(new Action(UpdateMarkerGridView));
+                return;
+            }
+            DataTable markers = SQL.query("SELECT * FROM dbo.[Markers]");
+            List<string> OnMarkers = new List<string>();
+            foreach (DataGridViewRow row in MarkerGridView.Rows)
+            {
+                if (Convert.ToBoolean(row.Cells["Fix"].Value) == true)
+                {
+                    OnMarkers.Add(row.Cells["Id"].Value.ToString());
+                }
+            }
+            string selectedId = null;
+            if (MarkerGridView.SelectedCells.Count > 0)
+            {
+                selectedId = MarkerGridView.SelectedCells[0].OwningRow.Cells["Id"].Value.ToString();
+            }
+            this.MarkerGridView.CurrentCellDirtyStateChanged -= new System.EventHandler(this.MarkerGridView_CurrentCellDirtyStateChanged);
+            MarkerGridView.Rows.Clear();
+
+            for (int mark = 0; mark < markers.Rows.Count; mark++)
+            {
+                MarkerGridView.Rows.Add();
+                MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Id"].Value = markers.Rows[mark]["Id"];
+                MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Name"].Value = markers.Rows[mark]["Name"];
+                MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Lat"].Value = markers.Rows[mark]["Lat"];
+                MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Lng"].Value = markers.Rows[mark]["Lng"];
+
+                ((DataGridViewComboBoxCell)(MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Color"])).Value = "";
+                ((DataGridViewComboBoxCell)(MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Color"])).Style.BackColor = Color.FromName(markers.Rows[mark]["Color"].ToString());
+
+                if (OnMarkers.Contains(markers.Rows[mark]["Id"].ToString()))
+                {
+                    MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Fix"].Value = true;
+                }
+            }
+
+            foreach (DataGridViewRow row in MarkerGridView.Rows)
+            {
+                if (row.Cells["Id"].Value.ToString() == selectedId)
+                {
+                    MarkerGridView.CurrentCell = row.Cells["Name"];
+                }
+            }
+            this.MarkerGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.MarkerGridView_CurrentCellDirtyStateChanged);
+        }
+
         /// <summary>
         /// Возвращает маркер из overlay.
         /// </summary>
@@ -1702,6 +1863,45 @@ namespace ASTERIX
         }
 
         /// <summary>
+        /// Выводит маркер на карту.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MarkerGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            if (MarkerGridView.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                PointLatLng point = new PointLatLng(Convert.ToDouble(MarkerGridView.CurrentCell.OwningRow.Cells["Lat"].Value), Convert.ToDouble(MarkerGridView.CurrentCell.OwningRow.Cells["Lng"].Value));
+                if (Convert.ToBoolean(MarkerGridView.CurrentCell.Value) == true)
+                {
+                    string name = MarkerGridView.CurrentCell.OwningRow.Cells["Name"].Value.ToString();
+                    GMarkerGoogleType type = getGMarkerGoogleType(((DataGridViewComboBoxCell)(MarkerGridView.CurrentCell.OwningRow.Cells["Color"])).Style.BackColor.Name);
+                    GMarkerGoogle marker = CreateGMarker(point, type, name);
+
+                    markersOverlay.Markers.Add(marker);
+                }
+                else
+                {
+                    markersOverlay.Markers.Remove(getMarker(markersOverlay, point));
+                }
+
+                MarkerGridView.CurrentCell = MarkerGridView.CurrentCell.OwningRow.Cells["Name"];
+            }
+        }
+        /// <summary>
+        /// Завершает режим редактирования checkBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MarkerGridView_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (MarkerGridView.CurrentCell is DataGridViewCheckBoxCell)
+            {
+                MarkerGridView.EndEdit();
+            }
+        }
+
+        /// <summary>
         /// Клик по маркеру.
         /// </summary>
         /// <param name="item"></param>
@@ -1710,7 +1910,26 @@ namespace ASTERIX
         {
             if (e.Button == MouseButtons.Left)
             {
-                Edit edit = new Edit("markers", Color.Blue, item.ToolTipText);
+                DataTable MarkerSelect = SQL.query("SELECT [Id], [Name], [Lat], [Lng], [Color] FROM dbo.[Markers] WHERE [Lat] = '" + item.Position.Lat.ToString() + "' AND [Lng] = '" + item.Position.Lng.ToString() + "'");
+                DataRow MarkerRow = null;
+                if (MarkerSelect.Rows.Count > 0)
+                {
+                    MarkerRow = MarkerSelect.Rows[0];
+                }
+                string buttonType;
+                Color oldColor;
+                if (MarkerRow == null)
+                {
+                    buttonType = "ДОБАВИТЬ В БД";
+                    oldColor = DefaultMarkerColor;
+                }
+                else
+                {
+                    buttonType = "УДАЛИТЬ ИЗ БД";
+                    oldColor = Color.FromName(MarkerRow["Color"].ToString());
+                }
+
+                Edit edit = new Edit("markers", oldColor, item.ToolTipText, buttonType);
                 edit.ShowDialog();
 
                 string onClick = edit.onClick;
@@ -1728,18 +1947,121 @@ namespace ASTERIX
                             GMarkerGoogle marker = CreateGMarker(point, type, name);
 
                             markersOverlay.Markers.Add(marker);
+               
+                            SQL.query("UPDATE dbo.[Markers] SET [Name] = '" + name + "', [Color] = '" + color.Name + "'  WHERE[Lat] = '" + point.Lat.ToString() + "' AND[Lng] = '" + point.Lng.ToString() + "'");
+                            UpdateMarkerGridView();
                             break;
                         }
                     case "DELETE":
                         {
                             markersOverlay.Markers.Remove(item);
-                            break;
-                        }
-                    case "EDITDB":
-                        {
 
+                            if (MarkerRow != null)
+                            {
+                                foreach (DataGridViewRow row in MarkerGridView.Rows)
+                                {
+                                    if (row.Cells["Id"].Value.ToString() == MarkerRow["Id"].ToString())
+                                    {
+                                        row.Cells["Fix"].Value = false;
+                                        break;
+                                    }
+                                }
+                            }
                             break;
                         }
+                    case "INSERTDB":
+                        {
+                            string name = edit.name;
+                            Color color = edit.color;
+                            PointLatLng point = item.Position;
+
+                            SQL.query("INSERT INTO dbo.[Markers] (Name, Lat, Lng, Color) VALUES ('" + name + "', '" + point.Lat.ToString() + "', '" + point.Lng.ToString() + "', '" + color.Name + "')");
+                            UpdateMarkerGridView();
+
+                            markersOverlay.Markers.Remove(item);
+
+                            MarkerGridView.CurrentCell = MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Fix"];
+                            MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Fix"].Value = true;
+                            break;
+                        }
+                    case "DELETEDB":
+                        {
+                            markersOverlay.Markers.Remove(item);
+
+                            string Id = MarkerRow["Id"].ToString();
+                            SQL.query("DELETE FROM dbo.[Markers] WHERE [Id] = " + Id);
+                            UpdateMarkerGridView();
+                            break;
+                        }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Добавляет обработчик для comboBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MarkerGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (((DataGridView)sender).CurrentCell.OwningColumn.Name == "Color")
+            {
+                ComboBox cb = e.Control as ComboBox;
+                if (cb != null)
+                {
+                    cb.DrawItem += new System.Windows.Forms.DrawItemEventHandler(marker_cb_DrawItem);
+                    cb.DrawMode = DrawMode.OwnerDrawFixed;
+                }
+            }
+        }
+        /// <summary>
+        /// Заполняет comboBox цветами.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void marker_cb_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            using (Brush br = new SolidBrush(Markercolors[e.Index]))
+            {
+                e.Graphics.FillRectangle(br, e.Bounds);
+            }
+        }
+
+        /// <summary>
+        /// Изменение цвета маркеров.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MarkerGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (MarkerGridView.CurrentCell is DataGridViewComboBoxCell)
+            {
+                Color color = Markercolors[((DataGridViewComboBoxEditingControl)MarkerGridView.EditingControl).SelectedIndex];
+                string Id = MarkerGridView.CurrentCell.OwningRow.Cells["Id"].Value.ToString();
+
+                SQL.query("UPDATE dbo.[Markers] SET [Color] = '" + color.Name + "'  WHERE [Id] = " + Id);
+                UpdateMarkerGridView();
+
+                MarkerGridView.CurrentCell = MarkerGridView.CurrentCell.OwningRow.Cells["Fix"];
+                foreach (DataGridViewRow row in MarkerGridView.Rows)
+                {
+                    if (row.Cells["Id"].Value.ToString() == Id)
+                    {
+                        if (Convert.ToBoolean(row.Cells["Fix"].Value) == true)
+                        {
+                            PointLatLng point = new PointLatLng(Convert.ToDouble(row.Cells["Lat"].Value), Convert.ToDouble(row.Cells["Lng"].Value));
+
+                            markersOverlay.Markers.Remove(getMarker(markersOverlay, point));
+
+                            string name = row.Cells["Name"].Value.ToString();
+                            GMarkerGoogleType type = getGMarkerGoogleType(((DataGridViewComboBoxCell)(row.Cells["Color"])).Style.BackColor.Name);
+                            GMarkerGoogle marker = CreateGMarker(point, type, name);
+
+                            markersOverlay.Markers.Add(marker);
+                        }
+
+                        break;
+                    }
                 }
             }
         }
@@ -1795,23 +2117,23 @@ namespace ASTERIX
         {
             double Lat = point.Lat;
             double Lng = point.Lng;
-            if (Lat > 0)
-            {
-                LatLBL.Text = "N" + Math.Abs(Lat).ToString();
-            }
-            else
-            {
-                LatLBL.Text = "S" + Math.Abs(Lat).ToString();
-            }
+              if (Lat > 0)
+              {
+                  LatLBL.Text = "N" + Math.Abs(Lat).ToString();
+              }
+              else
+              {
+                  LatLBL.Text = "S" + Math.Abs(Lat).ToString();
+              }
 
-            if (Lng > 0)
-            {
-                LngLBL.Text = "E" + Math.Abs(Lng).ToString();
-            }
-            else
-            {
-                LngLBL.Text = "W" + Math.Abs(Lng).ToString();
-            }
+              if (Lng > 0)
+              {
+                  LngLBL.Text = "E" + Math.Abs(Lng).ToString();
+              }
+              else
+              {
+                  LngLBL.Text = "W" + Math.Abs(Lng).ToString();
+              }
         }
         /// <summary>
         /// Получение координат по курсору.
@@ -1917,17 +2239,36 @@ namespace ASTERIX
                     }
                 case "Marker":
                     {
-                        Edit edit = new Edit("markers", Color.Red, null);
+                        Edit edit = new Edit("markers", "ДОБАВИТЬ В БД");
                         edit.ShowDialog();
-                        if (edit.onClick == "OK")
+
+                        string onClick = edit.onClick;
+                        switch (onClick)
                         {
-                            string name = edit.name;
+                            case "OK":
+                                {
+                                    string name = edit.name;
+                                    Color color = edit.color;
+                                    GMarkerGoogleType type = getGMarkerGoogleType(color.Name);
 
-                            GMarkerGoogleType type = getGMarkerGoogleType(edit.color.Name);
+                                    GMarkerGoogle marker = CreateGMarker(point, type, name);
 
-                            GMarkerGoogle marker = CreateGMarker(point, type, name);
+                                    markersOverlay.Markers.Add(marker);
+                                    break;
+                                }
 
-                            markersOverlay.Markers.Add(marker);
+                            case "INSERTDB":
+                                {
+                                    string name = edit.name;
+                                    Color color = edit.color;
+
+                                    SQL.query("INSERT INTO dbo.[Markers] (Name, Lat, Lng, Color) VALUES ('" + name + "', '" + point.Lat.ToString() + "', '" + point.Lng.ToString() + "', '" + color.Name + "')");
+                                    UpdateMarkerGridView();
+
+                                    MarkerGridView.CurrentCell = MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Fix"];
+                                    MarkerGridView.Rows[MarkerGridView.Rows.Count - 1].Cells["Fix"].Value = true;
+                                    break;
+                                }
                         }
                         break;
                     }
@@ -1956,6 +2297,10 @@ namespace ASTERIX
             HideRouteBTNInit();
 
             RoteGridViewInit();
+            MarkerGridViewInit();
+
+            Markerschcksum = checksum("Markers");
+            UpdateMarkerGridView();
 
             Loadchcksum = checksum("Load");
             ShowDataGridView(false, 1);
@@ -1979,5 +2324,6 @@ namespace ASTERIX
             DefaultColor = ColorNewRoute;
             SelectedColor = ColorSelected;
         }
+
     }
 }

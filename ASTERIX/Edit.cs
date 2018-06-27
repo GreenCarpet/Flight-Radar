@@ -20,13 +20,23 @@ namespace ASTERIX
         public Color color;
         public Color oldColor = Color.Red;
 
-        public Edit(string tool, Color oldcolor, string Name)
+        public Edit(string tool, string MultiButton)
+        {
+            InitializeComponent();
+
+            Tool = tool;
+
+            MultiBTN.Text = MultiButton;
+        }
+        public Edit(string tool, Color oldcolor, string Name, string MultiButton)
         {
             InitializeComponent();
 
             Tool = tool;
             oldColor = oldcolor;
             name = Name;
+
+            MultiBTN.Text = MultiButton;
         }
         private void Edit_Load(object sender, EventArgs e)
         {
@@ -48,8 +58,7 @@ namespace ASTERIX
                     }
                 case "markers":
                     {
-                        Color[] Markercolors = { Color.LightBlue, Color.Blue, Color.Green, Color.Orange, Color.Pink, Color.Purple, Color.Red, Color.Yellow };
-                        colors = Markercolors;
+                        colors = Map.Markercolors;
 
                         break;
                     }
@@ -80,9 +89,28 @@ namespace ASTERIX
 
             Close();
         }
-        private void EditDBBTN_Click(object sender, EventArgs e)
+        private void MultiBTN_Click(object sender, EventArgs e)
         {
-            onClick = "EDITDB";
+            switch (MultiBTN.Text)
+            {
+                case "ДОБАВИТЬ В БД":
+                    {
+                        name = NameTextBox.TextField;
+                        color = ColorComboBox.BackColor;
+                        onClick = "INSERTDB";
+                        break;
+                    }
+                case "УДАЛИТЬ ИЗ БД":
+                    {
+                        onClick = "DELETEDB";
+                        break;
+                    }
+                case "ГРАФИК ВЫСОТЫ":
+                    {
+                        onClick = "GRAPHICS";
+                        break;
+                    }
+            }
 
             Close();
         }
@@ -98,5 +126,6 @@ namespace ASTERIX
         {
             ColorComboBox.BackColor = colors[ColorComboBox.SelectedIndex];
         }
+
     }
 }

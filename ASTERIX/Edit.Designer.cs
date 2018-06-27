@@ -32,7 +32,7 @@
             this.ColorLBL = new System.Windows.Forms.Label();
             this.SaveBTN = new System.Windows.Forms.Button();
             this.DeleteBTN = new System.Windows.Forms.Button();
-            this.EditBDBTN = new System.Windows.Forms.Button();
+            this.MultiBTN = new System.Windows.Forms.Button();
             this.NameTextBox = new ASTERIX.UTextBox();
             this.SuspendLayout();
             // 
@@ -42,7 +42,7 @@
             this.ColorComboBox.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.ColorComboBox.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ColorComboBox.FormattingEnabled = true;
-            this.ColorComboBox.Location = new System.Drawing.Point(88, 58);
+            this.ColorComboBox.Location = new System.Drawing.Point(69, 60);
             this.ColorComboBox.Name = "ColorComboBox";
             this.ColorComboBox.Size = new System.Drawing.Size(47, 21);
             this.ColorComboBox.TabIndex = 15;
@@ -54,7 +54,7 @@
             this.ColorLBL.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ColorLBL.AutoSize = true;
             this.ColorLBL.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.ColorLBL.Location = new System.Drawing.Point(13, 59);
+            this.ColorLBL.Location = new System.Drawing.Point(13, 61);
             this.ColorLBL.Name = "ColorLBL";
             this.ColorLBL.Size = new System.Drawing.Size(40, 16);
             this.ColorLBL.TabIndex = 14;
@@ -81,7 +81,7 @@
             this.DeleteBTN.BackColor = System.Drawing.Color.LightSlateGray;
             this.DeleteBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.DeleteBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.DeleteBTN.Location = new System.Drawing.Point(14, 105);
+            this.DeleteBTN.Location = new System.Drawing.Point(16, 105);
             this.DeleteBTN.Name = "DeleteBTN";
             this.DeleteBTN.Size = new System.Drawing.Size(102, 29);
             this.DeleteBTN.TabIndex = 17;
@@ -90,20 +90,20 @@
             this.DeleteBTN.UseVisualStyleBackColor = false;
             this.DeleteBTN.Click += new System.EventHandler(this.DeleteBTN_Click);
             // 
-            // EditBDBTN
+            // MultiBTN
             // 
-            this.EditBDBTN.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.EditBDBTN.BackColor = System.Drawing.Color.LightSlateGray;
-            this.EditBDBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.EditBDBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.EditBDBTN.Location = new System.Drawing.Point(132, 105);
-            this.EditBDBTN.Name = "EditBDBTN";
-            this.EditBDBTN.Size = new System.Drawing.Size(102, 29);
-            this.EditBDBTN.TabIndex = 17;
-            this.EditBDBTN.TabStop = false;
-            this.EditBDBTN.Text = "ДОБАВИТЬ В БД";
-            this.EditBDBTN.UseVisualStyleBackColor = false;
-            this.EditBDBTN.Click += new System.EventHandler(this.EditDBBTN_Click);
+            this.MultiBTN.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.MultiBTN.BackColor = System.Drawing.Color.LightSlateGray;
+            this.MultiBTN.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.MultiBTN.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.MultiBTN.Location = new System.Drawing.Point(132, 105);
+            this.MultiBTN.Name = "MultiBTN";
+            this.MultiBTN.Size = new System.Drawing.Size(102, 29);
+            this.MultiBTN.TabIndex = 17;
+            this.MultiBTN.TabStop = false;
+            this.MultiBTN.Text = "ДОБАВИТЬ В БД";
+            this.MultiBTN.UseVisualStyleBackColor = false;
+            this.MultiBTN.Click += new System.EventHandler(this.MultiBTN_Click);
             // 
             // NameTextBox
             // 
@@ -133,7 +133,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(246, 181);
             this.Controls.Add(this.NameTextBox);
-            this.Controls.Add(this.EditBDBTN);
+            this.Controls.Add(this.MultiBTN);
             this.Controls.Add(this.DeleteBTN);
             this.Controls.Add(this.SaveBTN);
             this.Controls.Add(this.ColorComboBox);
@@ -154,7 +154,7 @@
         private System.Windows.Forms.Label ColorLBL;
         private System.Windows.Forms.Button SaveBTN;
         private System.Windows.Forms.Button DeleteBTN;
-        private System.Windows.Forms.Button EditBDBTN;
+        private System.Windows.Forms.Button MultiBTN;
         private UTextBox NameTextBox;
     }
 }
