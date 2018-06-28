@@ -1300,8 +1300,9 @@ namespace ASTERIX
                                 string xml = Convert.ToString(SQL.query("SELECT GPX FROM [LOAD] WHERE ID = '" + Id + "'").Rows[0][0]);
                                 GMapRoute newRoute = GetRoute(xml, Id);
 
-                                routeOverlay.Routes[routeOverlay.Routes.IndexOf(routeOverlay.Routes[trek])].Points.Clear();
-                                routeOverlay.Routes[routeOverlay.Routes.IndexOf(routeOverlay.Routes[trek])].Points.AddRange(newRoute.Points);
+                                routeOverlay.Markers[trek].Position = newRoute.Points.Last();
+                                routeOverlay.Routes[trek].Points.Clear();
+                                routeOverlay.Routes[trek].Points.AddRange(newRoute.Points);
 
                                 RouteGridView["CRC", trek].Value = NewCRC;
                                 break;
@@ -1565,7 +1566,8 @@ namespace ASTERIX
             }
             setFocusRoute();
 
-            Edit edit = new Edit("route", item.Stroke.Color, RouteGridView.CurrentCell.OwningRow.Cells["TargetAddress"].Value.ToString(), "ГРАФИК ВЫСОТЫ");
+            Color color = ((DataGridViewComboBoxCell)(routeRow.Cells["Color"])).Style.BackColor;
+            Edit edit = new Edit("route", color, RouteGridView.CurrentCell.OwningRow.Cells["TargetAddress"].Value.ToString(), "ГРАФИК ВЫСОТЫ");
             edit.ShowDialog();
 
             string onClick = edit.onClick;
@@ -1574,7 +1576,7 @@ namespace ASTERIX
                 case "OK":
                     {
                         string name = edit.name;
-                        Color color = edit.color;
+                        color = edit.color;
 
                         item.Stroke.Color = color;
                         ((DataGridViewComboBoxCell)(routeRow.Cells["Color"])).Style.BackColor = color;
@@ -1683,13 +1685,28 @@ namespace ASTERIX
                 }
             }
 
+            List<string> id = new List<string>();
             foreach (DataGridViewRow row in PolygonGridView.Rows)
             {
+                id.Add(row.Cells["Id"].Value.ToString());
                 if (row.Cells["Id"].Value.ToString() == selectedId)
                 {
                     PolygonGridView.CurrentCell = row.Cells["Name"];
                 }
             }
+
+            for (int pol = polyOverlay.Polygons.Count - 1; pol >= 0; pol--) {
+                GMapPolygon polygon = polyOverlay.Polygons[pol];
+                if (polygon.Name != "tempPolygon")
+                {
+                    if (!id.Contains(polygon.Name))
+                    {
+                        polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(polygon)]);
+                        polyOverlay.Polygons.Remove(polygon);
+                    }
+                }
+            }
+
             this.PolygonGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.PolygonGridView_CurrentCellDirtyStateChanged);
         }
 
@@ -1739,102 +1756,123 @@ namespace ASTERIX
         {
             if (e.Button == MouseButtons.Left)
             {
-                string buttonType;
-                string name = null;
-                if (item.Name == "tempPolygon")
+                if ((item.Name == "tempPolygon") || (Convert.ToInt32(SQL.query("SELECT COUNT(*) FROM dbo.[Polygons] WHERE Id =" + item.Name).Rows[0][0]) > 0))
                 {
-                    buttonType = "ДОБАВИТЬ В БД";
-                }
-                else
-                {
-                    name = SQL.query("SELECT [Name] FROM dbo.[Polygons] WHERE [Id] = " + item.Name + "").Rows[0]["Name"].ToString();
-                    if (name == "")
+                    string buttonType;
+                    string name = null;
+                    if (item.Name == "tempPolygon")
                     {
-                        name = null;
+                        buttonType = "ДОБАВИТЬ В БД";
                     }
-                    buttonType = "УДАЛИТЬ ИЗ БД";
-                }
-                
-                Edit edit = new Edit("polygons", item.Stroke.Color, name, buttonType);
-                edit.ShowDialog();
-
-                string onClick = edit.onClick;
-                switch (onClick)
-                {
-                    case "OK":
+                    else
+                    {
+                        name = SQL.query("SELECT [Name] FROM dbo.[Polygons] WHERE [Id] = " + item.Name + "").Rows[0]["Name"].ToString();
+                        if (name == "")
                         {
-                            name = edit.name;
-                            Color color = edit.color;
-
-                            item.Stroke.Color = color;
-                            if (item.Name != "tempPolygon")
-                            {
-                                SQL.query("UPDATE dbo.[Polygons] SET [Name] = '" + name + "', [Color] = '" + color.Name + "' WHERE[Id] = " + item.Name);
-                                UpdatePolygonGridView();
-                            }
-                            break;
+                            name = null;
                         }
-                    case "DELETE":
-                        {
-                            polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
-                            polyOverlay.Polygons.Remove(item);
+                        buttonType = "УДАЛИТЬ ИЗ БД";
+                    }
 
-                            if (item.Name != "tempPolygon")
+                    Edit edit = new Edit("polygons", item.Stroke.Color, name, buttonType);
+                    edit.ShowDialog();
+
+                    string onClick = edit.onClick;
+                    switch (onClick)
+                    {
+                        case "OK":
                             {
+                                name = edit.name;
+                                Color color = edit.color;
+
+                                item.Stroke.Color = color;
+                                if (item.Name != "tempPolygon")
+                                {
+                                    SQL.query("UPDATE dbo.[Polygons] SET [Name] = '" + name + "', [Color] = '" + color.Name + "' WHERE[Id] = " + item.Name);
+                                    UpdatePolygonGridView();
+                                }
+                                break;
+                            }
+                        case "DELETE":
+                            {
+                                if (item.Name != "tempPolygon")
+                                {
+                                    polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
+
+                                    foreach (DataGridViewRow row in PolygonGridView.Rows)
+                                    {
+                                        if (row.Cells["Id"].Value.ToString() == item.Name)
+                                        {
+                                            row.Cells["Fix"].Value = false;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                polyOverlay.Polygons.Remove(item);
+                                break;
+                            }
+                        case "INSERTDB":
+                            {
+                                name = edit.name;
+                                Color color = edit.color;
+
+                                gpxType gpx = new gpxType();
+                                wptType[] wpt = new wptType[item.Points.Count];
+
+                                for (int point = 0; point < item.Points.Count; point++)
+                                {
+                                    wpt[point] = new wptType();
+                                    wpt[point].lat = Convert.ToDecimal(item.Points[point].Lat);
+                                    wpt[point].lon = Convert.ToDecimal(item.Points[point].Lng);
+                                }
+
+                                gpx.wpt = wpt;
+
+                                string xml = GMaps.Instance.SerializeGPX(gpx);
+
+                                SQL.query("INSERT INTO dbo.[Polygons] (Name, Gpx, Color) VALUES ('" + name + "', '" + xml + "', '" + color.Name + "')");
+                                UpdatePolygonGridView();
+
+                                PointLatLng ToolPoint = new PointLatLng();
+                                List<double> Lat = new List<double>();
+                                List<double> Lng = new List<double>();
+                                foreach (PointLatLng point in item.Points)
+                                {
+                                    Lat.Add(point.Lat);
+                                    Lng.Add(point.Lng);
+                                }
+                                ToolPoint.Lat = Lat.Average();
+                                ToolPoint.Lng = Lng.Average();
+
+                                polyOverlay.Markers.Add(new GMarkerCross(ToolPoint) { ToolTipText = name, IsVisible = false, ToolTipMode = MarkerTooltipMode.Always });
+                                item.Name = SQL.query("SELECT scope_identity()").Rows[0][0].ToString();
+                                item.Stroke.Color = color;
+
                                 foreach (DataGridViewRow row in PolygonGridView.Rows)
                                 {
                                     if (row.Cells["Id"].Value.ToString() == item.Name)
                                     {
-                                        row.Cells["Fix"].Value = false;
-                                        break;
+                                        row.Cells["Fix"].Value = true;
                                     }
                                 }
+                                break;
                             }
-                            break;
-                        }
-                    case "INSERTDB":
-                        {
-                            name = edit.name;
-                            Color color = edit.color;
-
-                            gpxType gpx = new gpxType();
-                            wptType[] wpt = new wptType[item.Points.Count];
-
-                            for (int point = 0; point < item.Points.Count; point++)
+                        case "DELETEDB":
                             {
-                                wpt[point] = new wptType();
-                                wpt[point].lat = Convert.ToDecimal(item.Points[point].Lat);
-                                wpt[point].lon = Convert.ToDecimal(item.Points[point].Lng);
+                                polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
+                                polyOverlay.Polygons.Remove(item);
+
+                                SQL.query("DELETE FROM dbo.[Polygons] WHERE [Id] = " + item.Name);
+                                UpdatePolygonGridView();
+                                break;
                             }
-
-                            gpx.wpt = wpt;
-
-                            string xml = GMaps.Instance.SerializeGPX(gpx);
-
-                            SQL.query("INSERT INTO dbo.[Polygons] (Name, Gpx, Color) VALUES ('" + name + "', '" + xml + "', '" + color.Name + "')");
-                            UpdatePolygonGridView();
-
-                            item.Name = SQL.query("SELECT scope_identity()").Rows[0][0].ToString();
-                            item.Stroke.Color = color;
-
-                            foreach (DataGridViewRow row in PolygonGridView.Rows)
-                            {
-                                if (row.Cells["Id"].Value.ToString() == item.Name)
-                                {
-                                    row.Cells["Fix"].Value = true;
-                                }
-                            }
-                            break;
-                        }
-                    case "DELETEDB":
-                        {
-                            polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
-                            polyOverlay.Polygons.Remove(item);
-
-                            SQL.query("DELETE FROM dbo.[Polygons] WHERE [Id] = " + item.Name);
-                            UpdatePolygonGridView();
-                            break;
-                        }
+                    }
+                }
+                else
+                {
+                    polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
+                    polyOverlay.Polygons.Remove(item);
                 }
             }
         }
@@ -1985,11 +2023,17 @@ namespace ASTERIX
         /// <param name="item"></param>
         private void gMapControl_OnPolygonEnter(GMapPolygon item)
         {
-            polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)].IsVisible = true;
+            if (item.Name != "tempPolygon")
+            {
+                polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)].IsVisible = true;
+            }
         }
         private void gMapControl_OnPolygonLeave(GMapPolygon item)
         {
-            polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)].IsVisible = false;
+            if (item.Name != "tempPolygon")
+            {
+                polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)].IsVisible = false;
+            }
         }
         #endregion
 
@@ -2515,27 +2559,21 @@ namespace ASTERIX
         /// <summary>
         /// Прямоугольное выделение.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void RectangleBTN_Click(object sender, EventArgs e)
+        private void RectangleBTN_MouseClick(object sender, MouseEventArgs e)
         {
             Tool = "Rectangle";
         }
         /// <summary>
         /// Произвольное выделение.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FreeBTN_Click(object sender, EventArgs e)
+        private void FreeBTN_MouseClick(object sender, MouseEventArgs e)
         {
             Tool = "Free";
         }
         /// <summary>
         /// Маркер.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MarkerBTN_Click(object sender, EventArgs e)
+        private void MarkerBTN_MouseClick(object sender, MouseEventArgs e)
         {
             Tool = "Marker";
         }

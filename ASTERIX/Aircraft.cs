@@ -482,6 +482,8 @@ namespace ASTERIX
 
                 AddBTN.Enabled = true;
                 DeleteBTN.Enabled = true;
+                SearchBTN.Enabled = true;
+                ResetBTN.Enabled = true;
             }
             else
             {
@@ -529,6 +531,8 @@ namespace ASTERIX
 
                     AddBTN.Enabled = false;
                     DeleteBTN.Enabled = false;
+                    SearchBTN.Enabled = false;
+                    ResetBTN.Enabled = false;
                 }
                 else
                 {

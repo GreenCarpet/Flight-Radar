@@ -36,7 +36,6 @@ namespace ASTERIX
                     decimal ele = rte[route].rtept[i].ele;
                     if (ele != -1)
                     {
-                        // X.Add(new PointLatLng(Convert.ToDouble(rte[route].rtept[i].lat), Convert.ToDouble(rte[route].rtept[i].lon)).ToString());
                         X.Add(i);
                         Y.Add(rte[route].rtept[i].ele);
                     }
