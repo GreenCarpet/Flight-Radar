@@ -418,9 +418,9 @@ namespace ASTERIX
                 return;
             }
             int selectedId = 0;
-                int firstRow = 0;
-                int sortedColumn = 0;
-                ListSortDirection sortDirection = ListSortDirection.Descending;
+            int firstRow = 0;
+            int sortedColumn = 0;
+            ListSortDirection sortDirection = ListSortDirection.Descending;
 
             if (LoadGridView.Rows.Count > 0)
             {
@@ -437,48 +437,48 @@ namespace ASTERIX
             }
 
             if (LoadGridView.SortedColumn != null)
+            {
+                sortedColumn = LoadGridView.SortedColumn.Index;
+                if (LoadGridView.SortOrder == System.Windows.Forms.SortOrder.Ascending)
                 {
-                    sortedColumn = LoadGridView.SortedColumn.Index;
-                    if (LoadGridView.SortOrder == System.Windows.Forms.SortOrder.Ascending)
-                    {
-                        sortDirection = ListSortDirection.Ascending;
-                    }
-                    else
-                    {
-                        sortDirection = ListSortDirection.Descending;
-                    }
+                    sortDirection = ListSortDirection.Ascending;
+                }
+                else
+                {
+                    sortDirection = ListSortDirection.Descending;
+                }
+            }
+
+            LoadGridView.DataSource = table;
+
+            if (FirstSetting == false)
+            {
+                for (int column = 0; column < LoadGridView.ColumnCount; column++)
+                {
+                    LoadGridView.Columns[column].Visible = false;
                 }
 
-                LoadGridView.DataSource = table;
+                LoadGridViewSetting();
+                FirstSetting = true;
+            }
 
-                if (FirstSetting == false)
+            LoadGridView.Sort(LoadGridView.Columns[sortedColumn], sortDirection);
+
+            if (LoadGridView.Rows.Count > 0)
+            {
+                if (autoPosition)
                 {
-                    for (int column = 0; column < LoadGridView.ColumnCount; column++)
+                    for (int row = 0; row < LoadGridView.Rows.Count; row++)
                     {
-                        LoadGridView.Columns[column].Visible = false;
-                    }
-
-                    LoadGridViewSetting();
-                    FirstSetting = true;
-                }
-
-                LoadGridView.Sort(LoadGridView.Columns[sortedColumn], sortDirection);
-
-                if (LoadGridView.Rows.Count > 0)
-                {
-                    if (autoPosition)
-                    {
-                        for (int row = 0; row < LoadGridView.Rows.Count; row++)
+                        if (Convert.ToInt32(LoadGridView["Id", row].Value) == selectedId)
                         {
-                            if (Convert.ToInt32(LoadGridView["Id", row].Value) == selectedId)
-                            {
-                                LoadGridView.CurrentCell = LoadGridView[1, row];
-                                break;
-                            }
+                            LoadGridView.CurrentCell = LoadGridView[1, row];
+                            break;
                         }
-                        LoadGridView.FirstDisplayedScrollingRowIndex = firstRow;
                     }
+                    LoadGridView.FirstDisplayedScrollingRowIndex = firstRow;
                 }
+            }
         }
 
         /// <summary>
@@ -1120,7 +1120,7 @@ namespace ASTERIX
         static Color SelectedColor;
         static Color DefaultPolygonColor;
         static Color DefaultMarkerColor;
-        public static Color[] colors = { Color.DarkRed, Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.DarkGreen, Color.Aqua, Color.Blue, Color.Purple, Color.DeepPink};
+        public static Color[] colors = { Color.DarkRed, Color.Red, Color.Orange, Color.Yellow, Color.YellowGreen, Color.DarkGreen, Color.Aqua, Color.Blue, Color.Purple, Color.DeepPink };
         public static Color[] Markercolors = { Color.LightBlue, Color.Blue, Color.Green, Color.Orange, Color.Pink, Color.Purple, Color.Red, Color.Yellow };
 
         GMapOverlay routeOverlay = new GMapOverlay("route");
@@ -1695,13 +1695,14 @@ namespace ASTERIX
                 }
             }
 
-            for (int pol = polyOverlay.Polygons.Count - 1; pol >= 0; pol--) {
+            for (int pol = polyOverlay.Polygons.Count - 1; pol >= 0; pol--)
+            {
                 GMapPolygon polygon = polyOverlay.Polygons[pol];
                 if (polygon.Name != "tempPolygon")
                 {
                     if (!id.Contains(polygon.Name))
                     {
-                        polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(polygon)]);
+                        polyOverlay.Markers.Remove(getMarkerOfPolygons(polyOverlay, polygon.Name));
                         polyOverlay.Polygons.Remove(polygon);
                     }
                 }
@@ -1745,6 +1746,22 @@ namespace ASTERIX
             tempPolygon.Stroke = new Pen(color, 3);
 
             return tempPolygon;
+        }
+
+        GMapMarker getMarkerOfPolygons(GMapOverlay polyOverlay, string Id)
+        {
+            GMapMarker getMarker = null;
+            
+            foreach(GMapMarker marker in polyOverlay.Markers)
+            {
+                if (Convert.ToString(marker.Tag) == Id)
+                {
+                    getMarker = marker;
+                    break;
+                }
+            }
+
+            return getMarker;
         }
 
         /// <summary>
@@ -1797,7 +1814,7 @@ namespace ASTERIX
                             {
                                 if (item.Name != "tempPolygon")
                                 {
-                                    polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
+                                    polyOverlay.Markers.Remove(getMarkerOfPolygons(polyOverlay, item.Name));
 
                                     foreach (DataGridViewRow row in PolygonGridView.Rows)
                                     {
@@ -1845,9 +1862,11 @@ namespace ASTERIX
                                 ToolPoint.Lat = Lat.Average();
                                 ToolPoint.Lng = Lng.Average();
 
-                                polyOverlay.Markers.Add(new GMarkerCross(ToolPoint) { ToolTipText = name, IsVisible = false, ToolTipMode = MarkerTooltipMode.Always });
+
                                 item.Name = SQL.query("SELECT scope_identity()").Rows[0][0].ToString();
                                 item.Stroke.Color = color;
+
+                                polyOverlay.Markers.Add(new GMarkerCross(ToolPoint) { Tag = item.Name, ToolTipText = name, IsVisible = false, ToolTipMode = MarkerTooltipMode.Always });
 
                                 foreach (DataGridViewRow row in PolygonGridView.Rows)
                                 {
@@ -1860,7 +1879,7 @@ namespace ASTERIX
                             }
                         case "DELETEDB":
                             {
-                                polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
+                                polyOverlay.Markers.Remove(getMarkerOfPolygons(polyOverlay, item.Name));
                                 polyOverlay.Polygons.Remove(item);
 
                                 SQL.query("DELETE FROM dbo.[Polygons] WHERE [Id] = " + item.Name);
@@ -1871,7 +1890,7 @@ namespace ASTERIX
                 }
                 else
                 {
-                    polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)]);
+                    polyOverlay.Markers.Remove(getMarkerOfPolygons(polyOverlay, item.Name));
                     polyOverlay.Polygons.Remove(item);
                 }
             }
@@ -2003,13 +2022,13 @@ namespace ASTERIX
                     ToolPoint.Lat = Lat.Average();
                     ToolPoint.Lng = Lng.Average();
 
-                    polyOverlay.Markers.Add(new GMarkerCross(ToolPoint) { ToolTipText = name, IsVisible = false, ToolTipMode = MarkerTooltipMode.Always });
+                    polyOverlay.Markers.Add(new GMarkerCross(ToolPoint) {Tag = Id, ToolTipText = name, IsVisible = false, ToolTipMode = MarkerTooltipMode.Always });
                     polyOverlay.Polygons.Add(polygon);
                 }
                 else
                 {
                     GMapPolygon polygon = getPolygon(polyOverlay, Id);
-                    polyOverlay.Markers.Remove(polyOverlay.Markers[polyOverlay.Polygons.IndexOf(polygon)]);
+                    polyOverlay.Markers.Remove(getMarkerOfPolygons(polyOverlay, polygon.Name));
                     polyOverlay.Polygons.Remove(polygon);
                 }
 
@@ -2025,14 +2044,15 @@ namespace ASTERIX
         {
             if (item.Name != "tempPolygon")
             {
-                polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)].IsVisible = true;
+
+                getMarkerOfPolygons(polyOverlay, item.Name).IsVisible = true;
             }
         }
         private void gMapControl_OnPolygonLeave(GMapPolygon item)
         {
             if (item.Name != "tempPolygon")
             {
-                polyOverlay.Markers[polyOverlay.Polygons.IndexOf(item)].IsVisible = false;
+                getMarkerOfPolygons(polyOverlay, item.Name).IsVisible = false;
             }
         }
         #endregion
@@ -2303,7 +2323,7 @@ namespace ASTERIX
                             GMarkerGoogle marker = CreateGMarker(point, type, name);
 
                             markersOverlay.Markers.Add(marker);
-               
+
                             SQL.query("UPDATE dbo.[Markers] SET [Name] = '" + name + "', [Color] = '" + color.Name + "'  WHERE[Lat] = '" + point.Lat.ToString() + "' AND[Lng] = '" + point.Lng.ToString() + "'");
                             UpdateMarkerGridView();
                             break;
@@ -2490,23 +2510,23 @@ namespace ASTERIX
         {
             double Lat = point.Lat;
             double Lng = point.Lng;
-              if (Lat > 0)
-              {
-                  LatLBL.Text = "N" + Math.Abs(Lat).ToString();
-              }
-              else
-              {
-                  LatLBL.Text = "S" + Math.Abs(Lat).ToString();
-              }
+            if (Lat > 0)
+            {
+                LatLBL.Text = "N" + Math.Abs(Lat).ToString();
+            }
+            else
+            {
+                LatLBL.Text = "S" + Math.Abs(Lat).ToString();
+            }
 
-              if (Lng > 0)
-              {
-                  LngLBL.Text = "E" + Math.Abs(Lng).ToString();
-              }
-              else
-              {
-                  LngLBL.Text = "W" + Math.Abs(Lng).ToString();
-              }
+            if (Lng > 0)
+            {
+                LngLBL.Text = "E" + Math.Abs(Lng).ToString();
+            }
+            else
+            {
+                LngLBL.Text = "W" + Math.Abs(Lng).ToString();
+            }
         }
         /// <summary>
         /// Получение координат по курсору.
